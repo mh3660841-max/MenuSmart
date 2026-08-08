@@ -74,12 +74,7 @@ os.makedirs(
 # مجلد صور المنتجات والأقسام
 # =========================================================
 
-CATEGORY_PRODUCT_UPLOAD_FOLDER = os.path.join(
-    app.root_path,
-    "static",
-    "images",
-    "uploads"
-)
+CATEGORY_PRODUCT_UPLOAD_FOLDER = UPLOAD_FOLDER
 
 os.makedirs(
     CATEGORY_PRODUCT_UPLOAD_FOLDER,

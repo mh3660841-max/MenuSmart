@@ -63,10 +63,17 @@ if not DATABASE_URL:
     )
 
     if os.path.exists(database_url_file):
-        with open(database_url_file, "r", encoding="utf-8") as f:
+        with open(
+            database_url_file,
+            "r",
+            encoding="utf-8"
+        ) as f:
             DATABASE_URL = f.read().strip()
 
-DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD")
+
+DATABASE_PASSWORD = os.environ.get(
+    "DATABASE_PASSWORD"
+)
 
 if not DATABASE_URL:
     raise RuntimeError(
@@ -109,10 +116,8 @@ PERMANENT_SESSION_LIFETIME = (
 # =========================================================
 
 UPLOAD_FOLDER = os.path.join(
-    BASE_DIR,
-    "static",
-    "images",
-    "uploads"
+    "/tmp",
+    "menusmart_uploads"
 )
 
 

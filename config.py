@@ -108,13 +108,12 @@ PERMANENT_SESSION_LIFETIME = (
 # مجلد رفع الصور
 # =========================================================
 
-UPLOAD_FOLDER = os.path.join(
-    BASE_DIR,
-    "static",
-    "images",
-    "uploads"
-)
+import tempfile
 
+UPLOAD_FOLDER = os.path.join(
+    tempfile.gettempdir(),
+    "menusmart_uploads"
+)
 
 # =========================================================
 # أنواع الصور المسموح بها

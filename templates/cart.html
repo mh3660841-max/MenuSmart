@@ -1,0 +1,619 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<title>
+    سلة الطلبات | Menu Smart
+</title>
+
+<meta
+    name="description"
+    content="راجع المنتجات الموجودة في سلة الطلبات قبل إتمام الطلب."
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/menu.css') }}"
+>
+
+</head><body class="cart-page"><header class="public-menu-header"><div class="public-menu-header-inner">
+
+
+    <a
+        href="{{ url_for('home') }}"
+        class="public-brand"
+    >
+
+        <span class="brand-icon">
+            M
+        </span>
+
+        <span>
+            Menu Smart
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('public_menu') }}"
+        class="back-menu-button"
+    >
+        ← العودة للمنيو
+    </a>
+
+
+</div>
+
+</header><main class="cart-main"><div class="cart-container">
+
+
+    <section class="cart-page-heading">
+
+        <span>
+            طلبك
+        </span>
+
+        <h1>
+            سلة الطلبات
+        </h1>
+
+        <p>
+            راجع المنتجات والكميات قبل إتمام طلبك.
+        </p>
+
+    </section>
+
+
+    <section class="cart-layout">
+
+
+        <div class="cart-products-card">
+
+
+            <div class="cart-card-header">
+
+                <div>
+
+                    <span>
+                        المنتجات
+                    </span>
+
+                    <h2>
+                        تفاصيل طلبك
+                    </h2>
+
+                </div>
+
+
+                <span
+                    class="cart-items-count"
+                    id="cartItemsCount"
+                >
+                    0 منتجات
+                </span>
+
+            </div>
+
+
+            <div
+                class="cart-page-items"
+                id="cartPageItems"
+            >
+
+            </div>
+
+
+            <div
+                class="cart-page-empty"
+                id="cartPageEmpty"
+            >
+
+                <div class="cart-empty-icon">
+                    🛒
+                </div>
+
+                <h2>
+                    السلة فارغة
+                </h2>
+
+                <p>
+                    لم تضف أي منتجات إلى سلة الطلبات بعد.
+                </p>
+
+                <a
+                    href="{{ url_for('public_menu') }}"
+                    class="dashboard-primary-btn"
+                >
+                    تصفح المنيو
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <aside class="cart-summary-card">
+
+
+            <div class="cart-summary-header">
+
+                <span>
+                    ملخص الطلب
+                </span>
+
+                <h2>
+                    الإجمالي
+                </h2>
+
+            </div>
+
+
+            <div class="cart-summary-lines">
+
+
+                <div>
+
+                    <span>
+                        عدد المنتجات
+                    </span>
+
+                    <strong id="summaryCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        إجمالي المنتجات
+                    </span>
+
+                    <strong id="summarySubtotal">
+                        0 جنيه
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        رسوم التوصيل
+                    </span>
+
+                    <strong id="summaryDelivery">
+                        يحدد لاحقًا
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="cart-summary-total">
+
+                <span>
+                    الإجمالي
+                </span>
+
+                <strong id="summaryTotal">
+                    0 جنيه
+                </strong>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="checkoutBtn"
+                class="checkout-button"
+                disabled
+            >
+                متابعة الطلب
+            </button>
+
+
+            <a
+                href="{{ url_for('public_menu') }}"
+                class="continue-shopping"
+            >
+                ← إضافة منتجات أخرى
+            </a>
+
+
+        </aside>
+
+
+    </section>
+
+
+</div>
+
+</main><footer class="public-menu-footer"><strong>
+    Menu Smart
+</strong>
+
+<p>
+    منصة المنيو الإلكتروني والطلبات الرقمية.
+</p>
+
+</footer><script>
+
+let cart =
+    JSON.parse(
+        localStorage.getItem(
+            "menusmart_cart"
+        ) || "[]"
+    );
+
+
+const cartPageItems =
+    document.getElementById(
+        "cartPageItems"
+    );
+
+
+const cartPageEmpty =
+    document.getElementById(
+        "cartPageEmpty"
+    );
+
+
+const cartItemsCount =
+    document.getElementById(
+        "cartItemsCount"
+    );
+
+
+const summaryCount =
+    document.getElementById(
+        "summaryCount"
+    );
+
+
+const summarySubtotal =
+    document.getElementById(
+        "summarySubtotal"
+    );
+
+
+const summaryTotal =
+    document.getElementById(
+        "summaryTotal"
+    );
+
+
+const checkoutBtn =
+    document.getElementById(
+        "checkoutBtn"
+    );
+
+
+function formatPrice(value) {
+
+    return Number(value || 0)
+        .toFixed(2) +
+        " جنيه";
+
+}
+
+
+function renderCart() {
+
+    let total =
+        0;
+
+    let count =
+        0;
+
+
+    cart.forEach(
+        function(item) {
+
+            total +=
+                Number(item.price) *
+                Number(item.quantity);
+
+            count +=
+                Number(item.quantity);
+
+        }
+    );
+
+
+    if (cartItemsCount) {
+
+        cartItemsCount.textContent =
+            count +
+            (
+                count === 1
+                    ? " منتج"
+                    : " منتجات"
+            );
+
+    }
+
+
+    if (summaryCount) {
+
+        summaryCount.textContent =
+            count;
+
+    }
+
+
+    if (summarySubtotal) {
+
+        summarySubtotal.textContent =
+            formatPrice(total);
+
+    }
+
+
+    if (summaryTotal) {
+
+        summaryTotal.textContent =
+            formatPrice(total);
+
+    }
+
+
+    if (checkoutBtn) {
+
+        checkoutBtn.disabled =
+            cart.length === 0;
+
+    }
+
+
+    if (cart.length === 0) {
+
+        if (cartPageItems) {
+
+            cartPageItems.innerHTML =
+                "";
+
+        }
+
+
+        if (cartPageEmpty) {
+
+            cartPageEmpty.style.display =
+                "flex";
+
+        }
+
+
+        return;
+
+    }
+
+
+    if (cartPageEmpty) {
+
+        cartPageEmpty.style.display =
+            "none";
+
+    }
+
+
+    if (!cartPageItems) {
+        return;
+    }
+
+
+    cartPageItems.innerHTML =
+        cart.map(
+            function(item) {
+
+                const itemTotal =
+                    Number(item.price) *
+                    Number(item.quantity);
+
+
+                return `
+
+                    <article
+                        class="cart-product-row"
+                        data-id="${item.id}"
+                    >
+
+                        <div class="cart-product-image">
+
+                            <span>
+                                🍽️
+                            </span>
+
+                        </div>
+
+
+                        <div class="cart-product-info">
+
+                            <h3>
+                                ${item.name}
+                            </h3>
+
+                            <span>
+                                ${formatPrice(item.price)}
+                                للمنتج
+                            </span>
+
+                        </div>
+
+
+                        <div class="cart-product-quantity">
+
+                            <button
+                                type="button"
+                                onclick="changeQuantity('${item.id}', -1)"
+                                aria-label="تقليل الكمية"
+                            >
+                                −
+                            </button>
+
+                            <strong>
+                                ${item.quantity}
+                            </strong>
+
+                            <button
+                                type="button"
+                                onclick="changeQuantity('${item.id}', 1)"
+                                aria-label="زيادة الكمية"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+
+                        <strong class="cart-product-total">
+                            ${formatPrice(itemTotal)}
+                        </strong>
+
+
+                        <button
+                            type="button"
+                            class="remove-cart-product"
+                            onclick="removeProduct('${item.id}')"
+                            aria-label="حذف المنتج"
+                        >
+                            ×
+                        </button>
+
+                    </article>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+function saveCart() {
+
+    localStorage.setItem(
+        "menusmart_cart",
+        JSON.stringify(cart)
+    );
+
+}
+
+
+function changeQuantity(
+    id,
+    amount
+) {
+
+    const item =
+        cart.find(
+            function(product) {
+
+                return String(product.id) ===
+                    String(id);
+
+            }
+        );
+
+
+    if (!item) {
+        return;
+    }
+
+
+    item.quantity +=
+        amount;
+
+
+    if (item.quantity <= 0) {
+
+        cart =
+            cart.filter(
+                function(product) {
+
+                    return String(product.id) !==
+                        String(id);
+
+                }
+            );
+
+    }
+
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+function removeProduct(id) {
+
+    cart =
+        cart.filter(
+            function(product) {
+
+                return String(product.id) !==
+                    String(id);
+
+            }
+        );
+
+
+    saveCart();
+
+    renderCart();
+
+}
+
+
+window.changeQuantity =
+    changeQuantity;
+
+
+window.removeProduct =
+    removeProduct;
+
+
+if (checkoutBtn) {
+
+    checkoutBtn.addEventListener(
+        "click",
+        function() {
+
+            if (cart.length === 0) {
+                return;
+            }
+
+
+            window.location.href =
+                "{{ url_for('checkout') }}";
+
+        }
+    );
+
+}
+
+
+renderCart();
+
+</script></body></html>

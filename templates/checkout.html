@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#111111">
+
+    <title>إتمام الطلب | Menu Smart</title>
+
+    <meta
+        name="description"
+        content="أدخل بياناتك لإتمام طلبك من المنيو الإلكتروني."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/menu.css') }}"
+    >
+
+    <style>
+
+        /* =====================================================
+           MENU SMART — CHECKOUT
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body.checkout-page {
+            margin: 0;
+            background: #f6f6f3;
+            color: #111;
+            font-family: Arial, Tahoma, sans-serif;
+        }
+
+        /* Header */
+
+        .checkout-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,.94);
+            border-bottom: 1px solid #e9e9e5;
+            backdrop-filter: blur(14px);
+        }
+
+        .checkout-header-inner {
+            width: min(1120px, calc(100% - 30px));
+            min-height: 70px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .checkout-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #111;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 17px;
+        }
+
+        .checkout-brand-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #111;
+            color: #d4af37;
+            font-weight: 900;
+            box-shadow: 0 7px 18px rgba(0,0,0,.12);
+        }
+
+        .checkout-cart-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 15px;
+            border-radius: 12px;
+            background: #f3f3f0;
+            color: #222;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .checkout-cart-link:hover {
+            background: #111;
+            color: #d4af37;
+        }
+
+        /* Main */
+
+        .checkout-main {
+            min-height: calc(100vh - 150px);
+            padding: 42px 15px 55px;
+        }
+
+        .checkout-container {
+            width: min(1080px, 100%);
+            margin: auto;
+        }
+
+        .checkout-heading {
+            margin-bottom: 28px;
+        }
+
+        .checkout-heading-label {
+            display: inline-flex;
+            padding: 7px 11px;
+            border-radius: 9px;
+            background: #faf3d6;
+            color: #9a7b16;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .checkout-heading h1 {
+            margin: 10px 0 7px;
+            font-size: clamp(27px, 4vw, 38px);
+            font-weight: 900;
+            letter-spacing: -.5px;
+        }
+
+        .checkout-heading p {
+            margin: 0;
+            color: #858585;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Layout */
+
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(300px, .85fr);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .checkout-card {
+            background: #fff;
+            border: 1px solid #e9e9e5;
+            border-radius: 24px;
+            box-shadow: 0 15px 45px rgba(0,0,0,.055);
+        }
+
+        /* Form */
+
+        .checkout-form-card {
+            padding: 27px;
+        }
+
+        .checkout-card-heading {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 25px;
+        }
+
+        .checkout-heading-icon {
+            width: 50px;
+            height: 50px;
+            flex: 0 0 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            background: #faf3d6;
+            font-size: 22px;
+        }
+
+        .checkout-card-heading span {
+            color: #9a7b16;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .checkout-card-heading h2 {
+            margin: 4px 0 0;
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .form-group label span {
+            color: #999;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            border: 1px solid #deded9;
+            border-radius: 13px;
+            background: #fafaf8;
+            color: #111;
+            padding: 13px 14px;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            transition: .2s ease;
+        }
+
+        .form-group input {
+            height: 48px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 95px;
+            line-height: 1.7;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            background: #fff;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212,175,55,.12);
+        }
+
+        /* Payment */
+
+        .payment-section {
+            margin-top: 24px;
+            padding: 18px;
+            border: 1px solid #ecece8;
+            border-radius: 17px;
+            background: #fafaf8;
+        }
+
+        .payment-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 13px;
+            font-size: 13px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            padding: 14px;
+            margin-top: 9px;
+            border: 1px solid #e3e3df;
+            border-radius: 13px;
+            background: #fff;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .payment-option:hover {
+            border-color: #d4af37;
+        }
+
+        .payment-option input {
+            margin-top: 3px;
+            accent-color: #111;
+        }
+
+        .payment-option-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .payment-option-content strong {
+            font-size: 12px;
+        }
+
+        .payment-option-content small {
+            color: #888;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        /* Submit */
+
+        .checkout-submit-btn {
+            width: 100%;
+            min-height: 53px;
+            margin-top: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+            border: 0;
+            border-radius: 15px;
+            background: #111;
+            color: #d4af37;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 900;
+            transition: .2s ease;
+        }
+
+        .checkout-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(0,0,0,.16);
+        }
+
+        .checkout-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Summary */
+
+        .checkout-summary-card {
+            position: sticky;
+            top: 92px;
+            padding: 23px;
+        }
+
+        .checkout-summary-heading {
+            padding-bottom: 17px;
+            border-bottom: 1px solid #eeeeea;
+        }
+
+        .checkout-summary-heading span {
+            color: #9a7b16;
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .checkout-summary-heading h2 {
+            margin: 5px 0 0;
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .checkout-summary-items {
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 5px 0;
+        }
+
+        .checkout-summary-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f1f1ee;
+        }
+
+        .checkout-summary-item div {
+            min-width: 0;
+        }
+
+        .checkout-summary-item strong {
+            display: block;
+            color: #222;
+            font-size: 12px;
+        }
+
+        .checkout-summary-item small {
+            display: block;
+            margin-top: 5px;
+            color: #999;
+            font-size: 10px;
+        }
+
+        .checkout-summary-item > strong {
+            flex-shrink: 0;
+            color: #9a7b16;
+        }
+
+        .checkout-empty {
+            padding: 25px 10px;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+        }
+
+        .checkout-empty-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .checkout-summary-divider {
+            height: 1px;
+            margin: 5px 0 12px;
+            background: #e9e9e5;
+        }
+
+        .checkout-summary-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 8px 0;
+            color: #777;
+            font-size: 11px;
+        }
+
+        .checkout-summary-line strong {
+            color: #222;
+            font-size: 11px;
+        }
+
+        .checkout-summary-total {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 13px;
+            padding: 17px 0 0;
+            border-top: 2px solid #111;
+        }
+
+        .checkout-summary-total span {
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .checkout-summary-total strong {
+            color: #9a7b16;
+            font-size: 21px;
+            font-weight: 900;
+        }
+
+        /* Footer */
+
+        .checkout-footer {
+            padding: 25px 15px;
+            text-align: center;
+            background: #111;
+            color: #fff;
+        }
+
+        .checkout-footer strong {
+            color: #d4af37;
+            font-size: 14px;
+        }
+
+        .checkout-footer p {
+            margin: 6px 0 0;
+            color: #999;
+            font-size: 11px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 800px) {
+
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-summary-card {
+                position: static;
+                grid-row: 1;
+            }
+
+            .checkout-form-card {
+                grid-row: 2;
+            }
+
+        }
+
+        @media (max-width: 560px) {
+
+            .checkout-main {
+                padding: 27px 12px 40px;
+            }
+
+            .checkout-header-inner {
+                width: calc(100% - 24px);
+                min-height: 62px;
+            }
+
+            .checkout-form-card,
+            .checkout-summary-card {
+                padding: 18px;
+                border-radius: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .checkout-heading {
+                margin-bottom: 20px;
+            }
+
+            .checkout-heading h1 {
+                font-size: 27px;
+            }
+
+            .checkout-brand span:last-child {
+                font-size: 14px;
+            }
+
+            .checkout-cart-link {
+                padding: 9px 11px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="checkout-page">
+
+
+<header class="checkout-header">
+
+    <div class="checkout-header-inner">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="checkout-brand"
+        >
+
+            <span class="checkout-brand-icon">
+                M
+            </span>
+
+            <span>
+                Menu Smart
+            </span>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('cart') }}"
+            class="checkout-cart-link"
+        >
+            🛒 السلة
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="checkout-main">
+
+    <div class="checkout-container">
+
+
+        <section class="checkout-heading">
+
+            <span class="checkout-heading-label">
+                الخطوة الأخيرة
+            </span>
+
+            <h1>
+                إتمام الطلب
+            </h1>
+
+            <p>
+                أدخل بياناتك وسنستخدمها لتجهيز طلبك وتوصيله إليك.
+            </p>
+
+        </section>
+
+
+        <div class="checkout-layout">
+
+
+            <section class="checkout-card checkout-form-card">
+
+
+                <div class="checkout-card-heading">
+
+                    <div class="checkout-heading-icon">
+                        👤
+                    </div>
+
+                    <div>
+
+                        <span>
+                            بيانات العميل
+                        </span>
+
+                        <h2>
+                            معلومات الطلب
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for('checkout') }}"
+                    id="checkoutForm"
+                >
+
+                    <input
+                        type="hidden"
+                        name="cart_data"
+                        id="cartData"
+                    >
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="customer_name">
+                                الاسم بالكامل
+                            </label>
+
+                            <input
+                                type="text"
+                                id="customer_name"
+                                name="customer_name"
+                                placeholder="اكتب اسمك"
+                                autocomplete="name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="customer_phone">
+                                رقم الهاتف
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="customer_phone"
+                                name="customer_phone"
+                                placeholder="01xxxxxxxxx"
+                                inputmode="tel"
+                                autocomplete="tel"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="customer_address">
+                            العنوان
+                        </label>
+
+                        <textarea
+                            id="customer_address"
+                            name="customer_address"
+                            rows="3"
+                            placeholder="اكتب عنوان التوصيل بالتفصيل"
+                            autocomplete="street-address"
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="order_notes">
+
+                            ملاحظات على الطلب
+
+                            <span>
+                                اختياري
+                            </span>
+
+                        </label>
+
+                        <textarea
+                            id="order_notes"
+                            name="order_notes"
+                            rows="3"
+                            placeholder="مثلاً: بدون بصل، أو أي ملاحظات أخرى..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="payment-section">
+
+                        <div class="payment-title">
+
+                            <span>
+                                💳
+                            </span>
+
+                            <strong>
+                                طريقة الدفع
+                            </strong>
+
+                        </div>
+
+
+                        <label class="payment-option">
+
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="cash"
+                                checked
+                            >
+
+                            <span class="payment-option-content">
+
+                                <strong>
+                                    الدفع عند الاستلام
+                                </strong>
+
+                                <small>
+                                    ادفع قيمة الطلب عند استلامه.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <label class="payment-option">
+
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="online"
+                            >
+
+                            <span class="payment-option-content">
+
+                                <strong>
+                                    الدفع الإلكتروني
+                                </strong>
+
+                                <small>
+                                    سيتم توفير الدفع الإلكتروني
+                                    حسب إعدادات المطعم.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="checkout-submit-btn"
+                        id="submitOrderBtn"
+                    >
+
+                        <span>
+                            تأكيد الطلب
+                        </span>
+
+                        <span>
+                            ←
+                        </span>
+
+                    </button>
+
+
+                </form>
+
+            </section>
+
+
+            <aside class="checkout-card checkout-summary-card">
+
+
+                <div class="checkout-summary-heading">
+
+                    <span>
+                        طلبك
+                    </span>
+
+                    <h2>
+                        ملخص الطلب
+                    </h2>
+
+                </div>
+
+
+                <div
+                    class="checkout-summary-items"
+                    id="checkoutSummaryItems"
+                ></div>
+
+
+                <div class="checkout-summary-divider"></div>
+
+
+                <div class="checkout-summary-line">
+
+                    <span>
+                        عدد المنتجات
+                    </span>
+
+                    <strong id="checkoutCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="checkout-summary-line">
+
+                    <span>
+                        إجمالي المنتجات
+                    </span>
+
+                    <strong id="checkoutSubtotal">
+                        0.00 جنيه
+                    </strong>
+
+                </div>
+
+
+                <div class="checkout-summary-line">
+
+                    <span>
+                        التوصيل
+                    </span>
+
+                    <strong>
+                        يحدد لاحقًا
+                    </strong>
+
+                </div>
+
+
+                <div class="checkout-summary-total">
+
+                    <span>
+                        الإجمالي
+                    </span>
+
+                    <strong id="checkoutTotal">
+                        0.00 جنيه
+                    </strong>
+
+                </div>
+
+
+            </aside>
+
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer class="checkout-footer">
+
+    <strong>
+        Menu Smart
+    </strong>
+
+    <p>
+        منصة المنيو الإلكتروني والطلبات الرقمية.
+    </p>
+
+</footer>
+
+
+<script>
+
+const form =
+    document.getElementById("checkoutForm");
+
+const cartDataInput =
+    document.getElementById("cartData");
+
+const summaryItems =
+    document.getElementById("checkoutSummaryItems");
+
+const countElement =
+    document.getElementById("checkoutCount");
+
+const subtotalElement =
+    document.getElementById("checkoutSubtotal");
+
+const totalElement =
+    document.getElementById("checkoutTotal");
+
+const submitOrderBtn =
+    document.getElementById("submitOrderBtn");
+
+
+let cart = [];
+
+try {
+
+    cart =
+        JSON.parse(
+            localStorage.getItem("menusmart_cart") || "[]"
+        );
+
+    if (!Array.isArray(cart)) {
+        cart = [];
+    }
+
+} catch (error) {
+
+    cart = [];
+
+}
+
+
+function formatPrice(value) {
+
+    return Number(value || 0).toFixed(2) + " جنيه";
+
+}
+
+
+function renderCheckout() {
+
+    let total = 0;
+    let count = 0;
+
+    summaryItems.innerHTML = "";
+
+
+    if (cart.length === 0) {
+
+        summaryItems.innerHTML = `
+
+            <div class="checkout-empty">
+
+                <div class="checkout-empty-icon">
+                    🛒
+                </div>
+
+                <strong>
+                    السلة فارغة
+                </strong>
+
+                <div style="margin-top:7px;">
+                    أضف منتجات من المنيو أولًا.
+                </div>
+
+            </div>
+
+        `;
+
+        if (form) {
+            form.style.opacity = "0.55";
+        }
+
+        if (submitOrderBtn) {
+            submitOrderBtn.disabled = true;
+            submitOrderBtn.style.cursor = "not-allowed";
+        }
+
+    } else {
+
+        if (form) {
+            form.style.opacity = "1";
+        }
+
+        if (submitOrderBtn) {
+            submitOrderBtn.disabled = false;
+            submitOrderBtn.style.cursor = "pointer";
+        }
+
+
+        cart.forEach(function(item) {
+
+            const quantity =
+                Number(item.quantity || 0);
+
+            const price =
+                Number(item.price || 0);
+
+            const itemTotal =
+                price * quantity;
+
+
+            total += itemTotal;
+            count += quantity;
+
+
+            const itemElement =
+                document.createElement("div");
+
+            itemElement.className =
+                "checkout-summary-item";
+
+
+            itemElement.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${item.name || "منتج"}
+                    </strong>
+
+                    <small>
+                        الكمية: ${quantity}
+                    </small>
+
+                </div>
+
+                <strong>
+                    ${formatPrice(itemTotal)}
+                </strong>
+
+            `;
+
+
+            summaryItems.appendChild(itemElement);
+
+        });
+
+    }
+
+
+    countElement.textContent = count;
+
+    subtotalElement.textContent =
+        formatPrice(total);
+
+    totalElement.textContent =
+        formatPrice(total);
+
+    cartDataInput.value =
+        JSON.stringify(cart);
+
+}
+
+
+if (form) {
+
+    form.addEventListener("submit", function(event) {
+
+        if (cart.length === 0) {
+
+            event.preventDefault();
+
+            alert(
+                "السلة فارغة، أضف منتجات أولًا."
+            );
+
+            return;
+
+        }
+
+        cartDataInput.value =
+            JSON.stringify(cart);
+
+    });
+
+}
+
+
+renderCheckout();
+
+</script>
+
+
+</body>
+</html>

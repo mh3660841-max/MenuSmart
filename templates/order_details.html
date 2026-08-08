@@ -1,0 +1,2267 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<title>
+    تفاصيل الطلب | Menu Smart
+</title>
+
+<meta
+    name="description"
+    content="عرض تفاصيل طلب العميل وإدارة حالة الطلب في Menu Smart."
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/menu.css') }}"
+>
+
+
+<style>
+
+    /* =====================================================
+       INVOICE BUTTONS
+    ===================================================== */
+
+    .invoice-actions {
+
+        display: flex;
+
+        gap: 10px;
+
+        flex-wrap: wrap;
+
+        margin-top: 15px;
+
+    }
+
+
+    .invoice-button {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        min-height: 44px;
+
+        padding: 0 18px;
+
+        border: 0;
+
+        border-radius: 10px;
+
+        background: #111;
+
+        color: #fff;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+        font-weight: 800;
+
+        cursor: pointer;
+
+        transition: .2s ease;
+
+    }
+
+
+    .invoice-button:hover {
+
+        transform: translateY(-1px);
+
+        background: #222;
+
+    }
+
+
+    .invoice-button.secondary {
+
+        background: #d4af37;
+
+        color: #111;
+
+    }
+
+
+    .invoice-button.secondary:hover {
+
+        background: #c9a52f;
+
+    }
+
+
+    /* =====================================================
+       INVOICE MODAL
+    ===================================================== */
+
+    .invoice-modal {
+
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 999999;
+
+        display: none;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding: 20px;
+
+        background: rgba(0,0,0,.65);
+
+        backdrop-filter: blur(5px);
+
+    }
+
+
+    .invoice-modal.show {
+
+        display: flex;
+
+    }
+
+
+    .invoice-modal-content {
+
+        position: relative;
+
+        width: min(430px, 100%);
+
+        max-height: 92vh;
+
+        overflow-y: auto;
+
+        background: #fff;
+
+        border-radius: 18px;
+
+        box-shadow:
+            0 25px 70px rgba(0,0,0,.35);
+
+    }
+
+
+    .invoice-modal-close {
+
+        position: absolute;
+
+        top: 12px;
+
+        left: 12px;
+
+        z-index: 5;
+
+        width: 34px;
+
+        height: 34px;
+
+        border: 0;
+
+        border-radius: 50%;
+
+        background: rgba(0,0,0,.07);
+
+        color: #111;
+
+        font-size: 22px;
+
+        line-height: 1;
+
+        cursor: pointer;
+
+    }
+
+
+    /* =====================================================
+       INVOICE
+    ===================================================== */
+
+    .invoice {
+
+        width: 100%;
+
+        padding: 28px 24px;
+
+        background: #fff;
+
+        color: #111;
+
+        font-family:
+            Arial,
+            Tahoma,
+            sans-serif;
+
+    }
+
+
+    .invoice-header {
+
+        text-align: center;
+
+        padding-bottom: 18px;
+
+        border-bottom: 1px dashed #aaa;
+
+    }
+
+
+    .invoice-logo {
+
+        width: 72px;
+
+        height: 72px;
+
+        margin: 0 auto 10px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        overflow: hidden;
+
+        border-radius: 14px;
+
+        background: #f5f5f5;
+
+        border: 1px solid #eee;
+
+    }
+
+
+    .invoice-logo img {
+
+        width: 100%;
+
+        height: 100%;
+
+        object-fit: contain;
+
+    }
+
+
+    .invoice-logo-placeholder {
+
+        font-size: 30px;
+
+        font-weight: 900;
+
+        color: #111;
+
+    }
+
+
+    .invoice-restaurant-name {
+
+        margin: 0;
+
+        font-size: 23px;
+
+        font-weight: 900;
+
+        line-height: 1.4;
+
+    }
+
+
+    .invoice-powered {
+
+        margin-top: 4px;
+
+        color: #888;
+
+        font-size: 10px;
+
+        font-weight: 600;
+
+    }
+
+
+    .invoice-title {
+
+        margin-top: 16px;
+
+        font-size: 18px;
+
+        font-weight: 900;
+
+    }
+
+
+    .invoice-number {
+
+        margin-top: 5px;
+
+        color: #555;
+
+        font-size: 12px;
+
+    }
+
+
+    /* =====================================================
+       INVOICE INFO
+    ===================================================== */
+
+    .invoice-info {
+
+        padding: 16px 0;
+
+        border-bottom: 1px dashed #aaa;
+
+    }
+
+
+    .invoice-info-row {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-bottom: 8px;
+
+        font-size: 12px;
+
+    }
+
+
+    .invoice-info-row:last-child {
+
+        margin-bottom: 0;
+
+    }
+
+
+    .invoice-info-row span:first-child {
+
+        color: #777;
+
+    }
+
+
+    .invoice-info-row strong {
+
+        text-align: left;
+
+        font-weight: 800;
+
+    }
+
+
+    /* =====================================================
+       INVOICE ITEMS
+    ===================================================== */
+
+    .invoice-items {
+
+        padding: 15px 0;
+
+        border-bottom: 1px dashed #aaa;
+
+    }
+
+
+    .invoice-items-header,
+    .invoice-item-row {
+
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            45px
+            80px;
+
+        gap: 8px;
+
+        align-items: center;
+
+    }
+
+
+    .invoice-items-header {
+
+        padding-bottom: 8px;
+
+        color: #777;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+    }
+
+
+    .invoice-item-row {
+
+        padding: 9px 0;
+
+        border-top: 1px solid #eee;
+
+        font-size: 12px;
+
+    }
+
+
+    .invoice-item-name {
+
+        min-width: 0;
+
+        font-weight: 800;
+
+        overflow-wrap: anywhere;
+
+    }
+
+
+    .invoice-item-quantity {
+
+        text-align: center;
+
+        font-weight: 700;
+
+    }
+
+
+    .invoice-item-price {
+
+        text-align: left;
+
+        font-weight: 800;
+
+    }
+
+
+    /* =====================================================
+       INVOICE TOTALS
+    ===================================================== */
+
+    .invoice-totals {
+
+        padding: 15px 0;
+
+    }
+
+
+    .invoice-total-row {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 5px 0;
+
+        font-size: 12px;
+
+    }
+
+
+    .invoice-total-row span {
+
+        color: #666;
+
+    }
+
+
+    .invoice-total-row strong {
+
+        font-weight: 900;
+
+    }
+
+
+    .invoice-total-row.final {
+
+        margin-top: 8px;
+
+        padding-top: 12px;
+
+        border-top: 2px solid #111;
+
+        font-size: 17px;
+
+    }
+
+
+    .invoice-total-row.final span,
+    .invoice-total-row.final strong {
+
+        color: #111;
+
+    }
+
+
+    /* =====================================================
+       INVOICE FOOTER
+    ===================================================== */
+
+    .invoice-footer {
+
+        padding-top: 16px;
+
+        border-top: 1px dashed #aaa;
+
+        text-align: center;
+
+    }
+
+
+    .invoice-footer-thanks {
+
+        font-size: 14px;
+
+        font-weight: 900;
+
+    }
+
+
+    .invoice-footer-powered {
+
+        margin-top: 5px;
+
+        color: #999;
+
+        font-size: 9px;
+
+    }
+
+
+    /* =====================================================
+       MODAL ACTIONS
+    ===================================================== */
+
+    .invoice-modal-actions {
+
+        display: flex;
+
+        gap: 8px;
+
+        padding: 14px 20px 20px;
+
+        background: #fff;
+
+    }
+
+
+    .invoice-modal-actions button {
+
+        flex: 1;
+
+        min-height: 44px;
+
+        border: 0;
+
+        border-radius: 10px;
+
+        cursor: pointer;
+
+        font: inherit;
+
+        font-weight: 800;
+
+    }
+
+
+    .invoice-print-button {
+
+        background: #111;
+
+        color: #fff;
+
+    }
+
+
+    .invoice-close-button {
+
+        background: #eee;
+
+        color: #111;
+
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 600px) {
+
+        .invoice-actions {
+
+            flex-direction: column;
+
+        }
+
+
+        .invoice-button {
+
+            width: 100%;
+
+        }
+
+
+        .invoice-modal {
+
+            padding: 10px;
+
+        }
+
+
+        .invoice-modal-content {
+
+            max-height: 95vh;
+
+            border-radius: 14px;
+
+        }
+
+
+        .invoice {
+
+            padding: 24px 18px;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       PRINT
+    ===================================================== */
+
+    @media print {
+
+        body * {
+
+            visibility: hidden !important;
+
+        }
+
+
+        #printInvoice,
+        #printInvoice * {
+
+            visibility: visible !important;
+
+        }
+
+
+        #printInvoice {
+
+            position: absolute;
+
+            top: 0;
+
+            right: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            margin: 0;
+
+            padding: 0;
+
+            background: #fff;
+
+        }
+
+
+        .invoice {
+
+            width: 80mm;
+
+            max-width: 80mm;
+
+            margin: 0 auto;
+
+            padding: 5mm;
+
+            box-shadow: none;
+
+            border-radius: 0;
+
+        }
+
+
+        .invoice-modal {
+
+            position: static;
+
+            display: block !important;
+
+            padding: 0;
+
+            background: #fff;
+
+        }
+
+
+        .invoice-modal-content {
+
+            width: 100%;
+
+            max-height: none;
+
+            overflow: visible;
+
+            box-shadow: none;
+
+            border-radius: 0;
+
+        }
+
+
+        .invoice-modal-close,
+        .invoice-modal-actions {
+
+            display: none !important;
+
+        }
+
+
+        @page {
+
+            size: 80mm auto;
+
+            margin: 0;
+
+        }
+
+    }
+
+</style>
+
+</head><body class="dashboard-page"><!-- =====================================================
+     HEADER
+===================================================== --><header class="main-header"><div class="header-container">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="brand"
+    >
+
+        <span class="brand-icon">
+            M
+        </span>
+
+        <span class="brand-name">
+            Menu Smart
+        </span>
+
+    </a>
+
+
+    <div class="dashboard-header-actions">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="dashboard-home-link"
+        >
+            لوحة التحكم
+        </a>
+
+
+        <a
+            href="{{ url_for('orders') }}"
+            class="dashboard-home-link"
+        >
+            الطلبات
+        </a>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="dashboard-logout"
+        >
+            تسجيل الخروج
+        </a>
+
+    </div>
+
+</div>
+
+</header><!-- =====================================================
+     MAIN
+===================================================== --><main class="dashboard-main"><div class="dashboard-container">
+
+<a
+    href="{{ url_for('order_invoice', order_id=order.id) }}"
+    class="dashboard-primary-btn"
+    target="_blank"
+>
+    🧾 طباعة الفاتورة
+</a>
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <section class="menu-page-header">
+
+        <div>
+
+            <span class="dashboard-label">
+                إدارة الطلبات
+            </span>
+
+            <h1>
+
+                تفاصيل الطلب
+
+                {% if order %}
+                    #{{ order.id }}
+                {% endif %}
+
+            </h1>
+
+            <p>
+                راجع بيانات العميل والمنتجات
+                وحالة الطلب بالكامل.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('orders') }}"
+            class="dashboard-secondary-btn"
+        >
+            ← العودة للطلبات
+        </a>
+
+    </section>
+
+
+    <!-- =================================================
+         FLASH MESSAGES
+    ================================================== -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="dashboard-messages">
+
+                {% for category, message in messages %}
+
+                    <div class="dashboard-message {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    {% if order %}
+
+
+        {% set order_status = order.status|default('pending') %}
+
+
+        <section class="order-details-layout">
+
+
+            <!-- =================================================
+                 MAIN COLUMN
+            ================================================== -->
+
+            <div class="order-main-column">
+
+
+                <!-- =================================================
+                     ORDER INFO
+                ================================================== -->
+
+                <div class="dashboard-card order-info-card">
+
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+
+                            <span>
+                                الطلب
+                            </span>
+
+                            <h2>
+                                #{{ order.id }}
+                            </h2>
+
+                        </div>
+
+
+                        <div>
+
+                            {% if order_status == 'pending' %}
+
+                                <span class="order-status pending">
+                                    قيد الانتظار
+                                </span>
+
+
+                            {% elif order_status == 'confirmed' %}
+
+                                <span class="order-status confirmed">
+                                    مؤكدة
+                                </span>
+
+
+                            {% elif order_status == 'preparing' %}
+
+                                <span class="order-status preparing">
+                                    قيد التجهيز
+                                </span>
+
+
+                            {% elif order_status == 'ready' %}
+
+                                <span class="order-status ready">
+                                    جاهز
+                                </span>
+
+
+                            {% elif order_status == 'completed' %}
+
+                                <span class="order-status completed">
+                                    مكتملة
+                                </span>
+
+
+                            {% elif order_status == 'cancelled' %}
+
+                                <span class="order-status cancelled">
+                                    ملغاة
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="order-status">
+                                    {{ order_status }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         ORDER META
+                    ================================================== -->
+
+                    <div class="order-meta-grid">
+
+
+                        <div class="order-meta-item">
+
+                            <span>
+                                تاريخ الطلب
+                            </span>
+
+                            <strong>
+
+                                {% if order.created_at %}
+
+                                   {{ order.created_at.strftime('%Y-%m-%d') }}
+
+                                    -
+
+                                    {% set time_part = order.created_at.strftime('%H:%M:%S') %}
+                                    {% set hour = time_part[:2]|int %}
+                                    {% set minute = time_part[3:5] %}
+
+
+                                    {% if hour == 0 %}
+
+                                        12:{{ minute }} ص
+
+                                    {% elif hour < 12 %}
+
+                                        {{ hour }}:{{ minute }} ص
+
+                                    {% elif hour == 12 %}
+
+                                        12:{{ minute }} م
+
+                                    {% else %}
+
+                                        {{ hour - 12 }}:{{ minute }} م
+
+                                    {% endif %}
+
+
+                                {% else %}
+
+                                    غير محدد
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-meta-item">
+
+                            <span>
+                                طريقة الدفع
+                            </span>
+
+                            <strong>
+                                {{ order.payment_method|default('عند الاستلام') }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-meta-item">
+
+                            <span>
+                                نوع الطلب
+                            </span>
+
+                            <strong>
+                                {{ order.order_type|default('طلب من المنيو') }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-meta-item">
+
+                            <span>
+                                الإجمالي
+                            </span>
+
+                            <strong class="order-big-total">
+
+                                {{ order.total|default(0) }}
+
+                                جنيه
+
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =================================================
+                         INVOICE ACTIONS
+                    ================================================== -->
+
+                    <div class="invoice-actions">
+
+                        <button
+                            type="button"
+                            class="invoice-button secondary"
+                            onclick="openInvoice()"
+                        >
+                            🧾 عرض الفاتورة
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="invoice-button"
+                            onclick="printInvoice()"
+                        >
+                            🖨️ طباعة الفاتورة
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     PRODUCTS
+                ================================================== -->
+
+                <div class="dashboard-card">
+
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+
+                            <span>
+                                المنتجات
+                            </span>
+
+                            <h2>
+                                محتويات الطلب
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if order_items %}
+
+
+                        <div class="order-items-list">
+
+
+                            {% for item in order_items %}
+
+
+                                <div class="order-item">
+
+
+                                    <div class="order-item-image">
+
+
+                                        {% if item.image %}
+
+                                            <img
+                                                src="{{ url_for(
+                                                    'static',
+                                                    filename=item.image
+                                                ) }}"
+                                                alt="{{ item.product_name|default('منتج') }}"
+                                            >
+
+                                        {% else %}
+
+                                            <span>
+                                                🍽️
+                                            </span>
+
+                                        {% endif %}
+
+
+                                    </div>
+
+
+                                    <div class="order-item-info">
+
+                                        <h3>
+                                            {{ item.product_name|default('منتج') }}
+                                        </h3>
+
+
+                                        {% if item.description %}
+
+                                            <p>
+                                                {{ item.description }}
+                                            </p>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div class="order-item-quantity">
+
+                                        <span>
+                                            الكمية
+                                        </span>
+
+                                        <strong>
+                                            × {{ item.quantity|default(1) }}
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div class="order-item-price">
+
+                                        <strong>
+
+                                            {{ item.total|default(
+                                                item.price|default(0)
+                                            ) }}
+
+                                            جنيه
+
+                                        </strong>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            {% endfor %}
+
+
+                        </div>
+
+
+                    {% else %}
+
+
+                        <div class="empty-order-items">
+
+                            <div>
+                                🛒
+                            </div>
+
+                            <h3>
+                                لا توجد منتجات مسجلة
+                            </h3>
+
+                            <p>
+                                لم يتم العثور على منتجات لهذا الطلب.
+                            </p>
+
+                        </div>
+
+
+                    {% endif %}
+
+
+                    <!-- =================================================
+                         TOTALS
+                    ================================================== -->
+
+                    <div class="order-totals">
+
+
+                        <div class="order-total-row">
+
+                            <span>
+                                المجموع
+                            </span>
+
+                            <strong>
+
+                                {{ order.subtotal|default(
+                                    order.total|default(0)
+                                ) }}
+
+                                جنيه
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-total-row">
+
+                            <span>
+                                رسوم التوصيل
+                            </span>
+
+                            <strong>
+
+                                {{ order.delivery_fee|default(0) }}
+
+                                جنيه
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-total-row final">
+
+                            <span>
+                                الإجمالي النهائي
+                            </span>
+
+                            <strong>
+
+                                {{ order.total|default(0) }}
+
+                                جنيه
+
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 SIDE COLUMN
+            ================================================== -->
+
+            <aside class="order-side-column">
+
+
+                <!-- =================================================
+                     CUSTOMER
+                ================================================== -->
+
+                <div class="dashboard-card">
+
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+
+                            <span>
+                                العميل
+                            </span>
+
+                            <h2>
+                                بيانات العميل
+                            </h2>
+
+                        </div>
+
+
+                        <div class="customer-avatar large">
+                            👤
+                        </div>
+
+                    </div>
+
+
+                    <div class="customer-details">
+
+
+                        <div class="customer-detail">
+
+                            <span>
+                                الاسم
+                            </span>
+
+                            <strong>
+                                {{ order.customer_name|default('عميل') }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="customer-detail">
+
+                            <span>
+                                رقم الهاتف
+                            </span>
+
+                            <strong>
+
+                                {% if order.customer_phone %}
+
+                                    {{ order.customer_phone }}
+
+                                {% else %}
+
+                                    غير متوفر
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="customer-detail">
+
+                            <span>
+                                العنوان
+                            </span>
+
+                            <strong>
+
+                                {{ order.customer_address|default(
+                                    'غير محدد'
+                                ) }}
+
+                            </strong>
+
+                        </div>
+
+
+                        {% if order.notes %}
+
+                            <div class="customer-detail">
+
+                                <span>
+                                    ملاحظات العميل
+                                </span>
+
+                                <strong>
+                                    {{ order.notes }}
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     UPDATE ORDER STATUS
+                ================================================== -->
+
+                <div class="dashboard-card">
+
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+
+                            <span>
+                                حالة الطلب
+                            </span>
+
+                            <h2>
+                                تحديث الحالة
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'update_order_status',
+                            order_id=order.id
+                        ) }}"
+                        class="order-status-form"
+                    >
+
+
+                        <label for="status">
+                            اختر الحالة
+                        </label>
+
+
+                        <select
+                            id="status"
+                            name="status"
+                        >
+
+                            <option
+                                value="pending"
+                                {% if order_status == 'pending' %}
+                                    selected
+                                {% endif %}
+                            >
+                                قيد الانتظار
+                            </option>
+
+
+                            <option
+                                value="confirmed"
+                                {% if order_status == 'confirmed' %}
+                                    selected
+                                {% endif %}
+                            >
+                                مؤكدة
+                            </option>
+
+
+                            <option
+                                value="preparing"
+                                {% if order_status == 'preparing' %}
+                                    selected
+                                {% endif %}
+                            >
+                                قيد التجهيز
+                            </option>
+
+
+                            <option
+                                value="ready"
+                                {% if order_status == 'ready' %}
+                                    selected
+                                {% endif %}
+                            >
+                                جاهز
+                            </option>
+
+
+                            <option
+                                value="completed"
+                                {% if order_status == 'completed' %}
+                                    selected
+                                {% endif %}
+                            >
+                                مكتملة
+                            </option>
+
+
+                            <option
+                                value="cancelled"
+                                {% if order_status == 'cancelled' %}
+                                    selected
+                                {% endif %}
+                            >
+                                ملغاة
+                            </option>
+
+                        </select>
+
+
+                        <button
+                            type="submit"
+                            class="dashboard-primary-btn"
+                        >
+                            حفظ الحالة
+                        </button>
+
+
+                    </form>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     QUICK ACTIONS
+                ================================================== -->
+
+                <div class="dashboard-card order-actions-card">
+
+
+                    <h3>
+                        إجراءات سريعة
+                    </h3>
+
+
+                    {% if order.customer_phone %}
+
+                        <a
+                            href="tel:{{ order.customer_phone }}"
+                            class="order-action-btn"
+                        >
+                            📞 الاتصال بالعميل
+                        </a>
+
+                    {% endif %}
+
+
+                    <button
+                        type="button"
+                        class="order-action-btn"
+                        onclick="printInvoice()"
+                    >
+                        🧾 طباعة الفاتورة
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('orders') }}"
+                        class="order-action-btn secondary"
+                    >
+                        📋 كل الطلبات
+                    </a>
+
+
+                </div>
+
+
+            </aside>
+
+
+        </section>
+
+
+    {% else %}
+
+
+        <!-- =================================================
+             ORDER NOT FOUND
+        ================================================== -->
+
+        <section class="dashboard-card">
+
+
+            <div class="empty-menu">
+
+                <div class="empty-menu-icon">
+                    📦
+                </div>
+
+                <h2>
+                    الطلب غير موجود
+                </h2>
+
+                <p>
+                    لم نتمكن من العثور على هذا الطلب.
+                </p>
+
+                <a
+                    href="{{ url_for('orders') }}"
+                    class="dashboard-primary-btn"
+                >
+                    العودة للطلبات
+                </a>
+
+            </div>
+
+
+        </section>
+
+
+    {% endif %}
+
+
+</div>
+
+</main><!-- =====================================================
+     INVOICE MODAL
+===================================================== -->{% if order %}
+
+<div
+    id="invoiceModal"
+    class="invoice-modal"
+    onclick="handleInvoiceOverlayClick(event)"
+><div
+    class="invoice-modal-content"
+    onclick="event.stopPropagation()"
+>
+
+
+    <button
+        type="button"
+        class="invoice-modal-close"
+        onclick="closeInvoice()"
+        aria-label="إغلاق"
+    >
+        ×
+    </button>
+
+
+    <!-- =================================================
+         PRINTABLE INVOICE
+    ================================================== -->
+
+    <div
+        id="printInvoice"
+        class="invoice"
+    >
+
+
+        <!-- =================================================
+             INVOICE HEADER
+        ================================================== -->
+
+        <div class="invoice-header">
+
+
+            <div class="invoice-logo">
+
+                {% if restaurant and restaurant.logo %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/uploads/' + restaurant.logo
+                        ) }}"
+                        alt="{{ restaurant.name|default('المطعم') }}"
+                    >
+
+                {% else %}
+
+                    <span class="invoice-logo-placeholder">
+                        M
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <h2 class="invoice-restaurant-name">
+
+                {{ restaurant.name|default('اسم المطعم') }}
+
+            </h2>
+
+
+            <div class="invoice-powered">
+                Powered by Menu Smart
+            </div>
+
+
+            <div class="invoice-title">
+                فاتورة طلب
+            </div>
+
+
+            <div class="invoice-number">
+
+                رقم الفاتورة:
+
+                #{{ order.id }}
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             CUSTOMER / ORDER INFO
+        ================================================== -->
+
+        <div class="invoice-info">
+
+
+            <div class="invoice-info-row">
+
+                <span>
+                    العميل
+                </span>
+
+                <strong>
+                    {{ order.customer_name|default('عميل') }}
+                </strong>
+
+            </div>
+
+
+            {% if order.customer_phone %}
+
+                <div class="invoice-info-row">
+
+                    <span>
+                        الهاتف
+                    </span>
+
+                    <strong>
+                        {{ order.customer_phone }}
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if order.customer_address %}
+
+                <div class="invoice-info-row">
+
+                    <span>
+                        العنوان
+                    </span>
+
+                    <strong>
+                        {{ order.customer_address }}
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="invoice-info-row">
+
+                <span>
+                    طريقة الدفع
+                </span>
+
+                <strong>
+                    {{ order.payment_method|default('عند الاستلام') }}
+                </strong>
+
+            </div>
+
+
+            <div class="invoice-info-row">
+
+                <span>
+                    نوع الطلب
+                </span>
+
+                <strong>
+                    {{ order.order_type|default('طلب من المنيو') }}
+                </strong>
+
+            </div>
+
+
+            {% if order.created_at %}
+
+                <div class="invoice-info-row">
+
+                    <span>
+                        التاريخ
+                    </span>
+
+                    <strong>
+
+                        {{ order.created_at.strftime('%Y-%m-%d') }}
+
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =================================================
+             ITEMS
+        ================================================== -->
+
+        <div class="invoice-items">
+
+
+            <div class="invoice-items-header">
+
+                <div>
+                    المنتج
+                </div>
+
+                <div style="text-align:center;">
+                    الكمية
+                </div>
+
+                <div style="text-align:left;">
+                    السعر
+                </div>
+
+            </div>
+
+
+            {% if order_items %}
+
+
+                {% for item in order_items %}
+
+                    <div class="invoice-item-row">
+
+
+                        <div class="invoice-item-name">
+
+                            {{ item.product_name|default('منتج') }}
+
+                        </div>
+
+
+                        <div class="invoice-item-quantity">
+
+                            {{ item.quantity|default(1) }}
+
+                        </div>
+
+
+                        <div class="invoice-item-price">
+
+                            {{ item.total|default(
+                                item.price|default(0)
+                            ) }}
+
+                            جنيه
+
+                        </div>
+
+
+                    </div>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <div
+                    style="
+                        padding:15px 0;
+                        text-align:center;
+                        color:#777;
+                        font-size:12px;
+                    "
+                >
+                    لا توجد منتجات
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =================================================
+             TOTALS
+        ================================================== -->
+
+        <div class="invoice-totals">
+
+
+            <div class="invoice-total-row">
+
+                <span>
+                    المجموع
+                </span>
+
+                <strong>
+
+                    {{ order.subtotal|default(
+                        order.total|default(0)
+                    ) }}
+
+                    جنيه
+
+                </strong>
+
+            </div>
+
+
+            <div class="invoice-total-row">
+
+                <span>
+                    رسوم التوصيل
+                </span>
+
+                <strong>
+
+                    {{ order.delivery_fee|default(0) }}
+
+                    جنيه
+
+                </strong>
+
+            </div>
+
+
+            <div class="invoice-total-row final">
+
+                <span>
+                    الإجمالي
+                </span>
+
+                <strong>
+
+                    {{ order.total|default(0) }}
+
+                    جنيه
+
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             NOTES
+        ================================================== -->
+
+        {% if order.notes %}
+
+            <div
+                style="
+                    padding:12px 0;
+                    border-top:1px dashed #aaa;
+                    font-size:11px;
+                "
+            >
+
+                <strong>
+                    ملاحظات:
+                </strong>
+
+                <div style="margin-top:5px;">
+                    {{ order.notes }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <div class="invoice-footer">
+
+            <div class="invoice-footer-thanks">
+                شكرًا لطلبك ❤️
+            </div>
+
+
+            <div class="invoice-footer-powered">
+                هذه الفاتورة صادرة من {{ restaurant.name|default('المطعم') }}
+            </div>
+
+
+            <div class="invoice-footer-powered">
+                Powered by Menu Smart
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =================================================
+         MODAL ACTIONS
+    ================================================== -->
+
+    <div class="invoice-modal-actions">
+
+
+        <button
+            type="button"
+            class="invoice-print-button"
+            onclick="printInvoice()"
+        >
+            🖨️ طباعة
+        </button>
+
+
+        <button
+            type="button"
+            class="invoice-close-button"
+            onclick="closeInvoice()"
+        >
+            إغلاق
+        </button>
+
+
+    </div>
+
+
+</div>
+
+</div>{% endif %}
+
+<!-- =====================================================
+     FOOTER
+===================================================== --><footer class="main-footer"><div class="footer-container">
+
+
+    <div class="footer-brand">
+
+        <strong>
+            Menu Smart
+        </strong>
+
+        <p>
+            منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+        </p>
+
+    </div>
+
+
+    <div class="footer-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            لوحة التحكم
+        </a>
+
+
+        <a href="{{ url_for('orders') }}">
+            الطلبات
+        </a>
+
+
+        <a href="{{ url_for('products') }}">
+            المنتجات
+        </a>
+
+    </div>
+
+
+    <div class="footer-copy">
+
+        © {{ current_year|default(2026) }}
+
+        Menu Smart
+
+    </div>
+
+
+</div>
+
+</footer><!-- =====================================================
+     JAVASCRIPT
+===================================================== --><script>
+
+/* =========================================================
+   INVOICE MODAL
+========================================================= */
+
+function openInvoice() {
+
+    const modal =
+        document.getElementById("invoiceModal");
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    modal.classList.add("show");
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =========================================================
+   CLOSE INVOICE
+========================================================= */
+
+function closeInvoice() {
+
+    const modal =
+        document.getElementById("invoiceModal");
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    modal.classList.remove("show");
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================================
+   CLOSE WHEN CLICKING OUTSIDE
+========================================================= */
+
+function handleInvoiceOverlayClick(event) {
+
+    if (
+        event.target &&
+        event.target.id === "invoiceModal"
+    ) {
+
+        closeInvoice();
+
+    }
+
+}
+
+
+/* =========================================================
+   ESC KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Escape") {
+
+            closeInvoice();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PRINT INVOICE
+========================================================= */
+
+function printInvoice() {
+
+    const invoice =
+        document.getElementById("printInvoice");
+
+
+    if (!invoice) {
+
+        console.error(
+            "Invoice element not found."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * نفتح الفاتورة أولاً
+     */
+    openInvoice();
+
+
+    /*
+     * ننتظر لحظة حتى يتم تجهيز
+     * محتوى الفاتورة قبل الطباعة.
+     */
+    setTimeout(function() {
+
+        window.print();
+
+    }, 150);
+
+}
+
+
+/* =========================================================
+   AFTER PRINT
+========================================================= */
+
+window.addEventListener(
+    "afterprint",
+    function() {
+
+        closeInvoice();
+
+    }
+);
+
+</script></body></html>

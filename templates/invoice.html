@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        فاتورة الطلب #{{ order.id }} | {{ restaurant.name }} | Menu Smart
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #f1f3f5;
+            color: #171717;
+            font-family:
+                Tahoma,
+                Arial,
+                sans-serif;
+        }
+
+        .invoice-wrapper {
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .invoice {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 18px 55px rgba(0,0,0,.10);
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        .invoice-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 25px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #111;
+        }
+
+        .restaurant-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .restaurant-logo {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            border-radius: 16px;
+            border: 1px solid #eee;
+            background: #fff;
+        }
+
+        .restaurant-logo-placeholder {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: #111;
+            color: #d4af37;
+            font-size: 30px;
+            font-weight: 900;
+        }
+
+        .restaurant-name {
+            margin: 0;
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .restaurant-description {
+            margin: 6px 0 0;
+            color: #777;
+            font-size: 12px;
+        }
+
+        .platform-name {
+            margin-top: 7px;
+            color: #b08d19;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .invoice-number {
+            text-align: left;
+        }
+
+        .invoice-number span {
+            display: block;
+            color: #777;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .invoice-number strong {
+            font-size: 29px;
+        }
+
+        /* =========================
+           INFO
+        ========================== */
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 25px;
+        }
+
+        .info-box {
+            padding: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+            background: #fafafa;
+        }
+
+        .info-box span {
+            display: block;
+            margin-bottom: 6px;
+            color: #777;
+            font-size: 11px;
+        }
+
+        .info-box strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        /* =========================
+           ITEMS
+        ========================== */
+
+        .items-section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            margin-bottom: 12px;
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 13px 10px;
+            background: #111;
+            color: #fff;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        th:first-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        th:last-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        td {
+            padding: 14px 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+
+        .item-name {
+            font-weight: 800;
+        }
+
+        .item-description {
+            display: block;
+            margin-top: 4px;
+            color: #777;
+            font-size: 11px;
+        }
+
+        /* =========================
+           TOTALS
+        ========================== */
+
+        .totals {
+            width: 350px;
+            max-width: 100%;
+            margin-top: 25px;
+            margin-right: auto;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .total-row.final {
+            margin-top: 8px;
+            padding: 16px 0;
+            border-top: 2px solid #111;
+            border-bottom: 0;
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .total-row.final strong {
+            color: #b08d19;
+        }
+
+        /* =========================
+           NOTES
+        ========================== */
+
+        .notes {
+            margin-top: 25px;
+            padding: 16px;
+            border-radius: 13px;
+            background: #fffaf0;
+            border: 1px solid #f0dfaa;
+        }
+
+        .notes strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .notes p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        .invoice-footer {
+            margin-top: 35px;
+            padding-top: 22px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .invoice-footer strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .invoice-footer span {
+            display: block;
+            margin-top: 7px;
+            color: #777;
+            font-size: 11px;
+        }
+
+        .invoice-footer small {
+            display: block;
+            margin-top: 4px;
+            color: #b08d19;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================== */
+
+        .print-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .print-button,
+        .back-button {
+            min-width: 150px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .print-button {
+            border: 0;
+            background: #111;
+            color: #fff;
+        }
+
+        .back-button {
+            background: #fff;
+            color: #111;
+            border: 1px solid #d1d5db;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .invoice {
+                padding: 20px;
+                border-radius: 14px;
+            }
+
+            .invoice-header {
+                flex-direction: column;
+            }
+
+            .invoice-number {
+                text-align: right;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .restaurant-name {
+                font-size: 21px;
+            }
+
+            table {
+                font-size: 11px;
+            }
+
+            th,
+            td {
+                padding: 9px 6px;
+            }
+
+            .print-actions {
+                flex-direction: column;
+            }
+
+            .print-button,
+            .back-button {
+                width: 100%;
+            }
+        }
+
+        /* =========================
+           PRINT
+        ========================== */
+
+        @media print {
+
+            body {
+                padding: 0;
+                background: #fff;
+            }
+
+            .invoice-wrapper {
+                max-width: none;
+            }
+
+            .invoice {
+                padding: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .print-actions {
+                display: none;
+            }
+
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="invoice-wrapper">
+
+<div class="invoice">
+
+
+    <!-- =========================
+         RESTAURANT HEADER
+    ========================== -->
+
+    <header class="invoice-header">
+
+        <div class="restaurant-brand">
+
+            {% if restaurant.logo %}
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='images/uploads/' + restaurant.logo
+                    ) }}"
+                    alt="{{ restaurant.name }}"
+                    class="restaurant-logo"
+                >
+
+            {% else %}
+
+                <div class="restaurant-logo-placeholder">
+                    M
+                </div>
+
+            {% endif %}
+
+
+            <div>
+
+                <h1 class="restaurant-name">
+                    {{ restaurant.name|default('المطعم') }}
+                </h1>
+
+                {% if restaurant.description %}
+
+                    <p class="restaurant-description">
+                        {{ restaurant.description }}
+                    </p>
+
+                {% endif %}
+
+                <div class="platform-name">
+                    مدعوم بواسطة Menu Smart
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="invoice-number">
+
+            <span>
+                فاتورة رقم
+            </span>
+
+            <strong>
+                #{{ order.id }}
+            </strong>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         ORDER INFORMATION
+    ========================== -->
+
+    <div class="info-grid">
+
+
+        <div class="info-box">
+
+            <span>
+                العميل
+            </span>
+
+            <strong>
+                {{ order.customer_name|default('عميل') }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <span>
+                رقم الهاتف
+            </span>
+
+            <strong>
+                {{ order.customer_phone|default('غير متوفر') }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <span>
+                تاريخ الطلب
+            </span>
+
+            <strong>
+                {{ order.created_at|default('غير محدد') }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <span>
+                طريقة الدفع
+            </span>
+
+            <strong>
+                {{ order.payment_method|default('عند الاستلام') }}
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         ORDER ITEMS
+    ========================== -->
+
+    <section class="items-section">
+
+        <div class="section-title">
+            تفاصيل الطلب
+        </div>
+
+
+        {% if order_items %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            المنتج
+                        </th>
+
+                        <th>
+                            الكمية
+                        </th>
+
+                        <th>
+                            السعر
+                        </th>
+
+                        <th>
+                            الإجمالي
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in order_items %}
+
+                        <tr>
+
+                            <td>
+
+                                <span class="item-name">
+                                    {{ item.product_name|default('منتج') }}
+                                </span>
+
+                                {% if item.description %}
+
+                                    <span class="item-description">
+                                        {{ item.description }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ item.quantity|default(1) }}
+                            </td>
+
+
+                            <td>
+                                {{ item.price|default(0) }} جنيه
+                            </td>
+
+
+                            <td>
+                                {{ item.total|default(
+                                    item.price|default(0)
+                                ) }} جنيه
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% else %}
+
+            <p>
+                لا توجد منتجات في هذا الطلب.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =========================
+         TOTALS
+    ========================== -->
+
+    <div class="totals">
+
+        <div class="total-row">
+
+            <span>
+                المجموع
+            </span>
+
+            <strong>
+                {{ order.subtotal|default(
+                    order.total|default(0)
+                ) }} جنيه
+            </strong>
+
+        </div>
+
+
+        <div class="total-row">
+
+            <span>
+                رسوم التوصيل
+            </span>
+
+            <strong>
+                {{ order.delivery_fee|default(0) }} جنيه
+            </strong>
+
+        </div>
+
+
+        <div class="total-row final">
+
+            <span>
+                الإجمالي النهائي
+            </span>
+
+            <strong>
+                {{ order.total|default(0) }} جنيه
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         NOTES
+    ========================== -->
+
+    {% if order.notes %}
+
+        <div class="notes">
+
+            <strong>
+                ملاحظات العميل
+            </strong>
+
+            <p>
+                {{ order.notes }}
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="invoice-footer">
+
+        <strong>
+            شكرًا لطلبك من {{ restaurant.name|default('المطعم') }}
+        </strong>
+
+        <span>
+            نتمنى لك تجربة مميزة
+        </span>
+
+        <small>
+            تم إنشاء هذه الفاتورة بواسطة Menu Smart
+        </small>
+
+    </footer>
+
+
+    <!-- =========================
+         ACTIONS
+    ========================== -->
+
+    <div class="print-actions">
+
+        <button
+            type="button"
+            class="print-button"
+            onclick="window.print()"
+        >
+            🖨️ طباعة الفاتورة
+        </button>
+
+
+        <a
+            href="{{ url_for(
+                'order_details',
+                order_id=order.id
+            ) }}"
+            class="back-button"
+        >
+            العودة للطلب
+        </a>
+
+    </div>
+
+
+</div>
+
+</div>
+
+
+</body>
+
+</html>

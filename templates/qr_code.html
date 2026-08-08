@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111111">
+
+    <title>QR Code | Menu Smart</title>
+
+    <meta
+        name="description"
+        content="إنشاء ومشاركة QR Code الخاص بالمنيو الإلكتروني."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/menu.css') }}"
+    >
+
+    <style>
+
+        /* =====================================================
+           QR PAGE
+        ===================================================== */
+
+        .qr-page-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 350px;
+            gap: 24px;
+            align-items: start;
+        }
+
+
+        .qr-main-card {
+            overflow: hidden;
+        }
+
+
+        .qr-content {
+            display: grid;
+            grid-template-columns: minmax(320px, 0.9fr) minmax(320px, 1.1fr);
+            gap: 35px;
+            padding: 35px;
+            align-items: center;
+        }
+
+
+        /* =====================================================
+           QR DISPLAY
+        ===================================================== */
+
+        .qr-display {
+            min-height: 440px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            border-radius: 24px;
+            background:
+                linear-gradient(
+                    145deg,
+                    #f8f8f8,
+                    #ffffff
+                );
+            border: 1px solid #eeeeee;
+            position: relative;
+        }
+
+
+        .qr-display::before {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border: 1px dashed #dddddd;
+            border-radius: 18px;
+            pointer-events: none;
+        }
+
+
+        .qr-loading,
+        .qr-generated {
+            position: relative;
+            z-index: 2;
+        }
+
+
+        .qr-loading {
+            width: 320px;
+            height: 320px;
+            max-width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #eeeeee;
+            color: #777777;
+            font-size: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .qr-generated {
+            width: 320px;
+            min-height: 320px;
+            max-width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            padding: 18px;
+            box-sizing: border-box;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.10);
+        }
+
+
+        .qr-generated canvas {
+            width: 100% !important;
+            height: auto !important;
+            max-width: 320px;
+            display: block;
+        }
+
+
+        .qr-brand {
+            position: relative;
+            z-index: 2;
+            margin-top: 20px;
+            font-weight: 800;
+            font-size: 19px;
+            color: #111111;
+            letter-spacing: .2px;
+        }
+
+
+        .qr-brand::before {
+            content: "✓";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 23px;
+            height: 23px;
+            margin-left: 8px;
+            border-radius: 50%;
+            background: #111111;
+            color: #ffffff;
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           QR INFO
+        ===================================================== */
+
+        .qr-info {
+            padding: 10px 0;
+        }
+
+
+        .qr-info .dashboard-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 12px;
+            border-radius: 30px;
+            background: #f2f2f2;
+            color: #111111;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+        .qr-info .dashboard-label::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #111111;
+        }
+
+
+        .qr-info h2 {
+            margin: 18px 0 12px;
+            font-size: 28px;
+            line-height: 1.5;
+            color: #111111;
+        }
+
+
+        .qr-info > p {
+            margin: 0;
+            color: #707070;
+            font-size: 15px;
+            line-height: 2;
+        }
+
+
+        /* =====================================================
+           URL BOX
+        ===================================================== */
+
+        .qr-url-box {
+            margin-top: 28px;
+            padding: 18px;
+            border-radius: 16px;
+            background: #fafafa;
+            border: 1px solid #eeeeee;
+        }
+
+
+        .qr-url-box > span {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #444444;
+        }
+
+
+        .qr-url-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 15px;
+            margin: 0 0 12px;
+            border: 1px solid #dddddd;
+            border-radius: 11px;
+            direction: ltr;
+            text-align: left;
+            background: #ffffff;
+            color: #555555;
+            font-size: 13px;
+            outline: none;
+        }
+
+
+        .qr-url-box input:focus {
+            border-color: #111111;
+        }
+
+
+        .qr-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+
+        .qr-actions button,
+        .qr-url-box button {
+            min-height: 46px;
+            border-radius: 11px;
+            cursor: pointer;
+            font-family: inherit;
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease,
+                opacity .2s ease;
+        }
+
+
+        .qr-actions button:hover,
+        .qr-url-box button:hover {
+            transform: translateY(-2px);
+        }
+
+
+        .qr-actions .dashboard-primary-btn {
+            flex: 1;
+            min-width: 170px;
+        }
+
+
+        .qr-actions .dashboard-secondary-btn {
+            flex: 1;
+            min-width: 170px;
+        }
+
+
+        /* =====================================================
+           SIDE COLUMN
+        ===================================================== */
+
+        .qr-side-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+
+        .qr-steps {
+            padding: 8px 22px 22px;
+        }
+
+
+        .qr-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 20px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+
+        .qr-step:last-child {
+            border-bottom: 0;
+            padding-bottom: 5px;
+        }
+
+
+        .qr-step-number {
+            flex: 0 0 46px;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #111111;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+
+        .qr-step strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #222222;
+            font-size: 15px;
+        }
+
+
+        .qr-step p {
+            margin: 0;
+            color: #777777;
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+
+        /* =====================================================
+           TIP
+        ===================================================== */
+
+        .qr-tip-card {
+            padding: 25px;
+            background:
+                linear-gradient(
+                    145deg,
+                    #111111,
+                    #252525
+                );
+            color: #ffffff;
+        }
+
+
+        .qr-tip-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.10);
+            font-size: 23px;
+        }
+
+
+        .qr-tip-card h3 {
+            margin: 0 0 10px;
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+
+        .qr-tip-card p {
+            margin: 0;
+            color: rgba(255,255,255,.72);
+            font-size: 13px;
+            line-height: 2;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .qr-page-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-side-column {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 760px) {
+
+            .qr-content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 25px;
+            }
+
+
+            .qr-display {
+                min-height: 370px;
+                padding: 20px;
+            }
+
+
+            .qr-loading {
+                width: 260px;
+                height: 260px;
+            }
+
+
+            .qr-generated {
+                width: 280px;
+                min-height: 280px;
+            }
+
+
+            .qr-info h2 {
+                font-size: 23px;
+            }
+
+
+            .qr-side-column {
+                display: flex;
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .qr-content {
+                padding: 14px;
+            }
+
+
+            .qr-display {
+                min-height: 330px;
+                border-radius: 18px;
+            }
+
+
+            .qr-loading {
+                width: 230px;
+                height: 230px;
+            }
+
+
+            .qr-generated {
+                width: 245px;
+                min-height: 245px;
+                padding: 13px;
+            }
+
+
+            .qr-actions {
+                flex-direction: column;
+            }
+
+
+            .qr-actions button {
+                width: 100%;
+            }
+
+
+            .qr-url-box button {
+                width: 100%;
+            }
+
+
+            .qr-step {
+                gap: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<header class="main-header">
+
+    <div class="header-container">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="brand"
+        >
+            <span class="brand-icon">M</span>
+
+            <span class="brand-name">
+                Menu Smart
+            </span>
+        </a>
+
+
+        <div class="dashboard-header-actions">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="dashboard-home-link"
+            >
+                لوحة التحكم
+            </a>
+
+            <a
+                href="{{ url_for('settings') }}"
+                class="dashboard-home-link"
+            >
+                الإعدادات
+            </a>
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="dashboard-logout"
+            >
+                تسجيل الخروج
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="dashboard-main">
+
+    <div class="dashboard-container">
+
+
+        <section class="menu-page-header">
+
+            <div>
+
+                <span class="dashboard-label">
+                    مشاركة المنيو
+                </span>
+
+                <h1>
+                    QR Code
+                </h1>
+
+                <p>
+                    استخدم رمز QR ليتمكن عملاؤك من فتح
+                    المنيو الإلكتروني مباشرة من الهاتف.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="dashboard-secondary-btn"
+            >
+                ← لوحة التحكم
+            </a>
+
+        </section>
+
+
+        <section class="qr-page-grid">
+
+
+            <div class="dashboard-card qr-main-card">
+
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <span>
+                            رمز المنيو
+                        </span>
+
+                        <h2>
+                            QR Code الخاص بك
+                        </h2>
+
+                    </div>
+
+                    <div class="menu-create-icon">
+                        📱
+                    </div>
+
+                </div>
+
+
+                <div class="qr-content">
+
+
+                    <div class="qr-display">
+
+                        <div
+                            id="qrContainer"
+                            class="qr-loading"
+                        >
+                            جاري إنشاء QR Code...
+                        </div>
+
+
+                        <div class="qr-brand">
+                            Menu Smart
+                        </div>
+
+                    </div>
+
+
+                    <div class="qr-info">
+
+                        <span class="dashboard-label">
+                            جاهز للمشاركة
+                        </span>
+
+
+                        <h2>
+                            خلي عملاءك يوصلوا للمنيو بسهولة
+                        </h2>
+
+
+                        <p>
+                            اطبع رمز QR وضعه على الطاولات
+                            أو باب المطعم أو الفواتير.
+                            بمجرد مسحه بالكاميرا سيصل العميل
+                            إلى المنيو الخاص بك.
+                        </p>
+
+
+                        <div class="qr-url-box">
+
+                            <span>
+                                رابط المنيو
+                            </span>
+
+
+                            <input
+                                type="text"
+                                id="menuUrl"
+                                value="{{ menu_url }}"
+                                readonly
+                            >
+
+
+                            <button
+                                type="button"
+                                id="copyUrlBtn"
+                                class="dashboard-secondary-btn"
+                            >
+                                نسخ الرابط
+                            </button>
+
+                        </div>
+
+
+                        <div class="qr-actions">
+
+                            <button
+                                type="button"
+                                id="downloadQrBtn"
+                                class="dashboard-primary-btn"
+                            >
+                                تحميل QR Code
+                            </button>
+
+
+                            <button
+                                type="button"
+                                id="printQrBtn"
+                                class="dashboard-secondary-btn"
+                            >
+                                طباعة QR Code
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <aside class="qr-side-column">
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+
+                            <span>
+                                طريقة الاستخدام
+                            </span>
+
+                            <h2>
+                                3 خطوات
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="qr-steps">
+
+
+                        <div class="qr-step">
+
+                            <div class="qr-step-number">
+                                01
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    اطبع الرمز
+                                </strong>
+
+                                <p>
+                                    حمّل QR Code واطبعه
+                                    بالحجم المناسب.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="qr-step">
+
+                            <div class="qr-step-number">
+                                02
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    ضعه في مكان واضح
+                                </strong>
+
+                                <p>
+                                    مثل الطاولات أو المدخل
+                                    أو الفاتورة.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="qr-step">
+
+                            <div class="qr-step-number">
+                                03
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    العميل يمسح الرمز
+                                </strong>
+
+                                <p>
+                                    يفتح الكاميرا ويمسح الرمز
+                                    ليظهر المنيو مباشرة.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card qr-tip-card">
+
+                    <div class="qr-tip-icon">
+                        💡
+                    </div>
+
+                    <h3>
+                        نصيحة
+                    </h3>
+
+                    <p>
+                        حافظ على حجم QR مناسب وواضح،
+                        واترك مساحة فارغة حوله حتى تستطيع
+                        كاميرا الهاتف قراءته بسهولة.
+                    </p>
+
+                </div>
+
+
+            </aside>
+
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+<footer class="main-footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <strong>
+                Menu Smart
+            </strong>
+
+            <p>
+                منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                لوحة التحكم
+            </a>
+
+            <a href="{{ url_for('products') }}">
+                المنتجات
+            </a>
+
+            <a href="{{ url_for('orders') }}">
+                الطلبات
+            </a>
+
+            <a href="{{ url_for('qr_code') }}">
+                QR Code
+            </a>
+
+        </div>
+
+
+        <div class="footer-copy">
+            © {{ current_year|default(2026) }} Menu Smart
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+></script>
+
+
+<script>
+
+const menuUrl =
+    document.getElementById("menuUrl");
+
+const qrContainer =
+    document.getElementById("qrContainer");
+
+const copyUrlBtn =
+    document.getElementById("copyUrlBtn");
+
+const downloadQrBtn =
+    document.getElementById("downloadQrBtn");
+
+const printQrBtn =
+    document.getElementById("printQrBtn");
+
+
+let qrReady = false;
+
+
+/* =====================================================
+   إنشاء QR Code
+===================================================== */
+
+function createQRCode() {
+
+    if (!menuUrl || !qrContainer) {
+        return;
+    }
+
+
+    const url =
+        menuUrl.value.trim();
+
+
+    if (!url) {
+
+        qrContainer.innerHTML =
+            "رابط المنيو غير متوفر.";
+
+        return;
+    }
+
+
+    if (
+        typeof QRCode === "undefined"
+    ) {
+
+        qrContainer.innerHTML =
+            "تعذر تحميل مولد QR Code.";
+
+        return;
+    }
+
+
+    qrContainer.innerHTML = "";
+
+
+    new QRCode(
+        qrContainer,
+        {
+            text: url,
+
+            width: 320,
+
+            height: 320,
+
+            colorDark: "#000000",
+
+            colorLight: "#ffffff",
+
+            correctLevel:
+                QRCode.CorrectLevel.H
+        }
+    );
+
+
+    qrContainer.classList.remove(
+        "qr-loading"
+    );
+
+
+    qrContainer.classList.add(
+        "qr-generated"
+    );
+
+
+    qrReady = true;
+}
+
+
+/* =====================================================
+   نسخ الرابط
+===================================================== */
+
+if (copyUrlBtn && menuUrl) {
+
+    copyUrlBtn.addEventListener(
+        "click",
+        async function () {
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    menuUrl.value
+                );
+
+            } catch (error) {
+
+                menuUrl.select();
+
+                document.execCommand("copy");
+
+            }
+
+
+            const oldText =
+                this.textContent;
+
+
+            this.textContent =
+                "تم نسخ الرابط ✓";
+
+
+            setTimeout(
+                () => {
+
+                    this.textContent =
+                        oldText;
+
+                },
+                2000
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   تحميل QR Code
+===================================================== */
+
+if (downloadQrBtn) {
+
+    downloadQrBtn.addEventListener(
+        "click",
+        function () {
+
+            const canvas =
+                qrContainer.querySelector(
+                    "canvas"
+                );
+
+
+            if (!canvas) {
+
+                alert(
+                    "رمز QR غير جاهز."
+                );
+
+                return;
+            }
+
+
+            const link =
+                document.createElement("a");
+
+
+            link.href =
+                canvas.toDataURL(
+                    "image/png"
+                );
+
+
+            link.download =
+                "menusmart-qr-code.png";
+
+
+            document.body.appendChild(
+                link
+            );
+
+
+            link.click();
+
+
+            link.remove();
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   طباعة QR Code
+===================================================== */
+
+if (printQrBtn) {
+
+    printQrBtn.addEventListener(
+        "click",
+        function () {
+
+            const canvas =
+                qrContainer.querySelector(
+                    "canvas"
+                );
+
+
+            if (!canvas) {
+
+                alert(
+                    "رمز QR غير جاهز."
+                );
+
+                return;
+            }
+
+
+            const image =
+                canvas.toDataURL(
+                    "image/png"
+                );
+
+
+            const printWindow =
+                window.open(
+                    "",
+                    "_blank"
+                );
+
+
+            if (!printWindow) {
+
+                alert(
+                    "المتصفح منع نافذة الطباعة. اسمح بالنوافذ المنبثقة ثم حاول مرة أخرى."
+                );
+
+                return;
+            }
+
+
+            printWindow.document.write(`
+
+                <!DOCTYPE html>
+
+                <html
+                    lang="ar"
+                    dir="rtl"
+                >
+
+                <head>
+
+                    <meta charset="UTF-8">
+
+                    <title>
+                        Menu Smart QR
+                    </title>
+
+                    <style>
+
+                        body {
+
+                            margin: 0;
+
+                            min-height: 100vh;
+
+                            display: flex;
+
+                            align-items: center;
+
+                            justify-content: center;
+
+                            font-family: Arial, sans-serif;
+
+                            background: #ffffff;
+
+                        }
+
+
+                        .print-card {
+
+                            text-align: center;
+
+                            padding: 30px;
+
+                        }
+
+
+                        img {
+
+                            width: 320px;
+
+                            height: 320px;
+
+                            object-fit: contain;
+
+                        }
+
+
+                        h1 {
+
+                            margin: 20px 0 8px;
+
+                            font-size: 28px;
+
+                        }
+
+
+                        p {
+
+                            margin: 0;
+
+                            color: #666666;
+
+                            font-size: 16px;
+
+                        }
+
+                    </style>
+
+                </head>
+
+
+                <body>
+
+                    <div class="print-card">
+
+                        <img
+                            src="${image}"
+                            alt="QR Code"
+                        >
+
+
+                        <h1>
+                            Menu Smart
+                        </h1>
+
+
+                        <p>
+                            امسح الرمز لفتح المنيو
+                        </p>
+
+                    </div>
+
+                </body>
+
+                </html>
+
+            `);
+
+
+            printWindow.document.close();
+
+
+            printWindow.onload =
+                function () {
+
+                    printWindow.print();
+
+                };
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   تشغيل QR
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        createQRCode();
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

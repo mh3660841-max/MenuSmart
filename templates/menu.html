@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <meta
+        http-equiv="Cache-Control"
+        content="no-store, no-cache, must-revalidate, max-age=0"
+    >
+
+    <meta
+        http-equiv="Pragma"
+        content="no-cache"
+    >
+
+    <meta
+        http-equiv="Expires"
+        content="0"
+    >
+
+    <title>
+        {{ restaurant.name }} | Menu Smart
+    </title>
+
+    <meta
+        name="description"
+        content="{{ restaurant.description or 'المنيو الإلكتروني للمطعم' }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/menu.css') }}"
+    >
+
+
+    <style>
+
+        /* =====================================================
+           MENU SMART — PUBLIC CUSTOMER MENU
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: #f7f7f5;
+            color: #111;
+            font-family: Arial, Tahoma, sans-serif;
+        }
+
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .customer-menu-page {
+            min-height: 100vh;
+        }
+
+        .customer-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,.94);
+            border-bottom: 1px solid #eeeeea;
+            backdrop-filter: blur(15px);
+        }
+
+        .customer-header-inner {
+            width: min(1180px, calc(100% - 30px));
+            min-height: 70px;
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .customer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #111;
+            text-decoration: none;
+            font-weight: 900;
+        }
+
+        .customer-brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background: #111;
+            color: #d4af37;
+
+            font-size: 19px;
+            font-weight: 900;
+
+            box-shadow: 0 7px 20px rgba(0,0,0,.12);
+        }
+
+        .customer-brand-name {
+            font-size: 16px;
+        }
+
+        .customer-cart-button {
+            min-height: 43px;
+            padding: 0 16px;
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            border-radius: 13px;
+
+            background: #111;
+            color: #fff;
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 900;
+
+            box-shadow: 0 8px 20px rgba(0,0,0,.12);
+
+            transition: .2s ease;
+        }
+
+        .customer-cart-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .customer-cart-count {
+            min-width: 23px;
+            height: 23px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #d4af37;
+            color: #111;
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+
+        /* =====================================================
+           RESTAURANT HERO
+        ===================================================== */
+
+        .restaurant-hero {
+            position: relative;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 85% 20%,
+                    rgba(212,175,55,.18),
+                    transparent 30%
+                ),
+                linear-gradient(135deg,#111,#202020);
+
+            color: #fff;
+        }
+
+        .restaurant-hero-inner {
+            width: min(1180px, calc(100% - 30px));
+            margin: auto;
+
+            min-height: 250px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 30px;
+            padding: 35px 0;
+        }
+
+        .restaurant-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            min-width: 0;
+        }
+
+        .restaurant-logo {
+            width: 105px;
+            height: 105px;
+            flex: 0 0 105px;
+
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 28px;
+
+            background: #fff;
+            color: #d4af37;
+
+            font-size: 38px;
+            font-weight: 900;
+
+            border: 4px solid rgba(255,255,255,.12);
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,.3);
+        }
+
+        .restaurant-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .restaurant-info-content {
+            min-width: 0;
+        }
+
+        .restaurant-label {
+            display: inline-block;
+
+            margin-bottom: 7px;
+
+            color: #d4af37;
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .restaurant-info h1 {
+            margin: 0 0 8px;
+
+            font-size: clamp(28px, 5vw, 43px);
+            line-height: 1.15;
+            font-weight: 900;
+        }
+
+        .restaurant-info p {
+            max-width: 650px;
+
+            margin: 0;
+
+            color: #c8c8c8;
+
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .restaurant-hero-badge {
+            width: 145px;
+            min-height: 145px;
+            flex: 0 0 145px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(212,175,55,.3);
+            border-radius: 30px;
+
+            background: rgba(255,255,255,.05);
+        }
+
+        .restaurant-hero-badge strong {
+            color: #d4af37;
+            font-size: 38px;
+        }
+
+        .restaurant-hero-badge span {
+            margin-top: 4px;
+            color: #bbb;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           CATEGORY NAVIGATION
+        ===================================================== */
+
+        .category-navigation {
+            position: sticky;
+            top: 70px;
+            z-index: 900;
+
+            background: rgba(247,247,245,.95);
+
+            border-bottom: 1px solid #e8e8e4;
+
+            backdrop-filter: blur(12px);
+        }
+
+        .category-navigation-inner {
+            width: min(1180px, calc(100% - 30px));
+            margin: auto;
+
+            display: flex;
+            gap: 9px;
+
+            overflow-x: auto;
+
+            padding: 13px 0;
+
+            scrollbar-width: none;
+        }
+
+        .category-navigation-inner::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-link {
+            flex: 0 0 auto;
+
+            padding: 10px 16px;
+
+            border: 1px solid #e3e3df;
+            border-radius: 30px;
+
+            background: #fff;
+            color: #555;
+
+            text-decoration: none;
+
+            font-size: 12px;
+            font-weight: 900;
+
+            transition: .2s ease;
+        }
+
+        .category-link:hover,
+        .category-link.active {
+            background: #111;
+            border-color: #111;
+            color: #d4af37;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .customer-menu-main {
+            width: min(1180px, calc(100% - 30px));
+            margin: auto;
+
+            padding: 35px 0 110px;
+        }
+
+        .menu-section {
+            margin-bottom: 48px;
+            scroll-margin-top: 145px;
+        }
+
+        .menu-section-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 18px;
+        }
+
+        .menu-section-heading small {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #a1811f;
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .menu-section-heading h2 {
+            margin: 0;
+
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .menu-section-count {
+            color: #999;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           PRODUCTS
+        ===================================================== */
+
+        .customer-products-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+        .customer-product-card {
+            overflow: hidden;
+
+            display: flex;
+            flex-direction: column;
+
+            background: #fff;
+
+            border: 1px solid #e7e7e3;
+            border-radius: 22px;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,.045);
+
+            transition:
+                transform .22s ease,
+                box-shadow .22s ease,
+                border-color .22s ease;
+        }
+
+        .customer-product-card:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(212,175,55,.4);
+
+            box-shadow:
+                0 18px 40px rgba(0,0,0,.09);
+        }
+
+        .product-image {
+            position: relative;
+
+            width: 100%;
+            aspect-ratio: 16 / 10;
+
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 30% 25%,
+                    rgba(212,175,55,.16),
+                    transparent 35%
+                ),
+                #171717;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            display: block;
+
+            transition: transform .4s ease;
+        }
+
+        .customer-product-card:hover
+        .product-image img {
+            transform: scale(1.045);
+        }
+
+        .product-image-placeholder {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #d4af37;
+
+            font-size: 43px;
+        }
+
+        .product-content {
+            padding: 17px;
+
+            display: flex;
+            flex-direction: column;
+
+            flex: 1;
+        }
+
+        .product-content h3 {
+            margin: 0 0 7px;
+
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .product-description {
+            min-height: 40px;
+
+            margin: 0 0 13px;
+
+            color: #888;
+
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .product-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-top: auto;
+        }
+
+        .product-price {
+            color: #9b7d1e;
+
+            font-size: 16px;
+            font-weight: 900;
+
+            white-space: nowrap;
+        }
+
+        .add-product-button {
+            min-height: 40px;
+
+            padding: 0 13px;
+
+            border: 0;
+            border-radius: 12px;
+
+            background: #111;
+            color: #d4af37;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            font-size: 11px;
+            font-weight: 900;
+
+            transition: .2s ease;
+        }
+
+        .add-product-button:hover {
+            background: #d4af37;
+            color: #111;
+            transform: translateY(-2px);
+        }
+
+        .add-product-button:active {
+            transform: scale(.97);
+        }
+
+
+        /* =====================================================
+           EMPTY
+        ===================================================== */
+
+        .customer-empty {
+            padding: 60px 25px;
+
+            text-align: center;
+
+            background: #fff;
+
+            border: 1px dashed #d8d8d3;
+            border-radius: 25px;
+        }
+
+        .customer-empty-icon {
+            width: 75px;
+            height: 75px;
+
+            margin: 0 auto 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 23px;
+
+            background: #faf4d9;
+
+            font-size: 32px;
+        }
+
+        .customer-empty h2 {
+            margin: 0 0 7px;
+
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .customer-empty p {
+            margin: 0;
+
+            color: #888;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           CART BAR
+        ===================================================== */
+
+        .customer-cart-bar {
+            position: fixed;
+
+            right: 20px;
+            bottom: 20px;
+            left: 20px;
+
+            z-index: 1200;
+
+            width: min(680px, calc(100% - 40px));
+
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 12px 14px 12px 12px;
+
+            background: rgba(17,17,17,.96);
+            color: #fff;
+
+            border: 1px solid rgba(212,175,55,.2);
+            border-radius: 18px;
+
+            box-shadow:
+                0 18px 50px rgba(0,0,0,.25);
+
+            backdrop-filter: blur(12px);
+
+            transform: translateY(130%);
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition: .3s ease;
+        }
+
+        .customer-cart-bar.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .cart-bar-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-bar-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: rgba(212,175,55,.12);
+
+            color: #d4af37;
+
+            font-size: 20px;
+        }
+
+        .cart-bar-info strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            font-size: 13px;
+        }
+
+        .cart-bar-info span {
+            color: #aaa;
+
+            font-size: 10px;
+        }
+
+        .cart-bar-total {
+            margin-right: auto;
+
+            color: #d4af37;
+
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .cart-bar-button {
+            min-height: 42px;
+
+            padding: 0 16px;
+
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            border-radius: 12px;
+
+            background: #d4af37;
+            color: #111;
+
+            text-decoration: none;
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .customer-footer {
+            padding: 40px 20px 100px;
+
+            text-align: center;
+
+            background: #111;
+            color: #fff;
+        }
+
+        .customer-footer strong {
+            color: #d4af37;
+
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .customer-footer p {
+            margin: 8px 0 0;
+
+            color: #999;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        .customer-toast {
+            position: fixed;
+
+            top: 85px;
+            right: 20px;
+
+            z-index: 1500;
+
+            max-width: calc(100% - 40px);
+
+            padding: 12px 16px;
+
+            background: #111;
+            color: #fff;
+
+            border-right: 3px solid #d4af37;
+            border-radius: 12px;
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,.18);
+
+            font-size: 12px;
+            font-weight: 800;
+
+            transform: translateX(130%);
+            opacity: 0;
+
+            transition: .3s ease;
+        }
+
+        .customer-toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .customer-products-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .restaurant-hero-inner {
+                min-height: auto;
+            }
+
+            .restaurant-hero-badge {
+                display: none;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .customer-header-inner {
+                min-height: 62px;
+            }
+
+            .customer-brand-icon {
+                width: 38px;
+                height: 38px;
+                border-radius: 11px;
+            }
+
+            .customer-brand-name {
+                font-size: 14px;
+            }
+
+            .customer-cart-button {
+                min-height: 39px;
+                padding: 0 11px;
+                font-size: 11px;
+            }
+
+            .restaurant-hero-inner {
+                align-items: flex-start;
+                padding: 27px 0;
+            }
+
+            .restaurant-info {
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            .restaurant-logo {
+                width: 72px;
+                height: 72px;
+                flex-basis: 72px;
+                border-radius: 20px;
+                font-size: 27px;
+            }
+
+            .restaurant-info h1 {
+                font-size: 25px;
+            }
+
+            .restaurant-info p {
+                font-size: 12px;
+                line-height: 1.7;
+            }
+
+            .category-navigation {
+                top: 62px;
+            }
+
+            .category-navigation-inner {
+                width: calc(100% - 20px);
+                padding: 10px 0;
+            }
+
+            .category-link {
+                padding: 9px 13px;
+                font-size: 11px;
+            }
+
+            .customer-menu-main {
+                width: calc(100% - 20px);
+                padding-top: 25px;
+            }
+
+            .menu-section {
+                margin-bottom: 38px;
+                scroll-margin-top: 125px;
+            }
+
+            .menu-section-heading h2 {
+                font-size: 21px;
+            }
+
+            .customer-products-grid {
+                grid-template-columns: 1fr;
+                gap: 13px;
+            }
+
+            .customer-product-card {
+                flex-direction: row;
+                min-height: 130px;
+                border-radius: 18px;
+            }
+
+            .product-image {
+                width: 125px;
+                min-width: 125px;
+                height: 130px;
+                aspect-ratio: auto;
+            }
+
+            .product-content {
+                padding: 13px;
+            }
+
+            .product-content h3 {
+                font-size: 15px;
+            }
+
+            .product-description {
+                min-height: 0;
+                margin-bottom: 9px;
+                font-size: 11px;
+            }
+
+            .product-price {
+                font-size: 14px;
+            }
+
+            .add-product-button {
+                min-height: 36px;
+                padding: 0 10px;
+                font-size: 10px;
+            }
+
+            .customer-cart-bar {
+                right: 10px;
+                bottom: 10px;
+                left: 10px;
+                width: calc(100% - 20px);
+                border-radius: 16px;
+            }
+
+            .cart-bar-total {
+                display: none;
+            }
+
+            .cart-bar-button {
+                padding: 0 13px;
+            }
+
+            .customer-footer {
+                padding-bottom: 85px;
+            }
+
+        }
+
+
+        @media (max-width: 380px) {
+
+            .restaurant-logo {
+                width: 62px;
+                height: 62px;
+                flex-basis: 62px;
+            }
+
+            .restaurant-info h1 {
+                font-size: 22px;
+            }
+
+            .product-image {
+                width: 105px;
+                min-width: 105px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="customer-menu-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <header class="customer-header">
+
+        <div class="customer-header-inner">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="customer-brand"
+            >
+
+                <span class="customer-brand-icon">
+                    M
+                </span>
+
+                <span class="customer-brand-name">
+                    Menu Smart
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('cart') }}"
+                class="customer-cart-button"
+            >
+
+                <span>
+                    🛒
+                </span>
+
+                <span>
+                    السلة
+                </span>
+
+                <span
+                    class="customer-cart-count"
+                    id="headerCartCount"
+                >
+                    0
+                </span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         RESTAURANT HERO
+    ===================================================== -->
+
+    <section class="restaurant-hero">
+
+        <div class="restaurant-hero-inner">
+
+            <div class="restaurant-info">
+
+
+                <div class="restaurant-logo">
+
+                    {% if restaurant.logo %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/uploads/' ~ restaurant.logo
+                            ) }}"
+                            alt="{{ restaurant.name }}"
+                        >
+
+                    {% else %}
+
+                        <span>
+                            M
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="restaurant-info-content">
+
+                    <span class="restaurant-label">
+                        المنيو الإلكتروني
+                    </span>
+
+                    <h1>
+                        {{ restaurant.name }}
+                    </h1>
+
+                    <p>
+                        {{ restaurant.description or
+                           'اختار طلبك من المنيو واستمتع بتجربة طلب سهلة وسريعة.' }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="restaurant-hero-badge">
+
+                <strong>
+                    M
+                </strong>
+
+                <span>
+                    Menu Smart
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CATEGORY NAVIGATION
+    ===================================================== -->
+
+    {% if categories %}
+
+    <nav class="category-navigation">
+
+        <div class="category-navigation-inner">
+
+            {% for category in categories %}
+
+                <a
+                    href="#category-{{ category.id }}"
+                    class="category-link {% if loop.first %}active{% endif %}"
+                >
+                    {{ category.name }}
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    </nav>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         MENU
+    ===================================================== -->
+
+    <main class="customer-menu-main">
+
+
+        {% if categories %}
+
+
+            {% for category in categories %}
+
+                {% set category_products = products
+                    |selectattr('category_id', 'equalto', category.id)
+                    |list
+                %}
+
+
+                <section
+                    class="menu-section"
+                    id="category-{{ category.id }}"
+                >
+
+
+                    <div class="menu-section-heading">
+
+                        <div>
+
+                            <small>
+                                قائمة الطعام
+                            </small>
+
+                            <h2>
+                                {{ category.name }}
+                            </h2>
+
+                        </div>
+
+
+                        <span class="menu-section-count">
+
+                            {{ category_products|length }}
+
+                            منتج
+
+                        </span>
+
+                    </div>
+
+
+                    {% if category_products %}
+
+
+                        <div class="customer-products-grid">
+
+
+                            {% for product in category_products %}
+
+
+                                <article
+                                    class="customer-product-card"
+                                    data-product-id="{{ product.id }}"
+                                >
+
+
+                                    <div class="product-image">
+
+                                        {% if product.image %}
+
+                                            <img
+                                                src="{{ url_for(
+                                                    'static',
+                                                    filename='images/uploads/' ~ product.image
+                                                ) }}"
+                                                alt="{{ product.name }}"
+                                                loading="lazy"
+                                            >
+
+                                        {% else %}
+
+                                            <div class="product-image-placeholder">
+                                                🍽️
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div class="product-content">
+
+
+                                        <h3>
+                                            {{ product.name }}
+                                        </h3>
+
+
+                                        <p class="product-description">
+
+                                            {{ product.description or
+                                               'منتج مميز من منيو المطعم.' }}
+
+                                        </p>
+
+
+                                        <div class="product-bottom">
+
+
+                                            <strong class="product-price">
+
+                                                {{ product.price }}
+
+                                                جنيه
+
+                                            </strong>
+
+
+                                            <button
+                                                type="button"
+                                                class="add-product-button"
+                                                data-id="{{ product.id }}"
+                                                data-name="{{ product.name }}"
+                                                data-price="{{ product.price }}"
+                                                data-image="{{ product.image or '' }}"
+                                            >
+
+                                                + أضف للسلة
+
+                                            </button>
+
+
+                                        </div>
+
+                                    </div>
+
+
+                                </article>
+
+
+                            {% endfor %}
+
+
+                        </div>
+
+
+                    {% else %}
+
+
+                        <div class="customer-empty">
+
+                            <div class="customer-empty-icon">
+                                🍽️
+                            </div>
+
+                            <h2>
+                                لا توجد منتجات حاليًا
+                            </h2>
+
+                            <p>
+                                سيتم إضافة المنتجات لهذا القسم قريبًا.
+                            </p>
+
+                        </div>
+
+
+                    {% endif %}
+
+
+                </section>
+
+
+            {% endfor %}
+
+
+        {% elif products %}
+
+
+            <section class="menu-section">
+
+                <div class="menu-section-heading">
+
+                    <div>
+
+                        <small>
+                            قائمة الطعام
+                        </small>
+
+                        <h2>
+                            المنتجات
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-products-grid">
+
+
+                    {% for product in products %}
+
+
+                        <article class="customer-product-card">
+
+
+                            <div class="product-image">
+
+                                {% if product.image %}
+
+                                    <img
+                                        src="{{ url_for(
+                                            'static',
+                                            filename='images/uploads/' ~ product.image
+                                        ) }}"
+                                        alt="{{ product.name }}"
+                                        loading="lazy"
+                                    >
+
+                                {% else %}
+
+                                    <div class="product-image-placeholder">
+                                        🍽️
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="product-content">
+
+                                <h3>
+                                    {{ product.name }}
+                                </h3>
+
+                                <p class="product-description">
+                                    {{ product.description or
+                                       'منتج مميز من منيو المطعم.' }}
+                                </p>
+
+                                <div class="product-bottom">
+
+                                    <strong class="product-price">
+                                        {{ product.price }} جنيه
+                                    </strong>
+
+                                    <button
+                                        type="button"
+                                        class="add-product-button"
+                                        data-id="{{ product.id }}"
+                                        data-name="{{ product.name }}"
+                                        data-price="{{ product.price }}"
+                                        data-image="{{ product.image or '' }}"
+                                    >
+                                        + أضف للسلة
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                        </article>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+            </section>
+
+
+        {% else %}
+
+
+            <section class="customer-empty">
+
+                <div class="customer-empty-icon">
+                    🍽️
+                </div>
+
+                <h2>
+                    المنيو غير متاحة حاليًا
+                </h2>
+
+                <p>
+                    لا توجد منتجات مضافة إلى المنيو في الوقت الحالي.
+                </p>
+
+            </section>
+
+
+        {% endif %}
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FLOATING CART
+    ===================================================== -->
+
+    <div
+        class="customer-cart-bar"
+        id="customerCartBar"
+    >
+
+        <div class="cart-bar-info">
+
+            <div class="cart-bar-icon">
+                🛒
+            </div>
+
+            <div>
+
+                <strong>
+                    طلبك
+                </strong>
+
+                <span id="cartBarCount">
+                    0 منتج
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <strong
+            class="cart-bar-total"
+            id="cartBarTotal"
+        >
+            0.00 جنيه
+        </strong>
+
+
+        <a
+            href="{{ url_for('cart') }}"
+            class="cart-bar-button"
+        >
+
+            عرض السلة
+
+            <span>
+                →
+            </span>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         TOAST
+    ===================================================== -->
+
+    <div
+        class="customer-toast"
+        id="customerToast"
+    >
+        تمت إضافة المنتج إلى السلة
+    </div>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
+
+    <footer class="customer-footer">
+
+        <strong>
+            Menu Smart
+        </strong>
+
+        <p>
+            منصة المنيو الإلكتروني والطلبات الرقمية.
+        </p>
+
+    </footer>
+
+
+
+    <script
+        src="{{ url_for('static', filename='js/menu.js') }}"
+    ></script>
+
+
+    <script>
+
+        /*
+         * =====================================================
+         * CUSTOMER MENU CART
+         * =====================================================
+         */
+
+        const CART_KEY = "menusmart_cart";
+
+
+        function getCart() {
+
+            try {
+
+                return JSON.parse(
+                    localStorage.getItem(CART_KEY) || "[]"
+                );
+
+            } catch (error) {
+
+                return [];
+
+            }
+
+        }
+
+
+        function saveCart(cart) {
+
+            localStorage.setItem(
+                CART_KEY,
+                JSON.stringify(cart)
+            );
+
+        }
+
+
+        function updateCartUI() {
+
+            const cart = getCart();
+
+
+            let count = 0;
+            let total = 0;
+
+
+            cart.forEach(function(item) {
+
+                const quantity =
+                    Number(item.quantity || 0);
+
+                const price =
+                    Number(item.price || 0);
+
+                count += quantity;
+
+                total += price * quantity;
+
+            });
+
+
+            const headerCount =
+                document.getElementById(
+                    "headerCartCount"
+                );
+
+
+            const bar =
+                document.getElementById(
+                    "customerCartBar"
+                );
+
+
+            const barCount =
+                document.getElementById(
+                    "cartBarCount"
+                );
+
+
+            const barTotal =
+                document.getElementById(
+                    "cartBarTotal"
+                );
+
+
+            if (headerCount) {
+
+                headerCount.textContent =
+                    count;
+
+            }
+
+
+            if (barCount) {
+
+                barCount.textContent =
+                    count + " منتج";
+
+            }
+
+
+            if (barTotal) {
+
+                barTotal.textContent =
+                    total.toFixed(2) + " جنيه";
+
+            }
+
+
+            if (bar) {
+
+                if (count > 0) {
+
+                    bar.classList.add(
+                        "visible"
+                    );
+
+                } else {
+
+                    bar.classList.remove(
+                        "visible"
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        function showToast(message) {
+
+            const toast =
+                document.getElementById(
+                    "customerToast"
+                );
+
+
+            if (!toast) {
+                return;
+            }
+
+
+            toast.textContent =
+                message;
+
+
+            toast.classList.add(
+                "show"
+            );
+
+
+            clearTimeout(
+                window.menuSmartToastTimer
+            );
+
+
+            window.menuSmartToastTimer =
+                setTimeout(
+                    function() {
+
+                        toast.classList.remove(
+                            "show"
+                        );
+
+                    },
+                    1800
+                );
+
+        }
+
+
+        function addProductToCart(button) {
+
+            const product = {
+
+                id:
+                    String(
+                        button.dataset.id
+                    ),
+
+                name:
+                    button.dataset.name,
+
+                price:
+                    Number(
+                        button.dataset.price || 0
+                    ),
+
+                image:
+                    button.dataset.image || "",
+
+                quantity:
+                    1
+
+            };
+
+
+            const cart =
+                getCart();
+
+
+            const existing =
+                cart.find(function(item) {
+
+                    return String(item.id) ===
+                           String(product.id);
+
+                });
+
+
+            if (existing) {
+
+                existing.quantity =
+                    Number(
+                        existing.quantity || 0
+                    ) + 1;
+
+            } else {
+
+                cart.push(product);
+
+            }
+
+
+            saveCart(cart);
+
+
+            updateCartUI();
+
+
+            showToast(
+                "تمت إضافة " +
+                product.name +
+                " إلى السلة"
+            );
+
+
+            button.textContent =
+                "✓ تمت الإضافة";
+
+
+            button.style.background =
+                "#d4af37";
+
+            button.style.color =
+                "#111";
+
+
+            setTimeout(
+                function() {
+
+                    button.textContent =
+                        "+ أضف للسلة";
+
+                    button.style.background =
+                        "";
+
+                    button.style.color =
+                        "";
+
+                },
+                900
+            );
+
+        }
+
+
+        document
+            .querySelectorAll(
+                ".add-product-button"
+            )
+            .forEach(
+                function(button) {
+
+                    button.addEventListener(
+                        "click",
+                        function() {
+
+                            addProductToCart(
+                                button
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+
+        /*
+         * تحديث السلة عند الرجوع للصفحة.
+         */
+
+        window.addEventListener(
+            "pageshow",
+            function() {
+
+                updateCartUI();
+
+            }
+        );
+
+
+        /*
+         * تحديث السلة عند تغير localStorage
+         * من تبويب آخر.
+         */
+
+        window.addEventListener(
+            "storage",
+            function(event) {
+
+                if (
+                    event.key === CART_KEY
+                ) {
+
+                    updateCartUI();
+
+                }
+
+            }
+        );
+
+
+        /*
+         * تنشيط قسم المنيو أثناء التمرير.
+         */
+
+        const categoryLinks =
+            document.querySelectorAll(
+                ".category-link"
+            );
+
+
+        const menuSections =
+            document.querySelectorAll(
+                ".menu-section"
+            );
+
+
+        if (
+            categoryLinks.length &&
+            menuSections.length
+        ) {
+
+            const observer =
+                new IntersectionObserver(
+                    function(entries) {
+
+                        entries.forEach(
+                            function(entry) {
+
+                                if (
+                                    entry.isIntersecting
+                                ) {
+
+                                    categoryLinks
+                                        .forEach(
+                                            function(link) {
+
+                                                link.classList.remove(
+                                                    "active"
+                                                );
+
+                                            }
+                                        );
+
+
+                                    const activeLink =
+                                        document.querySelector(
+                                            '.category-link[href="#' +
+                                            entry.target.id +
+                                            '"]'
+                                        );
+
+
+                                    if (activeLink) {
+
+                                        activeLink.classList.add(
+                                            "active"
+                                        );
+
+                                    }
+
+                                }
+
+                            }
+                        );
+
+                    },
+                    {
+                        rootMargin:
+                            "-150px 0px -55% 0px"
+                    }
+                );
+
+
+            menuSections.forEach(
+                function(section) {
+
+                    observer.observe(
+                        section
+                    );
+
+                }
+            );
+
+        }
+
+
+        /*
+         * تشغيل أولي.
+         */
+
+        updateCartUI();
+
+
+        /*
+         * حماية إضافية من BFCache.
+         */
+
+        window.addEventListener(
+            "pageshow",
+            function(event) {
+
+                if (event.persisted) {
+
+                    window.location.reload();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

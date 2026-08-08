@@ -1,0 +1,494 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<title>
+    {{ product.name|default('تفاصيل المنتج') }} | Menu Smart
+</title>
+
+<meta
+    name="description"
+    content="{{ product.description|default('تفاصيل المنتج') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/menu.css') }}"
+>
+
+</head><body class="product-details-page"><header class="public-menu-header"><div class="public-menu-header-inner">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="public-brand"
+    >
+
+        <span class="brand-icon">
+            M
+        </span>
+
+        <span>
+            Menu Smart
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('public_menu') }}"
+        class="back-menu-button"
+    >
+        ← العودة للمنيو
+    </a>
+
+</div>
+
+</header><main class="product-details-main"><div class="product-details-container">
+
+
+    <a
+        href="{{ url_for('public_menu') }}"
+        class="product-back-link"
+    >
+        ← العودة إلى المنيو
+    </a>
+
+
+    <section class="product-details-card">
+
+
+        <div class="product-details-image">
+
+            {% if product.image %}
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename=product.image
+                    ) }}"
+                    alt="{{ product.name }}"
+                >
+
+            {% else %}
+
+                <div class="product-details-placeholder">
+                    🍽️
+                </div>
+
+            {% endif %}
+
+
+            {% if product.is_popular %}
+
+                <span class="product-popular-badge">
+                    ⭐ الأكثر طلبًا
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="product-details-content">
+
+
+            <span class="product-details-label">
+                {{ product.category_name|default('من منتجات المطعم') }}
+            </span>
+
+
+            <h1>
+                {{ product.name|default('منتج جديد') }}
+            </h1>
+
+
+            {% if product.description %}
+
+                <p class="product-details-description">
+                    {{ product.description }}
+                </p>
+
+            {% else %}
+
+                <p class="product-details-description">
+                    منتج مميز من قائمة المطعم.
+                </p>
+
+            {% endif %}
+
+
+            <div class="product-details-price">
+
+                <strong>
+                    {{ product.price|default(0) }}
+                </strong>
+
+                <span>
+                    جنيه
+                </span>
+
+            </div>
+
+
+            {% if product.available is defined
+                and not product.available %}
+
+                <div class="product-unavailable">
+                    هذا المنتج غير متاح حاليًا.
+                </div>
+
+            {% else %}
+
+
+                <div class="product-quantity-box">
+
+                    <span>
+                        الكمية
+                    </span>
+
+
+                    <div class="quantity-controls">
+
+                        <button
+                            type="button"
+                            id="minusBtn"
+                        >
+                            −
+                        </button>
+
+
+                        <strong id="quantity">
+                            1
+                        </strong>
+
+
+                        <button
+                            type="button"
+                            id="plusBtn"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="addToCartBtn"
+                    class="product-add-cart"
+                >
+
+                    <span>
+                        🛒
+                    </span>
+
+                    إضافة إلى السلة
+
+                </button>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </section>
+
+
+    <section class="product-info-section">
+
+
+        <div class="product-info-card">
+
+            <span>
+                🍽️
+            </span>
+
+            <div>
+
+                <strong>
+                    جودة مميزة
+                </strong>
+
+                <p>
+                    يتم تحضير المنتجات بعناية
+                    لتقديم تجربة مميزة لعملائنا.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="product-info-card">
+
+            <span>
+                ⚡
+            </span>
+
+            <div>
+
+                <strong>
+                    طلب سريع
+                </strong>
+
+                <p>
+                    أضف المنتج إلى السلة وأكمل
+                    طلبك بسهولة.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="product-info-card">
+
+            <span>
+                📱
+            </span>
+
+            <div>
+
+                <strong>
+                    منيو إلكتروني
+                </strong>
+
+                <p>
+                    يمكنك العودة للمنيو واستعراض
+                    باقي المنتجات في أي وقت.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+</main><div
+    class="product-toast"
+    id="productToast"
+>
+    تمت إضافة المنتج إلى السلة ✓
+</div><footer class="public-menu-footer"><strong>
+    {{ restaurant.name|default('Menu Smart') }}
+</strong>
+
+<p>
+    مدعوم بواسطة Menu Smart
+</p>
+
+</footer><script>
+
+let quantity =
+    1;
+
+
+const quantityElement =
+    document.getElementById(
+        "quantity"
+    );
+
+
+const minusBtn =
+    document.getElementById(
+        "minusBtn"
+    );
+
+
+const plusBtn =
+    document.getElementById(
+        "plusBtn"
+    );
+
+
+const addToCartBtn =
+    document.getElementById(
+        "addToCartBtn"
+    );
+
+
+const toast =
+    document.getElementById(
+        "productToast"
+    );
+
+
+function updateQuantity() {
+
+    if (quantityElement) {
+
+        quantityElement.textContent =
+            quantity;
+
+    }
+
+}
+
+
+if (minusBtn) {
+
+    minusBtn.addEventListener(
+        "click",
+        function() {
+
+            if (quantity > 1) {
+
+                quantity--;
+
+                updateQuantity();
+
+            }
+
+        }
+    );
+
+}
+
+
+if (plusBtn) {
+
+    plusBtn.addEventListener(
+        "click",
+        function() {
+
+            if (quantity < 99) {
+
+                quantity++;
+
+                updateQuantity();
+
+            }
+
+        }
+    );
+
+}
+
+
+if (addToCartBtn) {
+
+    addToCartBtn.addEventListener(
+        "click",
+        function() {
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem(
+                        "menusmart_cart"
+                    ) || "[]"
+                );
+
+
+            const productId =
+                "{{ product.id|default('product') }}";
+
+
+            const productName =
+                "{{ product.name|default('منتج')|e }}";
+
+
+            const productPrice =
+                Number(
+                    "{{ product.price|default(0) }}"
+                );
+
+
+            const existing =
+                cart.find(
+                    function(item) {
+
+                        return String(item.id) ===
+                            String(productId);
+
+                    }
+                );
+
+
+            if (existing) {
+
+                existing.quantity +=
+                    quantity;
+
+            } else {
+
+                cart.push({
+
+                    id:
+                        String(productId),
+
+                    name:
+                        productName,
+
+                    price:
+                        productPrice,
+
+                    quantity:
+                        quantity
+
+                });
+
+            }
+
+
+            localStorage.setItem(
+                "menusmart_cart",
+                JSON.stringify(cart)
+            );
+
+
+            if (toast) {
+
+                toast.classList.add(
+                    "show"
+                );
+
+
+                setTimeout(
+                    function() {
+
+                        toast.classList.remove(
+                            "show"
+                        );
+
+                    },
+                    2200
+                );
+
+            }
+
+
+            quantity =
+                1;
+
+            updateQuantity();
+
+        }
+    );
+
+}
+
+
+updateQuantity();
+
+</script></body></html>

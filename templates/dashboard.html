@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0f172a"
+    >
+
+    <title>لوحة التحكم | Menu Smart</title>
+
+    <meta
+        name="description"
+        content="لوحة تحكم Menu Smart لإدارة المطعم والمنيو والمنتجات والطلبات."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+    <style>
+
+        /* =====================================================
+           أزرار التحكم في التنقل
+        ===================================================== */
+
+        .navigation-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        .history-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 40px;
+            padding: 0 14px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 10px;
+            background: #ffffff;
+            color: #0f172a;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+
+        .history-button:hover {
+            transform: translateY(-1px);
+            background: #f8fafc;
+        }
+
+
+        .history-button:active {
+            transform: translateY(0);
+        }
+
+
+        .logout-button {
+            border: 0;
+            cursor: pointer;
+            font: inherit;
+        }
+
+
+        /* =====================================================
+           زر دعوة مطعم
+        ===================================================== */
+
+        .invite-restaurant-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-height: 64px;
+            padding: 10px 14px;
+            border: 1px solid rgba(15, 23, 42, 0.10);
+            border-radius: 16px;
+            background: #ffffff;
+            color: #0f172a;
+            cursor: pointer;
+            text-align: right;
+            font-family: inherit;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+
+        .invite-restaurant-button:hover {
+            transform: translateY(-2px);
+            border-color: rgba(15, 23, 42, 0.18);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.10);
+        }
+
+
+        .invite-restaurant-button:active {
+            transform: translateY(0);
+        }
+
+
+        .invite-icon {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #f1f5f9;
+            font-size: 20px;
+        }
+
+
+        .invite-content {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+
+        .invite-content strong {
+            color: #0f172a;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+
+        .invite-content small {
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+
+        .invite-arrow {
+            width: 32px;
+            height: 32px;
+            flex: 0 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+
+
+        .invite-restaurant-button:hover .invite-arrow {
+            transform: translateX(-3px);
+        }
+
+
+        @media (max-width: 768px) {
+
+            .navigation-actions {
+                gap: 5px;
+            }
+
+
+            .history-button {
+                min-width: 40px;
+                width: 40px;
+                padding: 0;
+            }
+
+
+            .history-button .history-text {
+                display: none;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .invite-restaurant-button {
+                min-height: 60px;
+                padding: 9px 12px;
+            }
+
+
+            .invite-icon {
+                width: 40px;
+                height: 40px;
+                flex-basis: 40px;
+            }
+
+
+            .invite-content strong {
+                font-size: 13px;
+            }
+
+
+            .invite-content small {
+                font-size: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="main-header">
+
+    <div class="header-container">
+
+
+        <!-- BRAND -->
+
+        <a
+            href="{{ url_for('home') }}"
+            class="brand"
+        >
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="Menu Smart"
+                class="brand-logo"
+            >
+
+            <span class="brand-name">
+                Menu Smart
+            </span>
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="dashboard-nav">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="nav-item active"
+            >
+                لوحة التحكم
+            </a>
+
+
+            <a
+                href="{{ url_for('categories') }}"
+                class="nav-item"
+            >
+                الأقسام
+            </a>
+
+
+            <a
+                href="{{ url_for('products') }}"
+                class="nav-item"
+            >
+                المنتجات
+            </a>
+
+
+            {% if restaurant %}
+
+                <a
+                    href="{{ url_for('public_menu', slug=restaurant.slug) }}"
+                    class="nav-item"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    المنيو
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+
+        <!-- USER ACTIONS -->
+
+        <div class="dashboard-header-actions navigation-actions">
+
+
+            <!-- زر الرجوع -->
+
+            <button
+                type="button"
+                class="history-button"
+                onclick="goBack()"
+                aria-label="العودة للصفحة السابقة"
+                title="العودة للصفحة السابقة"
+            >
+
+                <span>
+                    ←
+                </span>
+
+                <span class="history-text">
+                    رجوع
+                </span>
+
+            </button>
+
+
+            <!-- الحساب -->
+
+            <a
+                href="{{ url_for('profile') }}"
+                class="dashboard-user"
+            >
+
+                <span class="dashboard-user-icon">
+                    👤
+                </span>
+
+                <span>
+                    حسابي
+                </span>
+
+            </a>
+
+
+            <!-- تسجيل الخروج -->
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="dashboard-logout logout-button"
+                onclick="return confirmLogout();"
+            >
+                تسجيل الخروج
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="dashboard-main">
+
+    <div class="dashboard-container">
+
+
+        <!-- =================================================
+             WELCOME
+        ================================================== -->
+
+        <section class="dashboard-welcome">
+
+            <div class="welcome-content">
+
+                <span class="dashboard-label">
+                    لوحة التحكم
+                </span>
+
+
+                <h1>
+                    أهلاً بك{% if user %} {{ user.name }}{% endif %} 👋
+                </h1>
+
+
+                <p>
+                    من هنا يمكنك إدارة مطعمك والمنيو
+                    والمنتجات والطلبات والعملاء بسهولة.
+                </p>
+
+            </div>
+
+
+            <div class="welcome-actions">
+
+                {% if restaurant %}
+
+                    <a
+                        href="{{ url_for(
+                            'public_menu',
+                            slug=restaurant.slug
+                        ) }}"
+                        class="dashboard-primary-btn"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        مشاهدة المنيو
+                        <span>↗</span>
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{{ url_for('profile') }}"
+                        class="dashboard-primary-btn"
+                    >
+                        إعداد المطعم
+                        <span>+</span>
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FLASH MESSAGES
+        ================================================== -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="dashboard-messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="dashboard-message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =================================================
+             RESTAURANT
+        ================================================== -->
+
+        {% if restaurant %}
+
+        <section class="restaurant-banner">
+
+            <div class="restaurant-avatar">
+
+                {% if restaurant.logo %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/uploads/' + restaurant.logo
+                        ) }}"
+                        alt="{{ restaurant.name }}"
+                    >
+
+                {% else %}
+
+                    <span>🏪</span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="restaurant-info">
+
+                <span>
+                    المطعم الحالي
+                </span>
+
+
+                <h2>
+                    {{ restaurant.name }}
+                </h2>
+
+
+                {% if restaurant.description %}
+
+                    <p>
+                        {{ restaurant.description }}
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <a
+                href="{{ url_for('profile') }}"
+                class="dashboard-secondary-btn"
+            >
+                تعديل بيانات المطعم
+            </a>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <section class="dashboard-stats">
+
+
+            <a
+                href="{{ url_for('categories') }}"
+                class="stat-card stat-purple"
+            >
+
+                <div class="stat-icon">
+                    🗂️
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        الأقسام
+                    </span>
+
+
+                    <strong>
+                        {{ categories_count|default(0) }}
+                    </strong>
+
+
+                    <small>
+                        أقسام المنيو
+                    </small>
+
+                </div>
+
+
+                <span class="stat-arrow">
+                    ←
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('products') }}"
+                class="stat-card stat-green"
+            >
+
+                <div class="stat-icon">
+                    🍔
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        المنتجات
+                    </span>
+
+
+                    <strong>
+                        {{ products_count|default(0) }}
+                    </strong>
+
+
+                    <small>
+                        منتجات المنيو
+                    </small>
+
+                </div>
+
+
+                <span class="stat-arrow">
+                    ←
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('orders') }}"
+                class="stat-card stat-orange"
+            >
+
+                <div class="stat-icon">
+                    🛒
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        الطلبات
+                    </span>
+
+
+                    <strong>
+                        {{ orders_count|default(0) }}
+                    </strong>
+
+
+                    <small>
+                        إجمالي الطلبات
+                    </small>
+
+                </div>
+
+
+                <span class="stat-arrow">
+                    ←
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('customers') }}"
+                class="stat-card stat-blue"
+            >
+
+                <div class="stat-icon">
+                    👥
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        العملاء
+                    </span>
+
+
+                    <strong>
+                        {{ customers_count|default(0) }}
+                    </strong>
+
+
+                    <small>
+                        عملاء المطعم
+                    </small>
+
+                </div>
+
+
+                <span class="stat-arrow">
+                    ←
+                </span>
+
+            </a>
+
+
+        </section>
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+        ================================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="dashboard-section-header">
+
+                <div>
+
+                    <span>
+                        الإدارة السريعة
+                    </span>
+
+
+                    <h2>
+                        إدارة مطعمك
+                    </h2>
+
+                </div>
+
+
+                <span class="section-description">
+                    جميع الأدوات في مكان واحد
+                </span>
+
+            </div>
+
+
+            <div class="quick-actions">
+
+
+                <a
+                    href="{{ url_for('categories') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        🗂️
+                    </div>
+
+
+                    <div class="quick-action-content">
+
+                        <strong>
+                            أقسام المنيو
+                        </strong>
+
+
+                        <p>
+                            إنشاء وتنظيم أقسام المنيو
+                        </p>
+
+                    </div>
+
+
+                    <span class="quick-arrow">
+                        ←
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('products') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        🍔
+                    </div>
+
+
+                    <div class="quick-action-content">
+
+                        <strong>
+                            المنتجات
+                        </strong>
+
+
+                        <p>
+                            إضافة المنتجات والأسعار والصور
+                        </p>
+
+                    </div>
+
+
+                    <span class="quick-arrow">
+                        ←
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('orders') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        🛒
+                    </div>
+
+
+                    <div class="quick-action-content">
+
+                        <strong>
+                            الطلبات
+                        </strong>
+
+
+                        <p>
+                            متابعة وإدارة طلبات العملاء
+                        </p>
+
+                    </div>
+
+
+                    <span class="quick-arrow">
+                        ←
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('customers') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        👥
+                    </div>
+
+
+                    <div class="quick-action-content">
+
+                        <strong>
+                            العملاء
+                        </strong>
+
+
+                        <p>
+                            إدارة بيانات العملاء
+                        </p>
+
+                    </div>
+
+
+                    <span class="quick-arrow">
+                        ←
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('analytics') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        📊
+                    </div>
+
+
+                    <div class="quick-action-content">
+
+                        <strong>
+                            التحليلات
+                        </strong>
+
+
+                        <p>
+                            متابعة أداء المطعم والمبيعات
+                        </p>
+
+                    </div>
+
+
+                    <span class="quick-arrow">
+                        ←
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('qr_code') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        📱
+                    </div>
+
+
+                    <div class="quick-action-content">
+
+                        <strong>
+                            QR Code
+                        </strong>
+
+
+                        <p>
+                            مشاركة المنيو عبر QR Code
+                        </p>
+
+                    </div>
+
+
+                    <span class="quick-arrow">
+                        ←
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('settings') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        ⚙️
+                    </div>
+
+
+                    <div class="quick-action-content">
+
+                        <strong>
+                            الإعدادات
+                        </strong>
+
+
+                        <p>
+                            تخصيص إعدادات المنيو
+                        </p>
+
+                    </div>
+
+
+                    <span class="quick-arrow">
+                        ←
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('profile') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        🏪
+                    </div>
+
+
+                    <div class="quick-action-content">
+
+                        <strong>
+                            بيانات المطعم
+                        </strong>
+
+
+                        <p>
+                            تعديل اسم المطعم والبيانات
+                        </p>
+
+                    </div>
+
+
+                    <span class="quick-arrow">
+                        ←
+                    </span>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             MENU PREVIEW
+        ================================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="dashboard-section-header">
+
+                <div>
+
+                    <span>
+                        المنيو الإلكتروني
+                    </span>
+
+
+                    <h2>
+                        منيو مطعمك
+                    </h2>
+
+                </div>
+
+
+                {% if restaurant %}
+
+                    <a
+                        href="{{ url_for(
+                            'public_menu',
+                            slug=restaurant.slug
+                        ) }}"
+                        class="section-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        فتح المنيو ←
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="dashboard-menu-preview">
+
+
+                <div class="menu-preview-visual">
+
+                    <div class="menu-preview-logo">
+                        M
+                    </div>
+
+                </div>
+
+
+                <div class="menu-preview-content">
+
+                    <span class="preview-badge">
+                        جاهز للإدارة
+                    </span>
+
+
+                    <h3>
+                        منيو إلكتروني خاص بمطعمك
+                    </h3>
+
+
+                    <p>
+                        أضف الأقسام والمنتجات والأسعار،
+                        وسيتم عرضها تلقائيًا للعملاء.
+                    </p>
+
+
+                    {% if restaurant %}
+
+                        <div class="preview-url">
+                            /menu/{{ restaurant.slug }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="menu-preview-actions">
+
+                    {% if restaurant %}
+
+                        <a
+                            href="{{ url_for(
+                                'public_menu',
+                                slug=restaurant.slug
+                            ) }}"
+                            class="dashboard-primary-btn"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            مشاهدة المنيو
+                        </a>
+
+
+                        <a
+                            href="{{ url_for('qr_code') }}"
+                            class="dashboard-secondary-btn"
+                        >
+                            QR Code
+                        </a>
+
+                    {% else %}
+
+                        <a
+                            href="{{ url_for('profile') }}"
+                            class="dashboard-primary-btn"
+                        >
+                            إنشاء المطعم
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RECENT ORDERS
+        ================================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="dashboard-section-header">
+
+                <div>
+
+                    <span>
+                        النشاط
+                    </span>
+
+
+                    <h2>
+                        آخر الطلبات
+                    </h2>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('orders') }}"
+                    class="section-link"
+                >
+                    كل الطلبات ←
+                </a>
+
+            </div>
+
+
+            <div class="dashboard-orders">
+
+
+                {% if recent_orders %}
+
+
+                    {% for order in recent_orders %}
+
+                        <a
+                            href="{{ url_for(
+                                'order_details',
+                                order_id=order.id
+                            ) }}"
+                            class="dashboard-order-row"
+                        >
+
+                            <div class="order-number">
+
+                                <span>
+                                    طلب
+                                </span>
+
+
+                                <strong>
+                                    #{{ order.id }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="order-customer">
+
+                                <strong>
+                                    {{ order.customer_name|default('عميل') }}
+                                </strong>
+
+
+                                <small>
+                                    {{ order.created_at|default('') }}
+                                </small>
+
+                            </div>
+
+
+                            <div class="order-total">
+
+                                <strong>
+                                    {{ order.total|default(0) }}
+                                </strong>
+
+
+                                <span>
+                                    جنيه
+                                </span>
+
+                            </div>
+
+
+                            <div class="order-status">
+
+                                {% if order.status == 'completed' %}
+
+                                    <span class="status completed">
+                                        مكتمل
+                                    </span>
+
+                                {% elif order.status == 'cancelled' %}
+
+                                    <span class="status cancelled">
+                                        ملغي
+                                    </span>
+
+                                {% elif order.status == 'pending' %}
+
+                                    <span class="status pending">
+                                        قيد الانتظار
+                                    </span>
+
+                                {% elif order.status == 'confirmed' %}
+
+                                    <span class="status confirmed">
+                                        مؤكد
+                                    </span>
+
+                                {% elif order.status == 'preparing' %}
+
+                                    <span class="status preparing">
+                                        قيد التجهيز
+                                    </span>
+
+                                {% elif order.status == 'ready' %}
+
+                                    <span class="status ready">
+                                        جاهز
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status">
+                                        {{ order.status|default('غير محدد') }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </a>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <div class="empty-dashboard">
+
+                        <div class="empty-icon">
+                            🛒
+                        </div>
+
+
+                        <h3>
+                            لا توجد طلبات حتى الآن
+                        </h3>
+
+
+                        <p>
+                            ستظهر طلبات العملاء هنا بمجرد بدء استقبال الطلبات.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             GETTING STARTED
+        ================================================== -->
+
+        <section class="getting-started">
+
+
+            <div class="getting-started-content">
+
+                <span>
+                    🚀 ابدأ الآن
+                </span>
+
+
+                <h2>
+                    جهّز منيو مطعمك في دقائق
+                </h2>
+
+
+                <p>
+                    أنشئ الأقسام، أضف المنتجات والأسعار،
+                    ثم شارك رابط المنيو مع عملائك.
+                </p>
+
+
+                <div class="getting-started-actions">
+
+
+                    <a
+                        href="{{ url_for('categories') }}"
+                        class="dashboard-primary-btn"
+                    >
+                        إضافة الأقسام
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('products') }}"
+                        class="dashboard-secondary-btn"
+                    >
+                        إضافة المنتجات
+                    </a>
+
+
+                    <!-- دعوة مطعم لاستخدام Menu Smart -->
+
+                    <button
+                        type="button"
+                        class="invite-restaurant-button"
+                        onclick="shareMenuSmart()"
+                        aria-label="دعوة مطعم لاستخدام Menu Smart"
+                    >
+
+                        <span class="invite-icon">
+                            📣
+                        </span>
+
+
+                        <span class="invite-content">
+
+                            <strong>
+                                دعوة مطعم
+                            </strong>
+
+
+                            <small>
+                                شارك Menu Smart مع مطعم آخر
+                            </small>
+
+                        </span>
+
+
+                        <span class="invite-arrow">
+                            ←
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="getting-started-visual">
+
+                <div class="visual-circle">
+                    M
+                </div>
+
+
+                <div class="visual-card visual-card-one">
+                    🍔
+                </div>
+
+
+                <div class="visual-card visual-card-two">
+                    🥤
+                </div>
+
+
+                <div class="visual-card visual-card-three">
+                    🍕
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="main-footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <strong>
+                Menu Smart
+            </strong>
+
+
+            <p>
+                منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('home') }}">
+                الرئيسية
+            </a>
+
+
+            <a href="{{ url_for('profile') }}">
+                حسابي
+            </a>
+
+
+            <a href="{{ url_for('settings') }}">
+                الإعدادات
+            </a>
+
+        </div>
+
+
+        <div class="footer-copy">
+
+            © {{ current_year|default(2026) }}
+
+            Menu Smart
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+    /*
+     * الرجوع للصفحة السابقة
+     */
+
+    function goBack() {
+
+        if (window.history.length > 1) {
+
+            window.history.back();
+
+        } else {
+
+            window.location.href =
+                "{{ url_for('dashboard') }}";
+
+        }
+
+    }
+
+
+    /*
+     * تأكيد تسجيل الخروج
+     */
+
+    function confirmLogout() {
+
+        return window.confirm(
+            "هل أنت متأكد أنك تريد تسجيل الخروج؟"
+        );
+
+    }
+
+
+    /*
+     * مشاركة Menu Smart
+     *
+     * تفتح نافذة المشاركة الأصلية في الهاتف.
+     * يستطيع المستخدم اختيار واتساب أو فيسبوك
+     * أو Messenger أو Telegram أو أي تطبيق متاح.
+     */
+
+    async function shareMenuSmart() {
+
+        const shareData = {
+
+            title:
+                "Menu Smart",
+
+            text:
+                "🍽️ جرّب Menu Smart وأنشئ منيو إلكتروني احترافي لمطعمك بسهولة.",
+
+            url:
+                window.location.origin
+
+        };
+
+
+        try {
+
+            if (
+                navigator.share
+            ) {
+
+                await navigator.share(
+                    shareData
+                );
+
+                return;
+
+            }
+
+
+            if (
+                navigator.clipboard
+            ) {
+
+                await navigator.clipboard.writeText(
+                    shareData.url
+                );
+
+            } else {
+
+                const temporaryInput =
+                    document.createElement("input");
+
+                temporaryInput.value =
+                    shareData.url;
+
+                document.body.appendChild(
+                    temporaryInput
+                );
+
+                temporaryInput.select();
+
+                document.execCommand(
+                    "copy"
+                );
+
+                temporaryInput.remove();
+
+            }
+
+
+            alert(
+                "تم نسخ رابط Menu Smart. يمكنك الآن مشاركته مع المطعم."
+            );
+
+
+        } catch (error) {
+
+            if (
+                error &&
+                error.name === "AbortError"
+            ) {
+
+                return;
+
+            }
+
+
+            alert(
+                "تعذر فتح نافذة المشاركة. حاول مرة أخرى."
+            );
+
+        }
+
+    }
+
+</script>
+
+
+<script
+    src="{{ url_for('static', filename='js/dashboard.js') }}"
+></script>
+
+
+</body>
+
+</html>

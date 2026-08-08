@@ -1,0 +1,557 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<title>
+    إنشاء منيو جديد | Menu Smart
+</title>
+
+<meta
+    name="description"
+    content="إنشاء منيو إلكتروني جديد لمطعمك في Menu Smart."
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/menu.css') }}"
+>
+
+</head><body class="dashboard-page menu-management-page"><header class="main-header"><div class="header-container">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="brand"
+    >
+
+        <span class="brand-icon">
+            M
+        </span>
+
+        <span class="brand-name">
+            Menu Smart
+        </span>
+
+    </a>
+
+
+    <div class="dashboard-header-actions">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="dashboard-home-link"
+        >
+            لوحة التحكم
+        </a>
+
+
+        <a
+            href="{{ url_for('menu') }}"
+            class="dashboard-home-link"
+        >
+            المنيو
+        </a>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="dashboard-logout"
+        >
+            تسجيل الخروج
+        </a>
+
+    </div>
+
+</div>
+
+</header><main class="dashboard-main"><div class="dashboard-container">
+
+
+    <section class="menu-page-header">
+
+        <div>
+
+            <span class="dashboard-label">
+                إدارة المطعم
+            </span>
+
+            <h1>
+                إنشاء منيو جديد
+            </h1>
+
+            <p>
+                أنشئ المنيو الخاص بمطعمك ثم أضف الأقسام
+                والمنتجات والأسعار والصور.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('menu') }}"
+            class="dashboard-secondary-btn"
+        >
+            ← العودة للمنيو
+        </a>
+
+    </section>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="dashboard-messages">
+
+                {% for category, message in messages %}
+
+                    <div class="dashboard-message {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <section class="menu-create-layout">
+
+
+        <div class="dashboard-card menu-create-card">
+
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <span>
+                        بيانات المنيو
+                    </span>
+
+                    <h2>
+                        معلومات أساسية
+                    </h2>
+
+                </div>
+
+                <div class="menu-create-icon">
+                    📋
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('menu_create') }}"
+                enctype="multipart/form-data"
+                class="dashboard-form"
+            >
+
+
+                <div class="form-group">
+
+                    <label for="name">
+                        اسم المنيو
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="مثال: منيو مطعم البيت"
+                        value="{{ request.form.get('name', '') }}"
+                        required
+                    >
+
+                    <small>
+                        اسم المنيو الذي سيظهر للعملاء.
+                    </small>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="description">
+                        وصف المنيو
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="5"
+                        placeholder="اكتب وصفًا مختصرًا للمنيو..."
+                    >{{ request.form.get('description', '') }}</textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label for="slug">
+                            رابط المنيو
+                        </label>
+
+                        <div class="input-with-prefix">
+
+                            <span>
+                                /menu/
+                            </span>
+
+                            <input
+                                type="text"
+                                id="slug"
+                                name="slug"
+                                placeholder="my-restaurant"
+                                value="{{ request.form.get('slug', '') }}"
+                            >
+
+                        </div>
+
+                        <small>
+                            استخدم حروفًا إنجليزية وأرقامًا وشرطة فقط.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="status">
+                            حالة المنيو
+                        </label>
+
+                        <select
+                            id="status"
+                            name="status"
+                        >
+
+                            <option
+                                value="active"
+                                selected
+                            >
+                                نشط
+                            </option>
+
+                            <option value="inactive">
+                                غير نشط
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="image">
+                        صورة المنيو
+                    </label>
+
+                    <div class="upload-box">
+
+                        <input
+                            type="file"
+                            id="image"
+                            name="image"
+                            accept="image/*"
+                        >
+
+                        <div class="upload-content">
+
+                            <span class="upload-icon">
+                                🖼️
+                            </span>
+
+                            <strong>
+                                اختر صورة للمنيو
+                            </strong>
+
+                            <small>
+                                PNG أو JPG
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <a
+                        href="{{ url_for('menu') }}"
+                        class="dashboard-secondary-btn"
+                    >
+                        إلغاء
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="dashboard-primary-btn"
+                    >
+                        إنشاء المنيو
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+        <aside class="menu-create-preview">
+
+
+            <div class="preview-label">
+                معاينة
+            </div>
+
+
+            <div class="restaurant-preview">
+
+
+                <div class="restaurant-preview-header">
+
+                    <div class="restaurant-logo">
+                        M
+                    </div>
+
+                    <div>
+
+                        <h3 id="previewName">
+                            اسم مطعمك
+                        </h3>
+
+                        <p id="previewDescription">
+                            وصف المطعم سيظهر هنا
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="preview-divider"></div>
+
+
+                <div class="preview-category">
+
+                    <span>
+                        الأكثر طلبًا
+                    </span>
+
+                    <span>
+                        الوجبات
+                    </span>
+
+                    <span>
+                        المشروبات
+                    </span>
+
+                </div>
+
+
+                <div class="preview-menu-product">
+
+                    <div class="preview-food-image">
+                        🍔
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            منتج تجريبي
+                        </strong>
+
+                        <p>
+                            وصف المنتج سيظهر هنا
+                        </p>
+
+                        <b>
+                            150 جنيه
+                        </b>
+
+                    </div>
+
+                </div>
+
+
+                <div class="preview-menu-product">
+
+                    <div class="preview-food-image">
+                        🍕
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            منتج آخر
+                        </strong>
+
+                        <p>
+                            أضف منتجاتك من لوحة التحكم
+                        </p>
+
+                        <b>
+                            180 جنيه
+                        </b>
+
+                    </div>
+
+                </div>
+
+
+                <div class="preview-menu-product">
+
+                    <div class="preview-food-image">
+                        🥤
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            مشروب
+                        </strong>
+
+                        <p>
+                            المشروبات الخاصة بالمطعم
+                        </p>
+
+                        <b>
+                            45 جنيه
+                        </b>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="preview-note">
+
+                <span>
+                    💡
+                </span>
+
+                <p>
+                    بعد إنشاء المنيو يمكنك إضافة الأقسام
+                    والمنتجات والأسعار والصور من لوحة التحكم.
+                </p>
+
+            </div>
+
+
+        </aside>
+
+
+    </section>
+
+
+</div>
+
+</main><footer class="main-footer"><div class="footer-container">
+
+    <div class="footer-brand">
+
+        <strong>
+            Menu Smart
+        </strong>
+
+        <p>
+            منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+        </p>
+
+    </div>
+
+
+    <div class="footer-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            لوحة التحكم
+        </a>
+
+        <a href="{{ url_for('menu') }}">
+            المنيو
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            حسابي
+        </a>
+
+    </div>
+
+
+    <div class="footer-copy">
+
+        © {{ current_year }} Menu Smart
+
+    </div>
+
+</div>
+
+</footer><script>
+
+const nameInput = document.getElementById("name");
+const descriptionInput = document.getElementById("description");
+
+const previewName = document.getElementById("previewName");
+const previewDescription = document.getElementById("previewDescription");
+
+
+if (nameInput) {
+
+    nameInput.addEventListener("input", function () {
+
+        previewName.textContent =
+            this.value.trim() || "اسم مطعمك";
+
+    });
+
+}
+
+
+if (descriptionInput) {
+
+    descriptionInput.addEventListener("input", function () {
+
+        previewDescription.textContent =
+            this.value.trim() || "وصف المطعم سيظهر هنا";
+
+    });
+
+}
+
+</script></body></html>

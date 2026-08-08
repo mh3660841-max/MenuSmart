@@ -1,0 +1,672 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<title>تسجيل الدخول | Menu Smart</title>
+
+<meta
+    name="description"
+    content="تسجيل الدخول إلى حسابك في Menu Smart لإدارة مطعمك والمنيو الإلكتروني."
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<style>
+
+    /* =====================================================
+       MENU SMART - LOGIN PAGE
+    ===================================================== */
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body.auth-page {
+        margin: 0;
+        min-height: 100vh;
+        font-family: inherit;
+        background: #f4f4f2;
+        color: #111;
+    }
+
+    .login-page {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* =========================
+       BRAND SIDE
+    ========================= */
+
+    .login-brand-side {
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+        padding: 45px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background:
+            radial-gradient(
+                circle at 20% 20%,
+                rgba(212,175,55,0.18),
+                transparent 30%
+            ),
+            linear-gradient(
+                145deg,
+                #0c0c0c,
+                #151515 55%,
+                #202020
+            );
+        color: #fff;
+    }
+
+    .login-brand-side::before {
+        content: "";
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        left: -180px;
+        bottom: -180px;
+        border: 1px solid rgba(212,175,55,0.18);
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 45px rgba(212,175,55,0.025),
+            0 0 0 90px rgba(212,175,55,0.018);
+    }
+
+    .login-brand-side::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        right: -90px;
+        top: -90px;
+        border-radius: 50%;
+        background: rgba(212,175,55,0.05);
+    }
+
+    .login-brand-content {
+        position: relative;
+        z-index: 2;
+        max-width: 520px;
+        margin: auto;
+    }
+
+    .login-brand-logo {
+        width: 68px;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 28px;
+        border: 1px solid rgba(212,175,55,0.45);
+        border-radius: 20px;
+        background: rgba(255,255,255,0.05);
+        color: #d4af37;
+        font-size: 30px;
+        font-weight: 900;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+
+    .login-brand-content h1 {
+        margin: 0 0 18px;
+        font-size: clamp(36px, 4vw, 58px);
+        line-height: 1.15;
+        font-weight: 900;
+        letter-spacing: -1.5px;
+    }
+
+    .login-brand-content h1 span {
+        color: #d4af37;
+    }
+
+    .login-brand-content > p {
+        max-width: 470px;
+        margin: 0;
+        color: rgba(255,255,255,0.66);
+        font-size: 16px;
+        line-height: 2;
+    }
+
+    .login-features {
+        display: grid;
+        gap: 13px;
+        margin-top: 35px;
+    }
+
+    .login-feature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255,255,255,0.82);
+        font-size: 14px;
+    }
+
+    .login-feature-icon {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(212,175,55,0.22);
+        border-radius: 10px;
+        color: #d4af37;
+        background: rgba(212,175,55,0.07);
+        font-size: 14px;
+    }
+
+    .login-brand-footer {
+        position: relative;
+        z-index: 2;
+        color: rgba(255,255,255,0.35);
+        font-size: 12px;
+    }
+
+    /* =========================
+       FORM SIDE
+    ========================= */
+
+    .login-form-side {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 35px;
+        background: #f7f7f5;
+    }
+
+    .login-form-wrapper {
+        width: 100%;
+        max-width: 440px;
+    }
+
+    .login-top {
+        margin-bottom: 30px;
+    }
+
+    .login-mobile-brand {
+        display: none;
+    }
+
+    .login-top-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        color: #b18c18;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .login-top-label::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #d4af37;
+    }
+
+    .login-top h2 {
+        margin: 0 0 9px;
+        font-size: 32px;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+    }
+
+    .login-top p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+        line-height: 1.8;
+    }
+
+    /* =========================
+       ALERT
+    ========================= */
+
+    .login-messages {
+        margin-bottom: 18px;
+    }
+
+    .login-message {
+        padding: 12px 14px;
+        border-radius: 11px;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .login-message.error,
+    .login-message.danger {
+        color: #a52222;
+        background: #fff0f0;
+        border: 1px solid #ffd8d8;
+    }
+
+    .login-message.success {
+        color: #187345;
+        background: #effaf3;
+        border: 1px solid #d4f1df;
+    }
+
+    .login-message.warning {
+        color: #896719;
+        background: #fff9e8;
+        border: 1px solid #f6e8b4;
+    }
+
+    /* =========================
+       CARD
+    ========================= */
+
+    .login-card {
+        padding: 30px;
+        border: 1px solid #e8e8e4;
+        border-radius: 22px;
+        background: #fff;
+        box-shadow:
+            0 20px 55px rgba(0,0,0,0.07);
+    }
+
+    .login-form {
+        display: grid;
+        gap: 19px;
+    }
+
+    .login-field {
+        display: grid;
+        gap: 8px;
+    }
+
+    .login-field label {
+        color: #222;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .login-input {
+        width: 100%;
+        height: 52px;
+        padding: 0 15px;
+        border: 1px solid #deded9;
+        border-radius: 12px;
+        outline: none;
+        background: #fafaf8;
+        color: #111;
+        font-family: inherit;
+        font-size: 14px;
+        transition: 0.2s ease;
+    }
+
+    .login-input::placeholder {
+        color: #aaa;
+    }
+
+    .login-input:focus {
+        border-color: #d4af37;
+        background: #fff;
+        box-shadow:
+            0 0 0 4px rgba(212,175,55,0.10);
+    }
+
+    .login-submit {
+        width: 100%;
+        height: 53px;
+        margin-top: 3px;
+        border: none;
+        border-radius: 12px;
+        background: #111;
+        color: #fff;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    .login-submit:hover {
+        background: #d4af37;
+        color: #111;
+        transform: translateY(-1px);
+        box-shadow:
+            0 12px 25px rgba(212,175,55,0.20);
+    }
+
+    .login-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 24px 0 20px;
+        color: #aaa;
+        font-size: 12px;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+        content: "";
+        height: 1px;
+        flex: 1;
+        background: #ededeb;
+    }
+
+    .login-register {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #777;
+        font-size: 13px;
+    }
+
+    .login-register a {
+        color: #111;
+        font-weight: 900;
+        text-decoration: none;
+    }
+
+    .login-register a:hover {
+        color: #b18c18;
+    }
+
+    .login-back {
+        display: block;
+        margin-top: 20px;
+        color: #888;
+        text-align: center;
+        font-size: 12px;
+        text-decoration: none;
+    }
+
+    .login-back:hover {
+        color: #111;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 850px) {
+
+        .login-page {
+            grid-template-columns: 1fr;
+        }
+
+        .login-brand-side {
+            display: none;
+        }
+
+        .login-form-side {
+            min-height: 100vh;
+            padding: 25px 18px;
+        }
+
+        .login-form-wrapper {
+            max-width: 480px;
+        }
+
+        .login-mobile-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 35px;
+            color: #111;
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .login-mobile-brand span {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #111;
+            color: #d4af37;
+            font-size: 18px;
+        }
+
+    }
+
+    @media (max-width: 480px) {
+
+        .login-form-side {
+            padding: 22px 14px;
+        }
+
+        .login-top {
+            margin-bottom: 22px;
+        }
+
+        .login-top h2 {
+            font-size: 27px;
+        }
+
+        .login-card {
+            padding: 22px 18px;
+            border-radius: 18px;
+        }
+
+        .login-input,
+        .login-submit {
+            height: 50px;
+        }
+
+    }
+
+</style>
+
+</head><body class="auth-page"><main class="login-page">
+
+    <!-- =========================
+         BRAND
+    ========================== -->
+
+    <section class="login-brand-side">
+
+        <div></div>
+
+        <div class="login-brand-content">
+
+            <div class="login-brand-logo">
+                M
+            </div>
+
+            <h1>
+                إدارة مطعمك<br>
+                <span>بشكل أذكى.</span>
+            </h1>
+
+            <p>
+                Menu Smart تساعدك على إنشاء منيو إلكتروني
+                احترافي وإدارة منتجاتك وطلبات عملائك
+                من مكان واحد.
+            </p>
+
+            <div class="login-features">
+
+                <div class="login-feature">
+                    <span class="login-feature-icon">✓</span>
+                    إدارة المنتجات والأقسام
+                </div>
+
+                <div class="login-feature">
+                    <span class="login-feature-icon">✓</span>
+                    منيو إلكتروني احترافي
+                </div>
+
+                <div class="login-feature">
+                    <span class="login-feature-icon">✓</span>
+                    متابعة طلبات العملاء
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="login-brand-footer">
+            © {{ current_year|default(2026) }} Menu Smart
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         LOGIN
+    ========================== -->
+
+    <section class="login-form-side">
+
+        <div class="login-form-wrapper">
+
+            <div class="login-mobile-brand">
+
+                <span>M</span>
+
+                Menu Smart
+
+            </div>
+
+
+            <div class="login-top">
+
+                <span class="login-top-label">
+                    تسجيل الدخول
+                </span>
+
+                <h2>
+                    أهلاً بك مرة أخرى
+                </h2>
+
+                <p>
+                    سجّل الدخول للوصول إلى لوحة تحكم مطعمك.
+                </p>
+
+            </div>
+
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    <div class="login-messages">
+
+                        {% for category, message in messages %}
+
+                            <div class="login-message {{ category }}">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <div class="login-card">
+
+                <form
+                    method="POST"
+                    action="{{ url_for('login') }}"
+                    class="login-form"
+                >
+
+                    <div class="login-field">
+
+                        <label for="email">
+                            البريد الإلكتروني
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="login-input"
+                            placeholder="example@email.com"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="login-field">
+
+                        <label for="password">
+                            كلمة المرور
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="login-input"
+                            placeholder="أدخل كلمة المرور"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="login-submit"
+                    >
+                        تسجيل الدخول
+                    </button>
+
+                </form>
+
+
+                <div class="login-divider">
+                    أو
+                </div>
+
+
+                <div class="login-register">
+
+                    <span>
+                        ليس لديك حساب؟
+                    </span>
+
+                    <a href="{{ url_for('register') }}">
+                        إنشاء حساب جديد
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('home') }}"
+                class="login-back"
+            >
+                ← العودة إلى الرئيسية
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body></html>

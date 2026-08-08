@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <title>Menu Smart | المنيو الذكي</title>
+
+    <meta
+        name="description"
+        content="Menu Smart - منصة احترافية لإنشاء وإدارة المنيو الإلكتروني للمطاعم والكافيهات."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="main-header">
+
+    <div class="header-container">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="brand"
+            aria-label="Menu Smart"
+        >
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="Menu Smart"
+                class="brand-logo"
+            >
+
+        </a>
+
+
+        <button
+            type="button"
+            class="mobile-menu-btn"
+            aria-label="فتح القائمة"
+            aria-expanded="false"
+        >
+            ☰
+        </button>
+
+
+        <nav class="nav-links">
+
+            <a href="{{ url_for('home') }}">
+                الرئيسية
+            </a>
+
+
+            {% if session.get('user_id') %}
+
+                <a href="{{ url_for('dashboard') }}">
+                    لوحة التحكم
+                </a>
+
+                <a href="{{ url_for('profile') }}">
+                    مطعمي
+                </a>
+
+                <a href="{{ url_for('logout') }}">
+                    تسجيل الخروج
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}">
+                    تسجيل الدخول
+                </a>
+
+                <a
+                    href="{{ url_for('register') }}"
+                    class="nav-register"
+                >
+                    ابدأ الآن
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     FLASH MESSAGES
+===================================================== -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        <div class="flash-container">
+
+            {% for category, message in messages %}
+
+                <div
+                    class="alert alert-{{ category }}"
+                    data-auto-hide="5000"
+                >
+
+                    <span>
+                        {{ message }}
+                    </span>
+
+                    <button
+                        type="button"
+                        data-close-alert
+                        aria-label="إغلاق"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero-section">
+
+    <div class="hero-container">
+
+
+        <div class="hero-content">
+
+            <span class="hero-badge">
+                منصة رقمية للمطاعم والكافيهات
+            </span>
+
+
+            <h1>
+
+                حوّل منيو مطعمك
+
+                <span>
+                    إلى تجربة رقمية احترافية
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                أنشئ منيو إلكتروني خاص بمطعمك،
+                أضف الأقسام والمنتجات والصور والأسعار،
+                واستقبل طلبات عملائك من مكان واحد.
+
+            </p>
+
+
+            <div class="hero-actions">
+
+                {% if session.get('user_id') %}
+
+                    <a
+                        href="{{ url_for('dashboard') }}"
+                        class="btn btn-primary"
+                    >
+                        الدخول إلى لوحة التحكم
+                    </a>
+
+                    <a
+                        href="{{ url_for('profile') }}"
+                        class="btn btn-outline"
+                    >
+                        إدارة مطعمي
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{{ url_for('register') }}"
+                        class="btn btn-primary"
+                    >
+                        إنشاء حساب مطعم
+                    </a>
+
+                    <a
+                        href="{{ url_for('login') }}"
+                        class="btn btn-outline"
+                    >
+                        تسجيل الدخول
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =================================================
+                 APP PLATFORMS
+            ================================================== -->
+
+            <div class="hero-platforms">
+
+                <span class="hero-platform-title">
+                    يعمل على جميع أجهزتك
+                </span>
+
+
+                <div class="hero-platform-list">
+
+
+                    <!-- APPLE -->
+
+                    <div class="hero-platform">
+
+                        <div class="hero-platform-icon apple-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+
+                                <path
+                                    d="M18.71 19.5c-.98 1.43-2.01 2.85-3.62 2.88-1.58.03-2.11-.93-3.95-.93-1.85 0-2.43.9-3.93.96-1.58.06-2.78-1.55-3.76-2.97-2.04-2.94-3.6-8.3-1.5-11.93 1.04-1.81 2.75-2.95 4.61-2.98 1.6-.03 3.1 1.02 4.05 1.02.96 0 2.76-1.26 4.65-1.08.79.03 3.01.32 4.43 2.4-3.75 2.2-3.13 7.04.65 9.36-.69 1.52-1.03 2.18-1.93 3.27z"
+                                />
+
+                                <path
+                                    d="M15.53 3.64c.84-1.02 1.4-2.46 1.25-3.89-1.22.05-2.7.81-3.57 1.83-.77.89-1.45 2.35-1.27 3.74 1.36.11 2.75-.69 3.59-1.68z"
+                                />
+
+                            </svg>
+
+                        </div>
+
+
+                        <div class="hero-platform-text">
+
+                            <strong>
+                                Apple
+                            </strong>
+
+                            <span>
+                                iPhone و iPad
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ANDROID -->
+
+                    <div class="hero-platform">
+
+                        <div class="hero-platform-icon android-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+
+                                <path
+                                    d="M17.6 9.48l1.84-3.18c.16-.28.06-.64-.22-.8-.28-.16-.64-.06-.8.22l-1.9 3.29A9.72 9.72 0 0 0 12 7.8c-1.64 0-3.18.4-4.52 1.21L5.58 5.72a.58.58 0 0 0-.8-.22.58.58 0 0 0-.22.8L6.4 9.48A7.74 7.74 0 0 0 2.8 16h18.4a7.74 7.74 0 0 0-3.6-6.52z"
+                                />
+
+                                <path
+                                    d="M4.2 17.2h15.6v2.2a1.8 1.8 0 0 1-1.8 1.8h-.8v1.9a.9.9 0 1 1-1.8 0v-1.9H8.6v1.9a.9.9 0 1 1-1.8 0v-1.9H6a1.8 1.8 0 0 1-1.8-1.8v-2.2z"
+                                />
+
+                            </svg>
+
+                        </div>
+
+
+                        <div class="hero-platform-text">
+
+                            <strong>
+                                Android
+                            </strong>
+
+                            <span>
+                                جميع أجهزة Android
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 TRUST
+            ================================================== -->
+
+            <div class="hero-trust">
+
+                <div>
+
+                    <strong>
+                        منيو إلكتروني
+                    </strong>
+
+                    <span>
+                        بدون تطبيق
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        رابط خاص
+                    </strong>
+
+                    <span>
+                        لمطعمك
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        QR Code
+                    </strong>
+
+                    <span>
+                        جاهز للمشاركة
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MENU PREVIEW
+        ================================================== -->
+
+        <div class="hero-preview">
+
+            <div class="menu-preview-card">
+
+
+                <div class="menu-preview-header">
+
+                    <div class="preview-brand">
+
+                        {% if restaurant and restaurant.logo %}
+
+                            <img
+                                src="{{ url_for('static', filename='images/uploads/' + restaurant.logo) }}"
+                                alt="{{ restaurant.name }}"
+                            >
+
+                        {% else %}
+
+                            <div class="preview-brand-icon">
+                                M
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="preview-restaurant">
+
+                        {% if restaurant %}
+
+                            <h3>
+                                {{ restaurant.name }}
+                            </h3>
+
+                            <p>
+                                {{ restaurant.description or 'منيو إلكتروني احترافي' }}
+                            </p>
+
+                        {% else %}
+
+                            <h3>
+                                مطعمك هنا
+                            </h3>
+
+                            <p>
+                                المنيو الإلكتروني الخاص بمطعمك
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                {% if restaurant %}
+
+                    <div class="preview-status">
+                        المنيو جاهز للعرض
+                    </div>
+
+                {% else %}
+
+                    <div class="preview-status">
+                        ابدأ الآن وأنشئ منيو مطعمك
+                    </div>
+
+                {% endif %}
+
+
+                <div class="preview-dashboard">
+
+                    <div class="preview-stat">
+
+                        <span>
+                            الأقسام
+                        </span>
+
+                        <strong>
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="preview-stat">
+
+                        <span>
+                            المنتجات
+                        </span>
+
+                        <strong>
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="preview-stat">
+
+                        <span>
+                            الطلبات
+                        </span>
+
+                        <strong>
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="preview-menu-link">
+
+                    <span>
+                        رابط المنيو
+                    </span>
+
+                    <div>
+
+                        {% if restaurant %}
+
+                            /menu/{{ restaurant.slug }}
+
+                        {% else %}
+
+                            /menu/your-restaurant
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="preview-bottom">
+
+                    <span>
+                        Menu Smart
+                    </span>
+
+                    <span>
+                        QR
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section
+    class="features-section"
+    id="features"
+>
+
+    <div class="section-container">
+
+
+        <div class="section-heading">
+
+            <span>
+                Menu Smart
+            </span>
+
+            <h2>
+                كل أدوات مطعمك في مكان واحد
+            </h2>
+
+            <p>
+                إدارة المنيو والمنتجات والطلبات والعملاء
+                من لوحة تحكم واحدة وبطريقة بسيطة.
+            </p>
+
+        </div>
+
+
+        <div class="features-grid">
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    MENU
+                </div>
+
+                <h3>
+                    منيو إلكتروني
+                </h3>
+
+                <p>
+                    صفحة خاصة بمطعمك تعرض الأقسام والمنتجات
+                    والأسعار بشكل احترافي ومتوافق مع الهاتف.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    QR
+                </div>
+
+                <h3>
+                    QR Code
+                </h3>
+
+                <p>
+                    أنشئ رمز QR خاص بمنيو مطعمك
+                    واستخدمه على الطاولات أو المطبوعات.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    +
+                </div>
+
+                <h3>
+                    إدارة المنتجات
+                </h3>
+
+                <p>
+                    أضف المنتجات والصور والأسعار
+                    وحدد المنتجات المتاحة بسهولة.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    ORD
+                </div>
+
+                <h3>
+                    إدارة الطلبات
+                </h3>
+
+                <p>
+                    تابع الطلبات واعرف حالتها
+                    ونظم عمليات البيع من لوحة واحدة.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    CRM
+                </div>
+
+                <h3>
+                    العملاء
+                </h3>
+
+                <p>
+                    احتفظ ببيانات العملاء والطلبات
+                    وسجل تعاملاتهم مع مطعمك.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    DATA
+                </div>
+
+                <h3>
+                    الإحصائيات
+                </h3>
+
+                <p>
+                    تابع الطلبات والإيرادات والمنتجات
+                    من خلال لوحة الإحصائيات.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     HOW IT WORKS
+===================================================== -->
+
+<section class="how-section">
+
+    <div class="section-container">
+
+
+        <div class="section-heading">
+
+            <span>
+                طريقة العمل
+            </span>
+
+            <h2>
+                من إنشاء الحساب إلى أول طلب
+            </h2>
+
+            <p>
+                كل شيء يتم من خلال خطوات واضحة وبسيطة.
+            </p>
+
+        </div>
+
+
+        <div class="steps-grid">
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <h3>
+                    أنشئ حسابك
+                </h3>
+
+                <p>
+                    أنشئ حساب صاحب المطعم وأدخل بيانات مطعمك.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <h3>
+                    جهّز المنيو
+                </h3>
+
+                <p>
+                    أضف الأقسام والمنتجات والصور والأسعار.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <h3>
+                    شارك المنيو
+                </h3>
+
+                <p>
+                    استخدم رابط المنيو أو QR Code
+                    ليصل إليه عملاؤك بسهولة.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CTA
+===================================================== -->
+
+<section class="cta-section">
+
+    <div class="cta-container">
+
+
+        <div>
+
+            <span>
+                جاهز تبدأ؟
+            </span>
+
+            <h2>
+                خلّي مطعمك جاهز للعصر الرقمي
+            </h2>
+
+            <p>
+                أنشئ حسابك وابدأ بناء المنيو الخاص بمطعمك.
+            </p>
+
+        </div>
+
+
+        {% if session.get('user_id') %}
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-primary"
+            >
+                فتح لوحة التحكم
+            </a>
+
+        {% else %}
+
+            <a
+                href="{{ url_for('register') }}"
+                class="btn btn-primary"
+            >
+                ابدأ إنشاء مطعمك
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="main-footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <strong>
+                Menu Smart
+            </strong>
+
+            <p>
+                منصة رقمية لإنشاء وإدارة المنيو الإلكتروني
+                للمطاعم والكافيهات.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('home') }}">
+                الرئيسية
+            </a>
+
+            <a href="{{ url_for('about') }}">
+                من نحن
+            </a>
+
+            <a href="{{ url_for('contact') }}">
+                تواصل معنا
+            </a>
+
+            <a href="{{ url_for('privacy') }}">
+                الخصوصية
+            </a>
+
+            <a href="{{ url_for('terms') }}">
+                الشروط والأحكام
+            </a>
+
+        </div>
+
+
+        <div class="footer-account">
+
+            {% if session.get('user_id') %}
+
+                <a href="{{ url_for('dashboard') }}">
+                    لوحة التحكم
+                </a>
+
+                <a href="{{ url_for('logout') }}">
+                    تسجيل الخروج
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}">
+                    تسجيل الدخول
+                </a>
+
+                <a href="{{ url_for('register') }}">
+                    إنشاء حساب
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="footer-copy">
+
+            © {{ current_year or 2026 }} Menu Smart
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+<script
+    src="{{ url_for('static', filename='js/main.js') }}"
+></script>
+
+</body>
+
+</html>

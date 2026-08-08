@@ -1,0 +1,678 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<title>إنشاء حساب | Menu Smart</title>
+
+<meta
+    name="description"
+    content="أنشئ حسابك في Menu Smart وابدأ إنشاء منيو إلكتروني لمطعمك."
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<style>
+
+    .register-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at 10% 10%, rgba(212,175,55,.12), transparent 30%),
+            radial-gradient(circle at 90% 90%, rgba(212,175,55,.08), transparent 30%),
+            #0b0b0b;
+    }
+
+    .register-header {
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        background: rgba(10,10,10,.85);
+        backdrop-filter: blur(12px);
+    }
+
+    .register-header .header-container {
+        max-width: 1200px;
+        margin: auto;
+        min-height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px;
+    }
+
+    .register-main {
+        max-width: 1200px;
+        margin: auto;
+        padding: 55px 22px 80px;
+    }
+
+    .register-layout {
+        display: grid;
+        grid-template-columns: 1fr 470px;
+        gap: 70px;
+        align-items: center;
+        min-height: 650px;
+    }
+
+    .register-intro {
+        color: #fff;
+        padding: 20px;
+    }
+
+    .register-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        border-radius: 50px;
+        background: rgba(212,175,55,.1);
+        border: 1px solid rgba(212,175,55,.3);
+        color: #D4AF37;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+    .register-intro h1 {
+        margin: 0 0 20px;
+        font-size: clamp(36px, 5vw, 62px);
+        line-height: 1.15;
+        font-weight: 900;
+        color: #fff;
+    }
+
+    .register-intro h1 span {
+        color: #D4AF37;
+    }
+
+    .register-intro > p {
+        max-width: 600px;
+        color: #bdbdbd;
+        font-size: 18px;
+        line-height: 2;
+        margin-bottom: 35px;
+    }
+
+    .register-benefits {
+        display: grid;
+        gap: 15px;
+        max-width: 540px;
+    }
+
+    .register-benefit {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        color: #ddd;
+        font-size: 15px;
+    }
+
+    .benefit-icon {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: rgba(212,175,55,.1);
+        border: 1px solid rgba(212,175,55,.2);
+        color: #D4AF37;
+        font-size: 18px;
+    }
+
+    .register-card {
+        background: rgba(255,255,255,.97);
+        border-radius: 28px;
+        padding: 34px;
+        box-shadow:
+            0 25px 80px rgba(0,0,0,.45),
+            0 0 0 1px rgba(255,255,255,.08);
+    }
+
+    .register-card-header {
+        margin-bottom: 26px;
+    }
+
+    .register-card-header h2 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        color: #111;
+    }
+
+    .register-card-header p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .register-form {
+        display: grid;
+        gap: 17px;
+    }
+
+    .register-field {
+        display: grid;
+        gap: 8px;
+    }
+
+    .register-field label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #222;
+    }
+
+    .register-field input {
+        width: 100%;
+        box-sizing: border-box;
+        height: 52px;
+        border: 1px solid #dedede;
+        border-radius: 13px;
+        padding: 0 16px;
+        background: #fafafa;
+        color: #111;
+        font-size: 15px;
+        outline: none;
+        transition: .2s ease;
+    }
+
+    .register-field input:focus {
+        border-color: #D4AF37;
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(212,175,55,.1);
+    }
+
+    .register-field input::placeholder {
+        color: #aaa;
+    }
+
+    .password-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .register-terms {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: #666;
+        font-size: 13px;
+        line-height: 1.8;
+        margin-top: 2px;
+    }
+
+    .register-terms input {
+        margin-top: 5px;
+        accent-color: #D4AF37;
+    }
+
+    .register-terms a {
+        color: #a17d16;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .register-submit {
+        height: 54px;
+        border: 0;
+        border-radius: 14px;
+        background: #111;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: .2s ease;
+        box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    }
+
+    .register-submit:hover {
+        background: #D4AF37;
+        color: #111;
+        transform: translateY(-2px);
+    }
+
+    .register-login {
+        text-align: center;
+        margin-top: 22px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .register-login a {
+        color: #111;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .register-messages {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    .register-message {
+        padding: 12px 14px;
+        border-radius: 11px;
+        font-size: 13px;
+    }
+
+    .register-message.danger {
+        background: #fff0f0;
+        color: #a40000;
+    }
+
+    .register-message.success {
+        background: #effbf2;
+        color: #16702c;
+    }
+
+    .register-message.warning {
+        background: #fff8e8;
+        color: #8a6500;
+    }
+
+    .register-back {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .register-back a {
+        color: #aaa;
+        text-decoration: none;
+        font-size: 14px;
+        transition: .2s;
+    }
+
+    .register-back a:hover {
+        color: #D4AF37;
+    }
+
+    @media (max-width: 900px) {
+
+        .register-layout {
+            grid-template-columns: 1fr;
+            gap: 35px;
+        }
+
+        .register-intro {
+            text-align: center;
+            padding: 0;
+        }
+
+        .register-intro > p {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .register-benefits {
+            margin: auto;
+            text-align: right;
+        }
+
+        .register-card {
+            max-width: 520px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: auto;
+        }
+
+    }
+
+    @media (max-width: 560px) {
+
+        .register-main {
+            padding: 35px 14px 60px;
+        }
+
+        .register-intro h1 {
+            font-size: 36px;
+        }
+
+        .register-intro > p {
+            font-size: 15px;
+        }
+
+        .register-card {
+            padding: 23px 18px;
+            border-radius: 22px;
+        }
+
+        .password-row {
+            grid-template-columns: 1fr;
+        }
+
+        .register-header .header-container {
+            padding: 0 14px;
+        }
+
+    }
+
+</style>
+
+</head><body class="register-page"><header class="register-header"><div class="header-container">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="brand"
+    >
+
+        <span class="brand-icon">
+            M
+        </span>
+
+        <span class="brand-name">
+            Menu Smart
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('login') }}"
+        class="btn btn-outline"
+    >
+        تسجيل الدخول
+    </a>
+
+</div>
+
+</header><main class="register-main"><div class="register-layout">
+
+
+    <section class="register-intro">
+
+        <span class="register-badge">
+            ✨ ابدأ رحلتك الآن
+        </span>
+
+        <h1>
+            ابنِ منيو مطعمك
+            <span>بشكل أذكى</span>
+        </h1>
+
+        <p>
+            أنشئ حسابك في Menu Smart واحصل على مساحة
+            احترافية لإدارة منتجات مطعمك وأسعارك وطلبات عملائك.
+        </p>
+
+
+        <div class="register-benefits">
+
+            <div class="register-benefit">
+
+                <span class="benefit-icon">✓</span>
+
+                <span>
+                    أنشئ منيو إلكتروني احترافي بسهولة
+                </span>
+
+            </div>
+
+
+            <div class="register-benefit">
+
+                <span class="benefit-icon">✓</span>
+
+                <span>
+                    أضف المنتجات والصور والأسعار وقتما تريد
+                </span>
+
+            </div>
+
+
+            <div class="register-benefit">
+
+                <span class="benefit-icon">✓</span>
+
+                <span>
+                    شارك منيو مطعمك مع العملاء من رابط واحد
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="register-card">
+
+
+        <div class="register-card-header">
+
+            <h2>
+                إنشاء حساب
+            </h2>
+
+            <p>
+                أدخل بياناتك للبدء في استخدام Menu Smart
+            </p>
+
+        </div>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="register-messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="register-message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <form
+            method="POST"
+            action="{{ url_for('register') }}"
+            class="register-form"
+        >
+
+
+            <div class="register-field">
+
+                <label for="name">
+                    الاسم
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="اكتب اسمك"
+                    autocomplete="name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="register-field">
+
+                <label for="email">
+                    البريد الإلكتروني
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="example@email.com"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="register-field">
+
+                <label for="phone">
+                    رقم الهاتف
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="01xxxxxxxxx"
+                    autocomplete="tel"
+                >
+
+            </div>
+
+
+            <div class="password-row">
+
+                <div class="register-field">
+
+                    <label for="password">
+                        كلمة المرور
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="كلمة مرور قوية"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="register-field">
+
+                    <label for="confirm_password">
+                        تأكيد كلمة المرور
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="أعد كتابتها"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <label class="register-terms">
+
+                <input
+                    type="checkbox"
+                    name="terms"
+                    required
+                >
+
+                <span>
+                    أوافق على
+                    <a href="{{ url_for('terms') }}">
+                        الشروط والأحكام
+                    </a>
+                    وسياسة
+                    <a href="{{ url_for('privacy') }}">
+                        الخصوصية
+                    </a>.
+                </span>
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="register-submit"
+            >
+                إنشاء الحساب
+            </button>
+
+        </form>
+
+
+        <div class="register-login">
+
+            لديك حساب بالفعل؟
+
+            <a href="{{ url_for('login') }}">
+                تسجيل الدخول
+            </a>
+
+        </div>
+
+
+        <div class="register-back">
+
+            <a href="{{ url_for('home') }}">
+                ← العودة إلى الرئيسية
+            </a>
+
+        </div>
+
+
+    </section>
+
+</div>
+
+</main><footer class="main-footer"><div class="footer-container">
+
+    <div class="footer-brand">
+
+        <strong>
+            Menu Smart
+        </strong>
+
+        <p>
+            منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+        </p>
+
+    </div>
+
+
+    <div class="footer-links">
+
+        <a href="{{ url_for('home') }}">
+            الرئيسية
+        </a>
+
+        <a href="{{ url_for('login') }}">
+            تسجيل الدخول
+        </a>
+
+    </div>
+
+
+    <div class="footer-copy">
+
+        © {{ current_year }} Menu Smart
+
+    </div>
+
+</div>
+
+</footer></body>
+</html>

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0f172a"
+    >
+
+    <title>دعوة مطعم | Menu Smart</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(212, 175, 55, 0.12),
+                    transparent 35%
+                ),
+                #f8fafc;
+            color: #0f172a;
+        }
+
+        .invite-page {
+            min-height: 100vh;
+            padding: 30px 16px 50px;
+        }
+
+        .invite-container {
+            width: 100%;
+            max-width: 850px;
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        .invite-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #0f172a;
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 15px;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #0f172a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: #f1f5f9;
+        }
+
+        /* CARD */
+
+        .invite-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+        }
+
+        .invite-top {
+            padding: 40px 25px;
+            text-align: center;
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e293b
+                );
+            color: #ffffff;
+        }
+
+        .invite-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.1);
+            font-size: 35px;
+        }
+
+        .invite-top h1 {
+            margin: 0 0 10px;
+            font-size: 30px;
+        }
+
+        .invite-top p {
+            max-width: 600px;
+            margin: auto;
+            line-height: 1.9;
+            color: #cbd5e1;
+        }
+
+        /* CONTENT */
+
+        .invite-content {
+            padding: 30px;
+        }
+
+        .restaurant-name {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .restaurant-name span {
+            display: block;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .restaurant-name strong {
+            font-size: 24px;
+        }
+
+        .invite-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            align-items: stretch;
+        }
+
+        /* QR */
+
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            background: #f8fafc;
+        }
+
+        .qr-title {
+            margin: 0 0 18px;
+            font-size: 18px;
+        }
+
+        .qr-box {
+            width: 230px;
+            height: 230px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-hint {
+            margin: 15px 0 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* LINK */
+
+        .link-section {
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+        }
+
+        .link-section h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+
+        .link-description {
+            margin-top: 0;
+            margin-bottom: 18px;
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .link-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .link-box input {
+            min-width: 0;
+            flex: 1;
+            height: 48px;
+            padding: 0 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: #334155;
+            font-size: 13px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .copy-button,
+        .share-button,
+        .print-button {
+            border: 0;
+            min-height: 48px;
+            padding: 0 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .copy-button {
+            background: #0f172a;
+            color: #ffffff;
+        }
+
+        .copy-button:hover {
+            transform: translateY(-1px);
+            background: #1e293b;
+        }
+
+        .share-button {
+            width: 100%;
+            background: #d4af37;
+            color: #111827;
+            margin-top: 8px;
+        }
+
+        .share-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .print-button {
+            width: 100%;
+            background: #f1f5f9;
+            color: #0f172a;
+            margin-top: 10px;
+        }
+
+        .print-button:hover {
+            background: #e2e8f0;
+        }
+
+        .copy-message {
+            min-height: 22px;
+            margin: 8px 0 0;
+            color: #15803d;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* INFO */
+
+        .invite-info {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 16px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+        }
+
+        .invite-info strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .invite-info p {
+            margin: 0;
+            color: #713f12;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* FOOTER */
+
+        .invite-footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .invite-page {
+                padding: 18px 12px 35px;
+            }
+
+            .invite-header {
+                margin-bottom: 18px;
+            }
+
+            .brand-name {
+                display: none;
+            }
+
+            .invite-top {
+                padding: 32px 18px;
+            }
+
+            .invite-top h1 {
+                font-size: 25px;
+            }
+
+            .invite-content {
+                padding: 18px;
+            }
+
+            .invite-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-box {
+                width: 210px;
+                height: 210px;
+            }
+
+            .link-box {
+                flex-direction: column;
+            }
+
+            .copy-button {
+                width: 100%;
+            }
+
+        }
+
+        /* PRINT */
+
+        @media print {
+
+            body {
+                background: #ffffff;
+            }
+
+            .invite-page {
+                padding: 0;
+            }
+
+            .invite-header,
+            .link-section,
+            .invite-info,
+            .invite-footer {
+                display: none;
+            }
+
+            .invite-card {
+                border: 0;
+                box-shadow: none;
+            }
+
+            .invite-top {
+                background: #ffffff;
+                color: #000000;
+            }
+
+            .invite-top p {
+                color: #333333;
+            }
+
+            .qr-section {
+                border: 0;
+                background: #ffffff;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="invite-page">
+
+    <div class="invite-container">
+
+        <!-- HEADER -->
+
+        <header class="invite-header">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="brand"
+            >
+
+                <img
+                    src="{{ url_for('static', filename='images/logo.png') }}"
+                    alt="Menu Smart"
+                    class="brand-logo"
+                >
+
+                <span class="brand-name">
+                    Menu Smart
+                </span>
+
+            </a>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="back-button"
+            >
+                ← لوحة التحكم
+            </a>
+
+        </header>
+
+
+        <!-- CARD -->
+
+        <section class="invite-card">
+
+
+            <!-- TOP -->
+
+            <div class="invite-top">
+
+                <div class="invite-icon">
+                    🚀
+                </div>
+
+                <h1>
+                    ادعُ مطعمًا إلى Menu Smart
+                </h1>
+
+                <p>
+                    شارك المنصة مع مطعم آخر وساعده على إنشاء
+                    منيو إلكتروني احترافي واستقبال الطلبات بسهولة.
+                </p>
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <div class="invite-content">
+
+
+                {% if restaurant %}
+
+                    <div class="restaurant-name">
+
+                        <span>
+                            الدعوة من مطعم
+                        </span>
+
+                        <strong>
+                            {{ restaurant.name }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+
+                <div class="invite-grid">
+
+
+                    <!-- QR -->
+
+                    <div class="qr-section">
+
+                        <h2 class="qr-title">
+                            📱 امسح QR Code
+                        </h2>
+
+                        <div class="qr-box">
+
+                            <img
+                                id="qrImage"
+                                src="{{ qr_code }}"
+                                alt="QR Code"
+                            >
+
+                        </div>
+
+                        <p class="qr-hint">
+                            يمكن للمطعم الآخر مسح الكود
+                            لفتح صفحة الانضمام مباشرة.
+                        </p>
+
+                    </div>
+
+
+                    <!-- LINK -->
+
+                    <div class="link-section">
+
+                        <h2>
+                            🔗 رابط الدعوة
+                        </h2>
+
+                        <p class="link-description">
+                            انسخ الرابط وأرسله عبر واتساب
+                            أو أي وسيلة تواصل.
+                        </p>
+
+                        <div class="link-box">
+
+                            <input
+                                id="inviteLink"
+                                type="text"
+                                value="{{ invite_url }}"
+                                readonly
+                            >
+
+                            <button
+                                type="button"
+                                class="copy-button"
+                                onclick="copyInviteLink()"
+                            >
+                                📋 نسخ
+                            </button>
+
+                        </div>
+
+                        <p
+                            id="copyMessage"
+                            class="copy-message"
+                        ></p>
+
+
+                        <button
+                            type="button"
+                            class="share-button"
+                            onclick="shareInvite()"
+                        >
+                            📤 مشاركة الدعوة
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="print-button"
+                            onclick="window.print()"
+                        >
+                            🖨️ طباعة الدعوة
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="invite-info">
+
+                    <strong>
+                        💡 طريقة الاستخدام
+                    </strong>
+
+                    <p>
+                        اطبع QR Code وضعه في المطعم،
+                        أو أرسل رابط الدعوة مباشرة لصاحب المطعم.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer class="invite-footer">
+
+            Menu Smart
+            —
+            منصتك الذكية لإدارة المنيو والطلبات
+
+        </footer>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function copyInviteLink() {
+
+        const input =
+            document.getElementById("inviteLink");
+
+        const message =
+            document.getElementById("copyMessage");
+
+        navigator.clipboard.writeText(
+            input.value
+        ).then(function () {
+
+            message.textContent =
+                "تم نسخ رابط الدعوة ✅";
+
+        }).catch(function () {
+
+            input.select();
+
+            document.execCommand("copy");
+
+            message.textContent =
+                "تم نسخ رابط الدعوة ✅";
+
+        });
+
+    }
+
+
+    function shareInvite() {
+
+        const input =
+            document.getElementById("inviteLink");
+
+        const url =
+            input.value;
+
+        if (navigator.share) {
+
+            navigator.share({
+                title: "دعوة للانضمام إلى Menu Smart",
+                text: "انضم إلى Menu Smart وأنشئ منيو إلكتروني لمطعمك.",
+                url: url
+            });
+
+        } else {
+
+            copyInviteLink();
+
+            alert(
+                "تم نسخ رابط الدعوة، يمكنك إرساله الآن."
+            );
+
+        }
+
+    }
+
+</script>
+
+</body>
+
+</html>

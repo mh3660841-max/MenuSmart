@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <title>إضافة منتج | Menu Smart</title>
+
+    <meta
+        name="description"
+        content="إضافة منتج جديد إلى منيو المطعم في Menu Smart."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+    <style>
+
+        /* =========================================
+           PRODUCT ADD PAGE
+        ========================================= */
+
+        .product-add-page {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(212,175,55,0.07),
+                    transparent 32%
+                ),
+                #f6f6f7;
+        }
+
+
+        /* HEADER */
+
+        .product-add-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+
+            padding: 30px;
+
+            margin-bottom: 25px;
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #111111,
+                    #222222
+                );
+
+            color: #fff;
+
+            box-shadow:
+                0 18px 45px rgba(0,0,0,0.12);
+        }
+
+        .product-add-hero-content {
+            min-width: 0;
+        }
+
+        .product-add-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            color: #d4af37;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+        .product-add-label::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #d4af37;
+
+            box-shadow:
+                0 0 12px rgba(212,175,55,0.7);
+        }
+
+        .product-add-hero h1 {
+            margin: 0 0 8px;
+
+            font-size: clamp(27px,4vw,40px);
+
+            font-weight: 900;
+        }
+
+        .product-add-hero p {
+            margin: 0;
+
+            max-width: 650px;
+
+            color:
+                rgba(255,255,255,0.68);
+
+            line-height: 1.8;
+
+            font-size: 14px;
+        }
+
+        .product-back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 150px;
+
+            padding: 12px 18px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.16);
+
+            background:
+                rgba(255,255,255,0.06);
+
+            color: #fff;
+
+            text-decoration: none;
+
+            font-weight: 800;
+
+            transition: 0.2s ease;
+        }
+
+        .product-back-btn:hover {
+            background: #d4af37;
+            color: #111;
+            transform: translateY(-2px);
+        }
+
+
+        /* LAYOUT */
+
+        .product-add-layout {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.5fr)
+                minmax(300px, 0.8fr);
+
+            gap: 22px;
+
+            align-items: start;
+        }
+
+
+        /* FORM CARD */
+
+        .product-add-card {
+            background: #fff;
+
+            border:
+                1px solid #e8e8e8;
+
+            border-radius: 22px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,0.055);
+        }
+
+        .product-add-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 23px 25px;
+
+            border-bottom:
+                1px solid #eeeeee;
+        }
+
+        .product-add-card-header span {
+            display: block;
+
+            color: #d4af37;
+
+            font-size: 11px;
+            font-weight: 900;
+
+            margin-bottom: 5px;
+        }
+
+        .product-add-card-header h2 {
+            margin: 0;
+
+            font-size: 20px;
+        }
+
+        .product-header-icon {
+            width: 50px;
+            height: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            background:
+                rgba(212,175,55,0.11);
+
+            font-size: 24px;
+        }
+
+
+        /* FORM */
+
+        .product-add-form {
+            padding: 25px;
+        }
+
+        .product-form-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 18px;
+        }
+
+        .product-form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .product-form-group label {
+            margin-bottom: 8px;
+
+            color: #222;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+        .product-form-group input,
+        .product-form-group textarea,
+        .product-form-group select {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            border:
+                1px solid #dddddd;
+
+            border-radius: 12px;
+
+            background: #fafafa;
+
+            padding: 13px 14px;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.2s ease;
+        }
+
+        .product-form-group input,
+        .product-form-group select {
+            min-height: 48px;
+        }
+
+        .product-form-group textarea {
+            min-height: 120px;
+
+            resize: vertical;
+
+            line-height: 1.8;
+        }
+
+        .product-form-group input:focus,
+        .product-form-group textarea:focus,
+        .product-form-group select:focus {
+
+            background: #fff;
+
+            border-color: #d4af37;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(212,175,55,0.10);
+        }
+
+
+        /* PRICE */
+
+        .price-wrapper {
+            position: relative;
+        }
+
+        .price-wrapper input {
+            padding-left: 65px;
+        }
+
+        .price-currency {
+            position: absolute;
+
+            left: 13px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #777;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+
+        /* IMAGE UPLOAD */
+
+        .image-upload-area {
+            position: relative;
+
+            min-height: 190px;
+
+            border:
+                2px dashed #dddddd;
+
+            border-radius: 16px;
+
+            background: #fafafa;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            overflow: hidden;
+
+            transition: 0.2s ease;
+        }
+
+        .image-upload-area:hover {
+            border-color: #d4af37;
+
+            background:
+                rgba(212,175,55,0.035);
+        }
+
+        .image-upload-area.dragging {
+            border-color: #d4af37;
+
+            background:
+                rgba(212,175,55,0.08);
+        }
+
+        .image-upload-input {
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            opacity: 0;
+
+            cursor: pointer;
+        }
+
+        .upload-placeholder {
+            pointer-events: none;
+
+            padding: 20px;
+        }
+
+        .upload-icon {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 10px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(212,175,55,0.12);
+
+            font-size: 26px;
+        }
+
+        .upload-placeholder strong {
+            display: block;
+
+            color: #222;
+
+            font-size: 14px;
+
+            margin-bottom: 5px;
+        }
+
+        .upload-placeholder small {
+            color: #888;
+
+            font-size: 11px;
+        }
+
+
+        /* IMAGE PREVIEW INSIDE UPLOAD */
+
+        .upload-preview {
+            display: none;
+
+            position: absolute;
+
+            inset: 0;
+
+            background: #fff;
+        }
+
+        .upload-preview img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .change-image {
+            position: absolute;
+
+            left: 12px;
+            bottom: 12px;
+
+            padding: 8px 12px;
+
+            border-radius: 9px;
+
+            background:
+                rgba(17,17,17,0.82);
+
+            color: #fff;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            pointer-events: none;
+        }
+
+
+        /* STATUS */
+
+        .status-title {
+            margin-bottom: 9px;
+        }
+
+        .status-options {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 10px;
+        }
+
+        .status-option {
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 13px;
+
+            border:
+                1px solid #e3e3e3;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .status-option:hover {
+            border-color: #d4af37;
+        }
+
+        .status-option input {
+            accent-color: #d4af37;
+        }
+
+        .status-option strong {
+            display: block;
+
+            font-size: 13px;
+
+            margin-bottom: 3px;
+        }
+
+        .status-option small {
+            color: #888;
+
+            font-size: 10px;
+        }
+
+
+        /* ACTIONS */
+
+        .product-form-actions {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            padding-top: 22px;
+
+            margin-top: 22px;
+
+            border-top:
+                1px solid #eeeeee;
+        }
+
+        .product-cancel-btn,
+        .product-save-btn {
+
+            min-height: 46px;
+
+            padding: 0 22px;
+
+            border-radius: 11px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-decoration: none;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+        .product-cancel-btn {
+
+            border:
+                1px solid #dddddd;
+
+            background: #fff;
+
+            color: #333;
+        }
+
+        .product-save-btn {
+
+            border: none;
+
+            background: #111;
+
+            color: #fff;
+
+            transition: 0.2s ease;
+        }
+
+        .product-save-btn:hover {
+            background: #d4af37;
+
+            color: #111;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* PREVIEW */
+
+        .product-preview-card {
+            position: sticky;
+
+            top: 20px;
+
+            background: #fff;
+
+            border:
+                1px solid #e8e8e8;
+
+            border-radius: 22px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,0.055);
+        }
+
+        .preview-header {
+            padding: 20px 22px;
+
+            border-bottom:
+                1px solid #eeeeee;
+        }
+
+        .preview-header span {
+            display: block;
+
+            color: #d4af37;
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+            margin-bottom: 4px;
+        }
+
+        .preview-header h2 {
+            margin: 0;
+
+            font-size: 18px;
+        }
+
+        .preview-product {
+            padding: 18px;
+        }
+
+        .preview-image {
+            position: relative;
+
+            width: 100%;
+
+            aspect-ratio: 1 / 0.78;
+
+            overflow: hidden;
+
+            border-radius: 16px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eeeeee,
+                    #f8f8f8
+                );
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .preview-image img {
+            display: none;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .preview-image-placeholder {
+            font-size: 52px;
+
+            opacity: 0.75;
+        }
+
+        .preview-info {
+            padding: 17px 3px 3px;
+        }
+
+        .preview-category {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            margin-bottom: 8px;
+
+            border-radius: 50px;
+
+            background:
+                rgba(212,175,55,0.12);
+
+            color: #98770d;
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+        .preview-info h3 {
+            margin: 0 0 6px;
+
+            font-size: 19px;
+        }
+
+        .preview-info p {
+            margin: 0;
+
+            min-height: 42px;
+
+            color: #888;
+
+            line-height: 1.7;
+
+            font-size: 12px;
+        }
+
+        .preview-price {
+            display: flex;
+
+            align-items: baseline;
+
+            gap: 5px;
+
+            margin-top: 13px;
+
+            padding-top: 12px;
+
+            border-top:
+                1px solid #eeeeee;
+        }
+
+        .preview-price strong {
+            color: #111;
+
+            font-size: 21px;
+        }
+
+        .preview-price span {
+            color: #888;
+
+            font-size: 11px;
+        }
+
+        .preview-tip {
+            margin: 0 18px 18px;
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            background: #fafafa;
+
+            color: #777;
+
+            line-height: 1.7;
+
+            font-size: 11px;
+        }
+
+
+        /* WARNING */
+
+        .product-form-warning {
+            margin-top: 8px;
+
+            color: #a46c00;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 900px) {
+
+            .product-add-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .product-preview-card {
+                position: static;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .product-add-hero {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                padding: 24px;
+            }
+
+            .product-back-btn {
+                width: 100%;
+            }
+
+            .product-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-form-group.full {
+                grid-column: auto;
+            }
+
+            .status-options {
+                grid-template-columns: 1fr;
+            }
+
+            .product-add-form {
+                padding: 20px;
+            }
+
+            .product-add-card-header {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-page menu-management-page product-add-page">
+
+
+<header class="main-header">
+
+    <div class="header-container">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="brand"
+        >
+
+            <span class="brand-icon">
+                M
+            </span>
+
+            <span class="brand-name">
+                Menu Smart
+            </span>
+
+        </a>
+
+
+        <div class="dashboard-header-actions">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="dashboard-home-link"
+            >
+                لوحة التحكم
+            </a>
+
+            <a
+                href="{{ url_for('products') }}"
+                class="dashboard-home-link"
+            >
+                المنتجات
+            </a>
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="dashboard-logout"
+            >
+                تسجيل الخروج
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="dashboard-main">
+
+    <div class="dashboard-container">
+
+
+        <!-- HERO -->
+
+        <section class="product-add-hero">
+
+            <div class="product-add-hero-content">
+
+                <span class="product-add-label">
+                    إدارة المنيو
+                </span>
+
+                <h1>
+                    إضافة منتج جديد
+                </h1>
+
+                <p>
+                    أضف بيانات المنتج والصورة والسعر،
+                    وشاهد شكله مباشرة قبل إضافته إلى المنيو.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('products') }}"
+                class="product-back-btn"
+            >
+                ← العودة للمنتجات
+            </a>
+
+        </section>
+
+
+        <!-- FLASH -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="dashboard-messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="dashboard-message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- MAIN -->
+
+        <section class="product-add-layout">
+
+
+            <!-- FORM -->
+
+            <div class="product-add-card">
+
+
+                <div class="product-add-card-header">
+
+                    <div>
+
+                        <span>
+                            بيانات المنتج
+                        </span>
+
+                        <h2>
+                            معلومات المنتج
+                        </h2>
+
+                    </div>
+
+                    <div class="product-header-icon">
+                        🍽️
+                    </div>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for('product_add') }}"
+                    enctype="multipart/form-data"
+                    class="product-add-form"
+                >
+
+
+                    <div class="product-form-grid">
+
+
+                        <!-- NAME -->
+
+                        <div class="product-form-group">
+
+                            <label for="name">
+                                اسم المنتج
+                            </label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value="{{ request.form.get('name', '') }}"
+                                placeholder="مثال: برجر كلاسيك"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- PRICE -->
+
+                        <div class="product-form-group">
+
+                            <label for="price">
+                                السعر
+                            </label>
+
+                            <div class="price-wrapper">
+
+                                <input
+                                    type="number"
+                                    id="price"
+                                    name="price"
+                                    value="{{ request.form.get('price', '') }}"
+                                    placeholder="150"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                >
+
+                                <span class="price-currency">
+                                    جنيه
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CATEGORY -->
+
+                        <div class="product-form-group">
+
+                            <label for="category_id">
+                                القسم
+                            </label>
+
+                            <select
+                                id="category_id"
+                                name="category_id"
+                            >
+
+                                <option value="">
+                                    بدون قسم
+                                </option>
+
+                                {% for category in categories|default([]) %}
+
+                                    <option
+                                        value="{{ category.id }}"
+                                        {% if request.form.get('category_id') == category.id|string %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ category.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+
+                            {% if not categories %}
+
+                                <small class="product-form-warning">
+                                    لا توجد أقسام حاليًا. يمكنك إضافة المنتج
+                                    بدون قسم أو إنشاء قسم أولًا.
+                                </small>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="product-form-group">
+
+                            <label for="description">
+                                وصف المنتج
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                placeholder="مثال: لحم طازج مع جبنة وصوص خاص..."
+                            >{{ request.form.get('description', '') }}</textarea>
+
+                        </div>
+
+
+                        <!-- IMAGE -->
+
+                        <div class="product-form-group full">
+
+                            <label for="image">
+                                صورة المنتج
+                            </label>
+
+
+                            <div
+                                class="image-upload-area"
+                                id="imageUploadArea"
+                            >
+
+                                <input
+                                    class="image-upload-input"
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                                >
+
+
+                                <div
+                                    class="upload-placeholder"
+                                    id="uploadPlaceholder"
+                                >
+
+                                    <div class="upload-icon">
+                                        🖼️
+                                    </div>
+
+                                    <strong>
+                                        اضغط لاختيار صورة المنتج
+                                    </strong>
+
+                                    <small>
+                                        PNG أو JPG أو WEBP
+                                    </small>
+
+                                </div>
+
+
+                                <div
+                                    class="upload-preview"
+                                    id="uploadPreview"
+                                >
+
+                                    <img
+                                        id="uploadPreviewImage"
+                                        src=""
+                                        alt="معاينة صورة المنتج"
+                                    >
+
+                                    <span class="change-image">
+                                        اضغط لاختيار صورة أخرى
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <div class="product-form-group full">
+
+                            <label class="status-title">
+                                حالة المنتج
+                            </label>
+
+
+                            <div class="status-options">
+
+
+                                <label class="status-option">
+
+                                    <input
+                                        type="radio"
+                                        name="available"
+                                        value="1"
+                                        {% if request.form.get('available', '1') == '1' %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+
+                                        <strong>
+                                            متاح
+                                        </strong>
+
+                                        <small>
+                                            يظهر المنتج للعملاء.
+                                        </small>
+
+                                    </span>
+
+                                </label>
+
+
+                                <label class="status-option">
+
+                                    <input
+                                        type="radio"
+                                        name="available"
+                                        value=""
+                                        {% if request.form.get('available') == '' %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+
+                                        <strong>
+                                            مخفي
+                                        </strong>
+
+                                        <small>
+                                            لا يظهر المنتج في المنيو.
+                                        </small>
+
+                                    </span>
+
+                                </label>
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ACTIONS -->
+
+                    <div class="product-form-actions">
+
+                        <a
+                            href="{{ url_for('products') }}"
+                            class="product-cancel-btn"
+                        >
+                            إلغاء
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="product-save-btn"
+                        >
+                            إضافة المنتج
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+
+            <!-- PREVIEW -->
+
+            <aside class="product-preview-card">
+
+
+                <div class="preview-header">
+
+                    <span>
+                        معاينة مباشرة
+                    </span>
+
+                    <h2>
+                        شكل المنتج في المنيو
+                    </h2>
+
+                </div>
+
+
+                <div class="preview-product">
+
+
+                    <div class="preview-image">
+
+                        <span
+                            class="preview-image-placeholder"
+                            id="previewEmoji"
+                        >
+                            🍽️
+                        </span>
+
+                        <img
+                            id="previewImage"
+                            src=""
+                            alt=""
+                        >
+
+                    </div>
+
+
+                    <div class="preview-info">
+
+                        <span
+                            class="preview-category"
+                            id="previewCategory"
+                        >
+                            بدون قسم
+                        </span>
+
+
+                        <h3 id="previewName">
+                            اسم المنتج
+                        </h3>
+
+
+                        <p id="previewDescription">
+                            وصف المنتج سيظهر هنا
+                        </p>
+
+
+                        <div class="preview-price">
+
+                            <strong id="previewPrice">
+                                0
+                            </strong>
+
+                            <span>
+                                جنيه
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="preview-tip">
+
+                    💡
+                    استخدم صورة واضحة ومضاءة جيدًا للمنتج
+                    حتى يظهر بشكل أفضل للعملاء داخل المنيو.
+
+                </div>
+
+
+            </aside>
+
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+<footer class="main-footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <strong>
+                Menu Smart
+            </strong>
+
+            <p>
+                منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                لوحة التحكم
+            </a>
+
+            <a href="{{ url_for('products') }}">
+                المنتجات
+            </a>
+
+            <a href="{{ url_for('categories') }}">
+                الأقسام
+            </a>
+
+        </div>
+
+
+        <div class="footer-copy">
+
+            © {{ current_year|default(2026) }} Menu Smart
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    /* =========================================
+       LIVE PRODUCT PREVIEW
+    ========================================= */
+
+    const nameInput =
+        document.getElementById("name");
+
+    const descriptionInput =
+        document.getElementById("description");
+
+    const priceInput =
+        document.getElementById("price");
+
+    const categoryInput =
+        document.getElementById("category_id");
+
+    const imageInput =
+        document.getElementById("image");
+
+
+    const previewName =
+        document.getElementById("previewName");
+
+    const previewDescription =
+        document.getElementById("previewDescription");
+
+    const previewPrice =
+        document.getElementById("previewPrice");
+
+    const previewCategory =
+        document.getElementById("previewCategory");
+
+    const previewImage =
+        document.getElementById("previewImage");
+
+    const previewEmoji =
+        document.getElementById("previewEmoji");
+
+
+    const imageUploadArea =
+        document.getElementById("imageUploadArea");
+
+    const uploadPlaceholder =
+        document.getElementById("uploadPlaceholder");
+
+    const uploadPreview =
+        document.getElementById("uploadPreview");
+
+    const uploadPreviewImage =
+        document.getElementById("uploadPreviewImage");
+
+
+    /* NAME */
+
+    if (nameInput) {
+
+        nameInput.addEventListener(
+            "input",
+            function () {
+
+                previewName.textContent =
+                    this.value.trim() ||
+                    "اسم المنتج";
+
+            }
+        );
+
+    }
+
+
+    /* DESCRIPTION */
+
+    if (descriptionInput) {
+
+        descriptionInput.addEventListener(
+            "input",
+            function () {
+
+                previewDescription.textContent =
+                    this.value.trim() ||
+                    "وصف المنتج سيظهر هنا";
+
+            }
+        );
+
+    }
+
+
+    /* PRICE */
+
+    if (priceInput) {
+
+        priceInput.addEventListener(
+            "input",
+            function () {
+
+                previewPrice.textContent =
+                    this.value || "0";
+
+            }
+        );
+
+    }
+
+
+    /* CATEGORY */
+
+    if (categoryInput) {
+
+        categoryInput.addEventListener(
+            "change",
+            function () {
+
+                if (this.value) {
+
+                    previewCategory.textContent =
+                        this.options[
+                            this.selectedIndex
+                        ].text.trim();
+
+                } else {
+
+                    previewCategory.textContent =
+                        "بدون قسم";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* IMAGE */
+
+    function showImage(file) {
+
+        if (!file) {
+            return;
+        }
+
+
+        if (!file.type.startsWith("image/")) {
+
+            alert("من فضلك اختر ملف صورة صحيح.");
+
+            imageInput.value = "";
+
+            return;
+
+        }
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function (event) {
+
+                const imageURL =
+                    event.target.result;
+
+
+                /* MAIN PREVIEW */
+
+                previewImage.src =
+                    imageURL;
+
+                previewImage.style.display =
+                    "block";
+
+                previewEmoji.style.display =
+                    "none";
+
+
+                /* UPLOAD BOX */
+
+                uploadPreviewImage.src =
+                    imageURL;
+
+                uploadPreview.style.display =
+                    "block";
+
+                uploadPlaceholder.style.display =
+                    "none";
+
+            };
+
+
+        reader.readAsDataURL(file);
+
+    }
+
+
+    if (imageInput) {
+
+        imageInput.addEventListener(
+            "change",
+            function () {
+
+                const file =
+                    this.files[0];
+
+                showImage(file);
+
+            }
+        );
+
+    }
+
+
+    /* DRAG & DROP */
+
+    if (imageUploadArea) {
+
+        ["dragenter", "dragover"].forEach(
+            function (eventName) {
+
+                imageUploadArea.addEventListener(
+                    eventName,
+                    function (event) {
+
+                        event.preventDefault();
+
+                        imageUploadArea.classList.add(
+                            "dragging"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+        ["dragleave", "drop"].forEach(
+            function (eventName) {
+
+                imageUploadArea.addEventListener(
+                    eventName,
+                    function (event) {
+
+                        event.preventDefault();
+
+                        imageUploadArea.classList.remove(
+                            "dragging"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+        imageUploadArea.addEventListener(
+            "drop",
+            function (event) {
+
+                const file =
+                    event.dataTransfer.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+
+                try {
+
+                    const dataTransfer =
+                        new DataTransfer();
+
+                    dataTransfer.items.add(file);
+
+                    imageInput.files =
+                        dataTransfer.files;
+
+                } catch (error) {
+                    /* بعض المتصفحات لا تسمح بذلك */
+                }
+
+
+                showImage(file);
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+</html>

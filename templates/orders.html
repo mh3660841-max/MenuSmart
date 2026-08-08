@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <title>
+        الطلبات | Menu Smart
+    </title>
+
+    <meta
+        name="description"
+        content="إدارة ومتابعة طلبات العملاء في Menu Smart."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/menu.css') }}"
+    >
+
+    <style>
+
+        /* =====================================================
+           NEW ORDER NOTIFICATION
+        ===================================================== */
+
+        #newOrderNotification {
+
+            position: fixed;
+
+            top: 20px;
+            right: 20px;
+
+            z-index: 999999;
+
+            width: min(390px, calc(100vw - 30px));
+
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 16px;
+
+            background: #111;
+
+            color: #fff;
+
+            border: 1px solid rgba(212,175,55,.45);
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.30);
+
+            animation:
+                newOrderSlideIn .35s ease;
+
+        }
+
+
+        .new-order-notification-icon {
+
+            width: 46px;
+            height: 46px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background: #d4af37;
+
+            color: #111;
+
+            font-size: 21px;
+
+        }
+
+
+        .new-order-notification-content {
+
+            flex: 1;
+
+            min-width: 0;
+
+        }
+
+
+        .new-order-notification-content strong {
+
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #d4af37;
+
+            font-size: 14px;
+
+            font-weight: 950;
+
+        }
+
+
+        .new-order-notification-content span {
+
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #eee;
+
+            font-size: 11px;
+
+        }
+
+
+        .new-order-notification-content b {
+
+            display: block;
+
+            color: #fff;
+
+            font-size: 12px;
+
+        }
+
+
+        #newOrderNotification button {
+
+            width: 30px;
+            height: 30px;
+
+            flex-shrink: 0;
+
+            border: 0;
+
+            border-radius: 8px;
+
+            background: rgba(255,255,255,.08);
+
+            color: #fff;
+
+            cursor: pointer;
+
+            font-size: 20px;
+
+            line-height: 1;
+
+        }
+
+
+        #newOrderNotification button:hover {
+
+            background: rgba(255,255,255,.16);
+
+        }
+
+
+        @keyframes newOrderSlideIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-15px)
+                    translateX(20px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    translateX(0);
+
+            }
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 500px) {
+
+            #newOrderNotification {
+
+                top: 12px;
+                right: 12px;
+
+                width: calc(100vw - 24px);
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="main-header">
+
+    <div class="header-container">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="brand"
+        >
+
+            <span class="brand-icon">
+                M
+            </span>
+
+            <span class="brand-name">
+                Menu Smart
+            </span>
+
+        </a>
+
+
+        <div class="dashboard-header-actions">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="dashboard-home-link"
+            >
+                لوحة التحكم
+            </a>
+
+
+            <a
+                href="{{ url_for('products') }}"
+                class="dashboard-home-link"
+            >
+                المنتجات
+            </a>
+
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="dashboard-logout"
+            >
+                تسجيل الخروج
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="dashboard-main">
+
+    <div class="dashboard-container">
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <section class="menu-page-header">
+
+            <div>
+
+                <span class="dashboard-label">
+                    إدارة المبيعات
+                </span>
+
+                <h1>
+                    الطلبات
+                </h1>
+
+                <p>
+                    تابع طلبات العملاء واعرف حالة كل طلب
+                    وقيمة المبيعات بسهولة.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="dashboard-secondary-btn"
+            >
+                ← لوحة التحكم
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             FLASH MESSAGES
+        ================================================== -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="dashboard-messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="dashboard-message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =================================================
+             SUMMARY
+        ================================================== -->
+
+        <section class="orders-summary-grid">
+
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-icon">
+                    📦
+                </div>
+
+                <div>
+
+                    <span>
+                        إجمالي الطلبات
+                    </span>
+
+                    <strong>
+                        {{ orders|length if orders else 0 }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-icon">
+                    ⏳
+                </div>
+
+                <div>
+
+                    <span>
+                        قيد الانتظار
+                    </span>
+
+                    <strong id="pendingCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-icon">
+                    ✅
+                </div>
+
+                <div>
+
+                    <span>
+                        مكتملة
+                    </span>
+
+                    <strong id="completedCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-icon">
+                    💰
+                </div>
+
+                <div>
+
+                    <span>
+                        إجمالي المبيعات
+                    </span>
+
+                    <strong id="totalSales">
+                        0 جنيه
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             ORDERS
+        ================================================== -->
+
+        <section class="orders-section dashboard-card">
+
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <span>
+                        الطلبات
+                    </span>
+
+                    <h2>
+                        آخر الطلبات
+                    </h2>
+
+                </div>
+
+
+                <div class="orders-filter">
+
+                    <select id="orderStatusFilter">
+
+                        <option value="all">
+                            كل الطلبات
+                        </option>
+
+                        <option value="pending">
+                            قيد الانتظار
+                        </option>
+
+                        <option value="confirmed">
+                            مؤكدة
+                        </option>
+
+                        <option value="preparing">
+                            قيد التجهيز
+                        </option>
+
+                        <option value="completed">
+                            مكتملة
+                        </option>
+
+                        <option value="cancelled">
+                            ملغاة
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            {% if orders %}
+
+
+                <div class="orders-table-wrapper">
+
+                    <table class="orders-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    رقم الطلب
+                                </th>
+
+                                <th>
+                                    العميل
+                                </th>
+
+                                <th>
+                                    التاريخ
+                                </th>
+
+                                <th>
+                                    الإجمالي
+                                </th>
+
+                                <th>
+                                    الحالة
+                                </th>
+
+                                <th>
+                                    التفاصيل
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="ordersTableBody">
+
+
+                            {% for order in orders %}
+
+                                <tr
+                                    class="order-row"
+                                    data-status="{{ order.status|default('pending') }}"
+                                >
+
+
+                                    <td>
+
+                                        <strong class="order-number">
+
+                                            #
+
+                                            {{ order.id }}
+
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="customer-cell">
+
+                                            <div class="customer-avatar">
+                                                👤
+                                            </div>
+
+                                            <div>
+
+                                                <strong>
+                                                    {{ order.customer_name|default('عميل') }}
+                                                </strong>
+
+                                                {% if order.customer_phone %}
+
+                                                    <small>
+                                                        {{ order.customer_phone }}
+                                                    </small>
+
+                                                {% endif %}
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="order-date">
+
+                                            {{ order.created_at|default('حديثًا') }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong class="order-total">
+
+                                            {{ order.total|default(0) }}
+
+                                            جنيه
+
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% set order_status =
+                                            order.status|default('pending')
+                                        %}
+
+
+                                        {% if order_status == 'pending' %}
+
+                                            <span class="order-status pending">
+                                                قيد الانتظار
+                                            </span>
+
+
+                                        {% elif order_status == 'confirmed' %}
+
+                                            <span class="order-status confirmed">
+                                                مؤكدة
+                                            </span>
+
+
+                                        {% elif order_status == 'preparing' %}
+
+                                            <span class="order-status preparing">
+                                                قيد التجهيز
+                                            </span>
+
+
+                                        {% elif order_status == 'completed' %}
+
+                                            <span class="order-status completed">
+                                                مكتملة
+                                            </span>
+
+
+                                        {% elif order_status == 'cancelled' %}
+
+                                            <span class="order-status cancelled">
+                                                ملغاة
+                                            </span>
+
+
+                                        {% else %}
+
+                                            <span class="order-status">
+                                                {{ order_status }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <a
+                                            href="{{ url_for(
+                                                'order_details',
+                                                order_id=order.id
+                                            ) }}"
+                                            class="order-details-btn"
+                                        >
+                                            عرض الطلب
+                                        </a>
+
+                                    </td>
+
+
+                                </tr>
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div
+                    id="ordersEmptyFilter"
+                    class="empty-menu"
+                    style="display:none;"
+                >
+
+                    <div class="empty-menu-icon">
+                        🔎
+                    </div>
+
+                    <h2>
+                        لا توجد طلبات بهذه الحالة
+                    </h2>
+
+                    <p>
+                        جرّب اختيار حالة أخرى.
+                    </p>
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="empty-menu">
+
+                    <div class="empty-menu-icon">
+                        📦
+                    </div>
+
+                    <h2>
+                        لا توجد طلبات حتى الآن
+                    </h2>
+
+                    <p>
+                        عندما يبدأ العملاء في إرسال الطلبات
+                        ستظهر هنا جميع التفاصيل.
+                    </p>
+
+                    <a
+                        href="{{ url_for('dashboard') }}"
+                        class="dashboard-primary-btn"
+                    >
+                        العودة للوحة التحكم
+                    </a>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="main-footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <strong>
+                Menu Smart
+            </strong>
+
+            <p>
+                منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                لوحة التحكم
+            </a>
+
+            <a href="{{ url_for('products') }}">
+                المنتجات
+            </a>
+
+            <a href="{{ url_for('orders') }}">
+                الطلبات
+            </a>
+
+        </div>
+
+
+        <div class="footer-copy">
+
+            © {{ current_year }} Menu Smart
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+<!-- =====================================================
+     NEW ORDER SOUND
+===================================================== -->
+
+<audio
+    id="newOrderSound"
+    preload="auto"
+>
+
+    <source
+        src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA="
+        type="audio/wav"
+    >
+
+</audio>
+
+
+<script>
+
+/* =========================================================
+   EXISTING ORDERS
+========================================================= */
+
+const orderRows =
+    document.querySelectorAll(".order-row");
+
+const orderStatusFilter =
+    document.getElementById("orderStatusFilter");
+
+const ordersEmptyFilter =
+    document.getElementById("ordersEmptyFilter");
+
+const pendingCount =
+    document.getElementById("pendingCount");
+
+const completedCount =
+    document.getElementById("completedCount");
+
+const totalSales =
+    document.getElementById("totalSales");
+
+
+let pending = 0;
+let completed = 0;
+let sales = 0;
+
+
+orderRows.forEach(function(row) {
+
+    const status =
+        row.dataset.status || "pending";
+
+
+    if (status === "pending") {
+
+        pending++;
+
+    }
+
+
+    if (status === "completed") {
+
+        completed++;
+
+    }
+
+
+    const totalElement =
+        row.querySelector(".order-total");
+
+
+    if (totalElement) {
+
+        const number =
+            parseFloat(
+                totalElement.textContent
+                    .replace(/[^\d.]/g, "")
+            );
+
+
+        if (!isNaN(number)) {
+
+            sales += number;
+
+        }
+
+    }
+
+});
+
+
+if (pendingCount) {
+
+    pendingCount.textContent =
+        pending;
+
+}
+
+
+if (completedCount) {
+
+    completedCount.textContent =
+        completed;
+
+}
+
+
+if (totalSales) {
+
+    totalSales.textContent =
+        sales.toFixed(2) + " جنيه";
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function filterOrders() {
+
+    const selected =
+        orderStatusFilter
+        ? orderStatusFilter.value
+        : "all";
+
+
+    let visible = 0;
+
+
+    orderRows.forEach(function(row) {
+
+        const status =
+            row.dataset.status || "pending";
+
+
+        if (
+            selected === "all" ||
+            selected === status
+        ) {
+
+            row.style.display = "";
+
+            visible++;
+
+        } else {
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+
+    if (ordersEmptyFilter) {
+
+        ordersEmptyFilter.style.display =
+            visible === 0
+            ? "block"
+            : "none";
+
+    }
+
+}
+
+
+if (orderStatusFilter) {
+
+    orderStatusFilter.addEventListener(
+        "change",
+        filterOrders
+    );
+
+}
+
+
+/* =========================================================
+   NEW ORDER NOTIFICATION
+========================================================= */
+
+let latestKnownOrderId = null;
+
+let firstOrdersCheck = true;
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+const newOrderSound =
+    document.getElementById(
+        "newOrderSound"
+    );
+
+
+let audioUnlocked = false;
+
+
+/*
+ * المتصفح يحتاج تفاعل من المستخدم
+ * قبل السماح بتشغيل الصوت.
+ */
+document.addEventListener(
+    "click",
+    function() {
+
+        audioUnlocked = true;
+
+        if (newOrderSound) {
+
+            newOrderSound
+                .play()
+                .then(function() {
+
+                    newOrderSound.pause();
+
+                    newOrderSound.currentTime = 0;
+
+                })
+                .catch(function() {});
+
+        }
+
+    },
+    {
+        once: true
+    }
+);
+
+
+/* =========================================================
+   PLAY SOUND
+========================================================= */
+
+function playNewOrderSound() {
+
+    if (!newOrderSound) {
+        return;
+    }
+
+
+    /*
+     * إذا سمح المتصفح بالصوت
+     */
+    if (audioUnlocked) {
+
+        newOrderSound.currentTime = 0;
+
+        newOrderSound
+            .play()
+            .catch(function(error) {
+
+                console.log(
+                    "Sound blocked:",
+                    error
+                );
+
+            });
+
+        return;
+
+    }
+
+
+    /*
+     * محاولة احتياطية
+     */
+    newOrderSound.currentTime = 0;
+
+    newOrderSound
+        .play()
+        .catch(function() {
+
+            console.log(
+                "اضغط داخل الصفحة لتفعيل صوت الطلبات."
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   SHOW NOTIFICATION
+========================================================= */
+
+function showNewOrderNotification(order) {
+
+
+    /*
+     * حذف التنبيه السابق
+     */
+    const oldNotification =
+        document.getElementById(
+            "newOrderNotification"
+        );
+
+
+    if (oldNotification) {
+
+        oldNotification.remove();
+
+    }
+
+
+    const notification =
+        document.createElement("div");
+
+
+    notification.id =
+        "newOrderNotification";
+
+
+    const orderId =
+        order.id || "";
+
+
+    const customerName =
+        order.customer_name ||
+        "عميل";
+
+
+    const orderTotal =
+        order.total ||
+        0;
+
+
+    notification.innerHTML = `
+
+        <div class="new-order-notification-icon">
+            🔔
+        </div>
+
+
+        <div class="new-order-notification-content">
+
+            <strong>
+                طلب جديد!
+            </strong>
+
+
+            <span>
+                طلب #${orderId}
+                من ${customerName}
+            </span>
+
+
+            <b>
+                ${orderTotal} جنيه
+            </b>
+
+        </div>
+
+
+        <button
+            type="button"
+            aria-label="إغلاق"
+            onclick="closeNewOrderNotification()"
+        >
+            ×
+        </button>
+
+    `;
+
+
+    document.body.appendChild(
+        notification
+    );
+
+
+    /*
+     * تشغيل الصوت
+     */
+    playNewOrderSound();
+
+
+    /*
+     * إغلاق تلقائي
+     */
+    setTimeout(function() {
+
+        const current =
+            document.getElementById(
+                "newOrderNotification"
+            );
+
+
+        if (current) {
+
+            current.remove();
+
+        }
+
+    }, 8000);
+
+}
+
+
+/* =========================================================
+   CLOSE NOTIFICATION
+========================================================= */
+
+function closeNewOrderNotification() {
+
+    const notification =
+        document.getElementById(
+            "newOrderNotification"
+        );
+
+
+    if (notification) {
+
+        notification.remove();
+
+    }
+
+}
+
+
+/* =========================================================
+   CHECK API
+========================================================= */
+
+async function checkForNewOrders() {
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/orders/latest",
+                {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Cache-Control":
+                            "no-cache"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            console.log(
+                "Orders API error:",
+                response.status
+            );
+
+            return;
+
+        }
+
+
+        const orders =
+            await response.json();
+
+
+        if (
+            !Array.isArray(orders) ||
+            orders.length === 0
+        ) {
+
+            return;
+
+        }
+
+
+        const newestOrder =
+            orders[0];
+
+
+        const newestId =
+            Number(
+                newestOrder.id
+            );
+
+
+        if (
+            !Number.isFinite(
+                newestId
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+         * أول فحص:
+         * نسجل آخر طلب موجود
+         * بدون إطلاق تنبيه.
+         */
+        if (firstOrdersCheck) {
+
+            latestKnownOrderId =
+                newestId;
+
+            firstOrdersCheck =
+                false;
+
+            console.log(
+                "Latest known order:",
+                newestId
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * اكتشاف طلب جديد
+         */
+        if (
+            latestKnownOrderId !== null &&
+            newestId > latestKnownOrderId
+        ) {
+
+
+            console.log(
+                "NEW ORDER:",
+                newestOrder
+            );
+
+
+            latestKnownOrderId =
+                newestId;
+
+
+            /*
+             * إظهار التنبيه
+             */
+            showNewOrderNotification(
+                newestOrder
+            );
+
+
+            /*
+             * إعادة تحميل الصفحة
+             * بعد ثانية ونصف
+             * لإظهار الطلب الجديد.
+             */
+            setTimeout(function() {
+
+                window.location.reload();
+
+            }, 1500);
+
+        }
+
+
+    } catch (error) {
+
+        console.log(
+            "Orders polling error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   START POLLING
+========================================================= */
+
+checkForNewOrders();
+
+
+setInterval(
+    checkForNewOrders,
+    5000
+);
+
+</script>
+
+
+</body>
+
+</html>

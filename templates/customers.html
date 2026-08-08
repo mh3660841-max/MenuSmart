@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <title>العملاء | Menu Smart</title>
+
+    <meta
+        name="description"
+        content="إدارة عملاء المطعم في Menu Smart."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/menu.css') }}"
+    >
+
+    <style>
+
+        /* =========================================================
+           CUSTOMERS PAGE
+           ========================================================= */
+
+        .customers-page {
+            background:
+                linear-gradient(
+                    180deg,
+                    #fafafa 0%,
+                    #f4f4f1 100%
+                );
+        }
+
+
+        /* =========================================================
+           PAGE HEADER
+           ========================================================= */
+
+        .customers-page-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 25px;
+            margin-bottom: 28px;
+        }
+
+        .customers-page-title {
+            min-width: 0;
+        }
+
+        .customers-page-title > span {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #a98516;
+
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .customers-page-title h1 {
+            margin: 0 0 8px;
+
+            color: #111;
+
+            font-size: clamp(28px, 4vw, 38px);
+            line-height: 1.2;
+            font-weight: 950;
+
+            letter-spacing: -.5px;
+        }
+
+        .customers-page-title p {
+            margin: 0;
+
+            color: #777;
+
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+
+        /* =========================================================
+           SUMMARY
+           ========================================================= */
+
+        .customers-summary-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 15px;
+
+            margin-bottom: 24px;
+        }
+
+        .customer-summary-card {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            min-width: 0;
+            min-height: 90px;
+
+            padding: 18px;
+
+            overflow: hidden;
+
+            background: #fff;
+
+            border:
+                1px solid #e7e7e2;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, .05);
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease,
+                border-color .2s ease;
+        }
+
+        .customer-summary-card::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            right: 0;
+
+            width: 4px;
+            height: 100%;
+
+            background: #d4af37;
+        }
+
+        .customer-summary-card:hover {
+            transform: translateY(-3px);
+
+            border-color:
+                rgba(212, 175, 55, .35);
+
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, .08);
+        }
+
+        .customer-summary-icon {
+            width: 50px;
+            height: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 14px;
+
+            background: #f8f1d8;
+
+            font-size: 21px;
+        }
+
+        .customer-summary-card:nth-child(2)
+        .customer-summary-icon {
+            background: #e9f1ff;
+        }
+
+        .customer-summary-card:nth-child(3)
+        .customer-summary-icon {
+            background: #e7f6ed;
+        }
+
+        .customer-summary-card:nth-child(4)
+        .customer-summary-icon {
+            background: #fff0dd;
+        }
+
+        .customer-summary-content {
+            min-width: 0;
+        }
+
+        .customer-summary-content span {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #888;
+
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .customer-summary-content strong {
+            display: block;
+
+            color: #111;
+
+            font-size: 24px;
+            line-height: 1.2;
+            font-weight: 950;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           MAIN CARD
+           ========================================================= */
+
+        .customers-card {
+            overflow: hidden;
+
+            background: #fff;
+
+            border:
+                1px solid #e7e7e2;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, .055);
+        }
+
+
+        /* =========================================================
+           CARD HEADER
+           ========================================================= */
+
+        .customers-card-header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 23px 25px;
+
+            border-bottom:
+                1px solid #eeeeeb;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffffff 0%,
+                    #fcfcfa 100%
+                );
+        }
+
+        .customers-heading {
+            min-width: 0;
+        }
+
+        .customers-heading > span {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #a98516;
+
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .customers-heading h2 {
+            margin: 0;
+
+            color: #111;
+
+            font-size: 21px;
+            font-weight: 950;
+        }
+
+
+        /* =========================================================
+           SEARCH
+           ========================================================= */
+
+        .customer-search {
+            position: relative;
+
+            width: 320px;
+            max-width: 100%;
+
+            flex-shrink: 0;
+        }
+
+        .customer-search::before {
+            content: "⌕";
+
+            position: absolute;
+
+            right: 14px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #999;
+
+            font-size: 21px;
+
+            pointer-events: none;
+        }
+
+        .customer-search input {
+            width: 100%;
+            height: 46px;
+
+            box-sizing: border-box;
+
+            padding:
+                0 42px 0 14px;
+
+            border:
+                1px solid #deded9;
+
+            border-radius: 12px;
+
+            background: #fafaf8;
+
+            color: #111;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            outline: none;
+
+            transition:
+                background .2s ease,
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .customer-search input::placeholder {
+            color: #aaa;
+        }
+
+        .customer-search input:hover {
+            border-color:
+                #cfcfc8;
+        }
+
+        .customer-search input:focus {
+            background: #fff;
+
+            border-color:
+                #d4af37;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(212, 175, 55, .10);
+        }
+
+
+        /* =========================================================
+           TABLE
+           ========================================================= */
+
+        .customers-table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+
+            scrollbar-width: thin;
+        }
+
+        .customers-table {
+            width: 100%;
+
+            min-width: 780px;
+
+            border-collapse: collapse;
+        }
+
+        .customers-table thead {
+            background: #f8f8f5;
+        }
+
+        .customers-table th {
+            padding:
+                14px 18px;
+
+            color: #777;
+
+            border-bottom:
+                1px solid #e7e7e2;
+
+            text-align: right;
+
+            font-size: 10px;
+            font-weight: 950;
+
+            white-space: nowrap;
+        }
+
+        .customers-table td {
+            padding:
+                16px 18px;
+
+            color: #444;
+
+            border-bottom:
+                1px solid #eeeeeb;
+
+            font-size: 12px;
+
+            vertical-align: middle;
+        }
+
+        .customers-table tbody tr {
+            transition:
+                background .18s ease;
+        }
+
+        .customers-table tbody tr:hover {
+            background: #fffdf6;
+        }
+
+        .customers-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+
+        /* =========================================================
+           CUSTOMER CELL
+           ========================================================= */
+
+        .customer-cell {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            min-width: 180px;
+        }
+
+        .customer-avatar {
+            width: 43px;
+            height: 43px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            overflow: hidden;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #111,
+                    #292929
+                );
+
+            color: #d4af37;
+
+            font-size: 15px;
+            font-weight: 950;
+        }
+
+        .customer-cell > div:last-child {
+            min-width: 0;
+        }
+
+        .customer-cell strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            overflow: hidden;
+
+            color: #111;
+
+            font-size: 13px;
+            font-weight: 900;
+
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .customer-cell small {
+            display: block;
+
+            max-width: 190px;
+
+            overflow: hidden;
+
+            color: #999;
+
+            font-size: 10px;
+
+            direction: ltr;
+            text-align: right;
+
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+
+        /* =========================================================
+           PHONE
+           ========================================================= */
+
+        .customer-phone {
+            display: inline-flex;
+
+            align-items: center;
+
+            min-height: 29px;
+
+            padding:
+                0 10px;
+
+            border-radius: 8px;
+
+            background: #f6f6f3;
+
+            color: #555;
+
+            direction: ltr;
+
+            font-size: 11px;
+            font-weight: 750;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           VALUES
+           ========================================================= */
+
+        .customer-orders {
+            color: #111;
+
+            font-size: 13px;
+            font-weight: 900;
+
+            white-space: nowrap;
+        }
+
+        .muted-text {
+            color: #999;
+
+            font-size: 10px;
+        }
+
+        .customer-total {
+            color: #111;
+
+            font-size: 13px;
+            font-weight: 950;
+
+            white-space: nowrap;
+        }
+
+        .customer-last-order {
+            color: #777;
+
+            font-size: 11px;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           DETAILS BUTTON
+           ========================================================= */
+
+        .order-details-btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 34px;
+
+            padding:
+                0 13px;
+
+            border:
+                1px solid #111;
+
+            border-radius: 9px;
+
+            background: #111;
+
+            color: #d4af37;
+
+            text-decoration: none;
+
+            font-size: 10px;
+            font-weight: 900;
+
+            white-space: nowrap;
+
+            transition:
+                background .2s ease,
+                color .2s ease,
+                transform .2s ease,
+                border-color .2s ease;
+        }
+
+        .order-details-btn:hover {
+            background: #d4af37;
+
+            color: #111;
+
+            border-color: #d4af37;
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =========================================================
+           EMPTY STATE
+           ========================================================= */
+
+        .customers-empty,
+        #customersEmpty {
+            padding:
+                65px 25px;
+
+            text-align: center;
+        }
+
+        .customers-empty-icon,
+        #customersEmpty .empty-menu-icon {
+            width: 65px;
+            height: 65px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin:
+                0 auto 17px;
+
+            border-radius: 20px;
+
+            background: #f8f1d8;
+
+            font-size: 26px;
+        }
+
+        .customers-empty h2,
+        #customersEmpty h2 {
+            margin:
+                0 0 8px;
+
+            color: #111;
+
+            font-size: 19px;
+            font-weight: 950;
+        }
+
+        .customers-empty p,
+        #customersEmpty p {
+            max-width: 420px;
+
+            margin:
+                0 auto 20px;
+
+            color: #888;
+
+            font-size: 12px;
+            line-height: 1.9;
+        }
+
+
+        /* =========================================================
+           ACCESSIBILITY
+           ========================================================= */
+
+        .customers-page :focus-visible {
+            outline:
+                3px solid
+                rgba(212, 175, 55, .30);
+
+            outline-offset: 3px;
+        }
+
+/* =========================================================
+   ENGLISH NUMBERS
+========================================================= */
+
+.customers-page {
+    font-variant-numeric: lining-nums;
+}
+
+.customers-page .customer-summary-content strong,
+.customers-page .customers-table,
+.customers-page .customer-phone,
+.customers-page .customer-total,
+.customers-page .customer-last-order {
+    font-variant-numeric: lining-nums;
+    unicode-bidi: plaintext;
+}
+        /* =========================================================
+           TABLET
+           ========================================================= */
+
+        @media (max-width: 1050px) {
+
+            .customers-summary-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 700px) {
+
+            .customers-page-header {
+                align-items: stretch;
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+            .customers-page-header .dashboard-secondary-btn {
+                width: 100%;
+            }
+
+            .customers-page-title h1 {
+                font-size: 30px;
+            }
+
+            .customers-page-title p {
+                font-size: 13px;
+            }
+
+            .customers-card-header {
+                align-items: stretch;
+
+                flex-direction: column;
+
+                padding: 19px 17px;
+            }
+
+            .customer-search {
+                width: 100%;
+            }
+
+            .customer-search input {
+                height: 47px;
+
+                font-size: 13px;
+            }
+
+        }
+
+
+        /* =========================================================
+           SMALL PHONE
+           ========================================================= */
+
+        @media (max-width: 500px) {
+
+            .customers-summary-grid {
+                grid-template-columns:
+                    1fr 1fr;
+
+                gap: 9px;
+            }
+
+            .customer-summary-card {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                min-height: 110px;
+
+                padding: 13px;
+
+                gap: 9px;
+
+                border-radius: 15px;
+            }
+
+            .customer-summary-icon {
+                width: 39px;
+                height: 39px;
+
+                border-radius: 11px;
+
+                font-size: 17px;
+            }
+
+            .customer-summary-content span {
+                font-size: 9px;
+            }
+
+            .customer-summary-content strong {
+                font-size: 19px;
+            }
+
+            .customers-card {
+                border-radius: 16px;
+            }
+
+            .customers-heading h2 {
+                font-size: 18px;
+            }
+
+            .customers-table {
+                min-width: 720px;
+            }
+
+            .customers-table th {
+                padding:
+                    13px 12px;
+
+                font-size: 9px;
+            }
+
+            .customers-table td {
+                padding:
+                    14px 12px;
+
+                font-size: 11px;
+            }
+
+            .customer-cell {
+                min-width: 165px;
+            }
+
+            .customer-avatar {
+                width: 39px;
+                height: 39px;
+
+                border-radius: 11px;
+            }
+
+            .customer-cell strong {
+                font-size: 11px;
+            }
+
+            .customer-cell small {
+                font-size: 9px;
+            }
+
+            .customer-phone {
+                font-size: 10px;
+            }
+
+            .customer-total,
+            .customer-orders {
+                font-size: 11px;
+            }
+
+            .customer-last-order {
+                font-size: 10px;
+            }
+
+            .customers-empty,
+            #customersEmpty {
+                padding:
+                    50px 18px;
+            }
+
+        }
+
+
+        /* =========================================================
+           VERY SMALL PHONE
+           ========================================================= */
+
+        @media (max-width: 360px) {
+
+            .customers-summary-grid {
+                grid-template-columns:
+                    1fr 1fr;
+
+                gap: 7px;
+            }
+
+            .customer-summary-card {
+                min-height: 100px;
+
+                padding: 10px;
+            }
+
+            .customer-summary-content strong {
+                font-size: 17px;
+            }
+
+            .customer-summary-content span {
+                font-size: 8px;
+            }
+
+            .customers-page-title h1 {
+                font-size: 26px;
+            }
+
+        }
+
+
+        /* =========================================================
+           REDUCED MOTION
+           ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .customers-page *,
+            .customers-page *::before,
+            .customers-page *::after {
+                scroll-behavior: auto !important;
+
+                transition: none !important;
+
+                animation: none !important;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-page customers-page">
+
+
+    <!-- =========================================================
+         HEADER
+         ========================================================= -->
+
+    <header class="main-header">
+
+        <div class="header-container">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="brand"
+            >
+
+                <span class="brand-icon">
+                    M
+                </span>
+
+                <span class="brand-name">
+                    Menu Smart
+                </span>
+
+            </a>
+
+
+            <div class="dashboard-header-actions">
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="dashboard-home-link"
+                >
+                    لوحة التحكم
+                </a>
+
+                <a
+                    href="{{ url_for('orders') }}"
+                    class="dashboard-home-link"
+                >
+                    الطلبات
+                </a>
+
+                <a
+                    href="{{ url_for('logout') }}"
+                    class="dashboard-logout"
+                >
+                    تسجيل الخروج
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         MAIN
+         ========================================================= -->
+
+    <main class="dashboard-main">
+
+        <div class="dashboard-container">
+
+
+            <!-- =====================================================
+                 PAGE HEADER
+                 ===================================================== -->
+
+            <section class="customers-page-header">
+
+                <div class="customers-page-title">
+
+                    <span>
+                        إدارة العملاء
+                    </span>
+
+                    <h1>
+                        العملاء
+                    </h1>
+
+                    <p>
+                        تابع عملاء مطعمك وراجع بيانات الطلبات
+                        الخاصة بهم بسهولة.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="dashboard-secondary-btn"
+                >
+                    ← لوحة التحكم
+                </a>
+
+            </section>
+
+
+            <!-- =====================================================
+                 SUMMARY
+                 ===================================================== -->
+
+            <section class="customers-summary-grid">
+
+
+                <div class="customer-summary-card">
+
+                    <div class="customer-summary-icon">
+                        👥
+                    </div>
+
+                    <div class="customer-summary-content">
+
+                        <span>
+                            إجمالي العملاء
+                        </span>
+
+                        <strong id="customersCount">
+                            {{ customers|length if customers else 0 }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-summary-card">
+
+                    <div class="customer-summary-icon">
+                        🛒
+                    </div>
+
+                    <div class="customer-summary-content">
+
+                        <span>
+                            إجمالي الطلبات
+                        </span>
+
+                        <strong id="customersOrders">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-summary-card">
+
+                    <div class="customer-summary-icon">
+                        💰
+                    </div>
+
+                    <div class="customer-summary-content">
+
+                        <span>
+                            إجمالي المبيعات
+                        </span>
+
+                        <strong id="customersSales">
+                            0 جنيه
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-summary-card">
+
+                    <div class="customer-summary-icon">
+                        ⭐
+                    </div>
+
+                    <div class="customer-summary-content">
+
+                        <span>
+                            متوسط العميل
+                        </span>
+
+                        <strong id="customersAverage">
+                            0 جنيه
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- =====================================================
+                 CUSTOMERS
+                 ===================================================== -->
+
+            <section class="customers-card">
+
+
+                <!-- CARD HEADER -->
+
+                <div class="customers-card-header">
+
+                    <div class="customers-heading">
+
+                        <span>
+                            قاعدة العملاء
+                        </span>
+
+                        <h2>
+                            عملاء مطعمك
+                        </h2>
+
+                    </div>
+
+
+                    <div class="customer-search">
+
+                        <input
+                            type="search"
+                            id="customerSearch"
+                            placeholder="ابحث باسم العميل أو رقم الهاتف..."
+                            aria-label="البحث عن عميل"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                {% if customers %}
+
+
+                    <!-- =================================================
+                         TABLE
+                         ================================================= -->
+
+                    <div class="customers-table-wrapper">
+
+                        <table class="customers-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        العميل
+                                    </th>
+
+                                    <th>
+                                        الهاتف
+                                    </th>
+
+                                    <th>
+                                        الطلبات
+                                    </th>
+
+                                    <th>
+                                        إجمالي الإنفاق
+                                    </th>
+
+                                    <th>
+                                        آخر طلب
+                                    </th>
+
+                                    <th>
+                                        التفاصيل
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="customersTableBody">
+
+                                {% for customer in customers %}
+
+                                    <tr
+                                        class="customer-row"
+
+                                        data-search="
+                                            {{ customer.name|default('') }}
+                                            {{ customer.phone|default('') }}
+                                            {{ customer.email|default('') }}
+                                        "
+
+                                        data-orders="{{ customer.orders_count|default(0) }}"
+
+                                        data-sales="{{ customer.total_spent|default(0) }}"
+                                    >
+
+
+                                        <!-- CUSTOMER -->
+
+                                        <td>
+
+                                            <div class="customer-cell">
+
+                                                <div class="customer-avatar">
+
+                                                    {% if customer.name %}
+
+                                                        {{ customer.name[0]|upper }}
+
+                                                    {% else %}
+
+                                                        👤
+
+                                                    {% endif %}
+
+                                                </div>
+
+
+                                                <div>
+
+                                                    <strong>
+                                                        {{ customer.name|default('عميل') }}
+                                                    </strong>
+
+
+                                                    {% if customer.email %}
+
+                                                        <small>
+                                                            {{ customer.email }}
+                                                        </small>
+
+                                                    {% else %}
+
+                                                        <small>
+                                                            عميل المطعم
+                                                        </small>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- PHONE -->
+
+                                        <td>
+
+                                            <span class="customer-phone">
+
+                                                {{ customer.phone|default('غير متوفر') }}
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- ORDERS -->
+
+                                        <td>
+
+                                            <strong class="customer-orders">
+
+                                                {{ customer.orders_count|default(0) }}
+
+                                            </strong>
+
+                                            <span class="muted-text">
+                                                طلب
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- TOTAL -->
+
+                                        <td>
+
+                                            <strong class="customer-total">
+
+                                                {{ customer.total_spent|default(0) }}
+
+                                                جنيه
+
+                                            </strong>
+
+                                        </td>
+
+
+                                        <!-- LAST ORDER -->
+
+                                        <td>
+
+                                            <span class="customer-last-order">
+
+                                                {{ customer.last_order|default('لا يوجد') }}
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- DETAILS -->
+
+                                        <td>
+
+                                            {% if customer.id %}
+
+                                                <a
+                                                    href="{{ url_for('orders') }}"
+                                                    class="order-details-btn"
+                                                >
+                                                    الطلبات
+                                                </a>
+
+                                            {% else %}
+
+                                                <span class="muted-text">
+                                                    —
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         SEARCH EMPTY
+                         ================================================= -->
+
+                    <div
+                        id="customersEmpty"
+                        style="display: none;"
+                    >
+
+                        <div class="empty-menu-icon">
+                            🔎
+                        </div>
+
+                        <h2>
+                            لم يتم العثور على عميل
+                        </h2>
+
+                        <p>
+                            جرّب البحث باسم مختلف أو رقم الهاتف.
+                        </p>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- =================================================
+                         NO CUSTOMERS
+                         ================================================= -->
+
+                    <div class="customers-empty">
+
+                        <div class="customers-empty-icon">
+                            👥
+                        </div>
+
+                        <h2>
+                            لا يوجد عملاء حتى الآن
+                        </h2>
+
+                        <p>
+                            سيظهر العملاء هنا تلقائيًا عند وصول أول طلب.
+                        </p>
+
+                        <a
+                            href="{{ url_for('dashboard') }}"
+                            class="dashboard-primary-btn"
+                        >
+                            العودة للوحة التحكم
+                        </a>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer class="main-footer">
+
+        <div class="footer-container">
+
+            <div class="footer-brand">
+
+                <strong>
+                    Menu Smart
+                </strong>
+
+                <p>
+                    منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <a href="{{ url_for('dashboard') }}">
+                    لوحة التحكم
+                </a>
+
+                <a href="{{ url_for('products') }}">
+                    المنتجات
+                </a>
+
+                <a href="{{ url_for('orders') }}">
+                    الطلبات
+                </a>
+
+            </div>
+
+
+            <div class="footer-copy">
+
+                © {{ current_year|default(2026) }} Menu Smart
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+         ========================================================= -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+
+                /* =====================================================
+                   ELEMENTS
+                   ===================================================== */
+
+                const searchInput =
+                    document.getElementById(
+                        "customerSearch"
+                    );
+
+                const rows =
+                    Array.from(
+                        document.querySelectorAll(
+                            ".customer-row"
+                        )
+                    );
+
+                const emptyState =
+                    document.getElementById(
+                        "customersEmpty"
+                    );
+
+                const customersCount =
+                    document.getElementById(
+                        "customersCount"
+                    );
+
+                const customersOrders =
+                    document.getElementById(
+                        "customersOrders"
+                    );
+
+                const customersSales =
+                    document.getElementById(
+                        "customersSales"
+                    );
+
+                const customersAverage =
+                    document.getElementById(
+                        "customersAverage"
+                    );
+
+
+                /* =====================================================
+                   HELPERS
+                   ===================================================== */
+
+                function parseNumber(value) {
+
+                    if (
+                        value === null ||
+                        value === undefined
+                    ) {
+                        return 0;
+                    }
+
+                    let text =
+                        String(value)
+                            .trim()
+                            .replace(/,/g, "");
+
+                    const number =
+                        parseFloat(text);
+
+                    return Number.isFinite(number)
+                        ? number
+                        : 0;
+                }
+
+
+                function formatNumber(number) {
+
+                    return new Intl.NumberFormat(
+                        "ar-EG",
+                        {
+                            maximumFractionDigits: 2
+                        }
+                    ).format(number);
+
+                }
+
+
+                /* =====================================================
+                   STATISTICS
+                   ===================================================== */
+
+                let totalOrders = 0;
+
+                let totalSales = 0;
+
+
+                rows.forEach(
+                    function (row) {
+
+                        totalOrders +=
+                            parseNumber(
+                                row.dataset.orders
+                            );
+
+                        totalSales +=
+                            parseNumber(
+                                row.dataset.sales
+                            );
+
+                    }
+                );
+
+
+                const customerCount =
+                    rows.length;
+
+
+                const average =
+                    customerCount > 0
+                        ? totalSales / customerCount
+                        : 0;
+
+
+                if (customersCount) {
+
+                    customersCount.textContent =
+                        formatNumber(
+                            customerCount
+                        );
+
+                }
+
+
+                if (customersOrders) {
+
+                    customersOrders.textContent =
+                        formatNumber(
+                            totalOrders
+                        );
+
+                }
+
+
+                if (customersSales) {
+
+                    customersSales.textContent =
+                        formatNumber(
+                            totalSales
+                        ) +
+                        " جنيه";
+
+                }
+
+
+                if (customersAverage) {
+
+                    customersAverage.textContent =
+                        formatNumber(
+                            average
+                        ) +
+                        " جنيه";
+
+                }
+
+
+                /* =====================================================
+                   SEARCH
+                   ===================================================== */
+
+                if (!searchInput) {
+                    return;
+                }
+
+
+                searchInput.addEventListener(
+                    "input",
+                    function () {
+
+                        const search =
+                            this.value
+                                .trim()
+                                .toLowerCase();
+
+
+                        let visibleCount = 0;
+
+
+                        rows.forEach(
+                            function (row) {
+
+                                const text =
+                                    (
+                                        row.dataset.search ||
+                                        ""
+                                    )
+                                    .replace(/\s+/g, " ")
+                                    .toLowerCase();
+
+
+                                const match =
+                                    !search ||
+                                    text.includes(search);
+
+
+                                row.style.display =
+                                    match
+                                        ? ""
+                                        : "none";
+
+
+                                if (match) {
+
+                                    visibleCount++;
+
+                                }
+
+                            }
+                        );
+
+
+                        if (emptyState) {
+
+                            emptyState.style.display =
+                                visibleCount === 0
+                                    ? "block"
+                                    : "none";
+
+                        }
+
+                    }
+                );
+
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

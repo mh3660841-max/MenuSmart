@@ -1,0 +1,828 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<meta
+    http-equiv="Cache-Control"
+    content="no-store, no-cache, must-revalidate, max-age=0"
+>
+
+<meta
+    http-equiv="Pragma"
+    content="no-cache"
+>
+
+<meta
+    http-equiv="Expires"
+    content="0"
+>
+
+<title>
+    تم استلام طلبك | Menu Smart
+</title>
+
+<meta
+    name="description"
+    content="تم استلام طلبك بنجاح من Menu Smart."
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/menu.css') }}"
+>
+
+<style>
+
+    /* =====================================================
+       MENU SMART
+       ORDER SUCCESS PAGE
+    ===================================================== */
+
+    .order-success-page {
+        min-height: 100vh;
+        margin: 0;
+        background:
+            radial-gradient(
+                circle at 50% -10%,
+                rgba(212,175,55,.10),
+                transparent 35%
+            ),
+            #f6f6f4;
+        color: #111;
+    }
+
+    /* Header */
+
+    .order-success-page .public-menu-header {
+        background: rgba(255,255,255,.94);
+        border-bottom: 1px solid #e9e9e6;
+        backdrop-filter: blur(14px);
+    }
+
+    .order-success-page .public-menu-header-inner {
+        min-height: 70px;
+    }
+
+    .order-success-page .public-brand {
+        font-weight: 900;
+    }
+
+    .success-back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 12px;
+        background: #111;
+        color: #d4af37;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 900;
+        transition: .2s ease;
+    }
+
+    .success-back-link:hover {
+        transform: translateY(-2px);
+        opacity: .92;
+    }
+
+    /* Main */
+
+    .order-success-main {
+        min-height: calc(100vh - 145px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 55px 18px;
+    }
+
+    /* Card */
+
+    .success-card {
+        width: min(680px, 100%);
+        position: relative;
+        overflow: hidden;
+        padding: 42px;
+        text-align: center;
+        background: #fff;
+        border: 1px solid #e8e8e4;
+        border-radius: 30px;
+        box-shadow:
+            0 25px 70px rgba(0,0,0,.08);
+    }
+
+    .success-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(
+            90deg,
+            #111,
+            #d4af37,
+            #111
+        );
+    }
+
+    /* Success icon */
+
+    .success-icon {
+        width: 92px;
+        height: 92px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background:
+            radial-gradient(
+                circle,
+                #fff 42%,
+                #faf4d9 43%,
+                #faf4d9 100%
+            );
+        border: 1px solid rgba(212,175,55,.35);
+        box-shadow:
+            0 12px 35px rgba(212,175,55,.16);
+    }
+
+    .success-icon span {
+        width: 58px;
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #111;
+        color: #d4af37;
+        font-size: 29px;
+        font-weight: 900;
+    }
+
+    .success-label {
+        display: inline-block;
+        margin-bottom: 8px;
+        color: #a17f18;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .3px;
+    }
+
+    .success-card h1 {
+        margin: 0;
+        color: #111;
+        font-size: 30px;
+        font-weight: 950;
+        line-height: 1.4;
+    }
+
+    .success-message {
+        max-width: 500px;
+        margin: 13px auto 28px;
+        color: #777;
+        font-size: 14px;
+        line-height: 2;
+    }
+
+    /* Order number */
+
+    .success-order-number {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 17px 20px;
+        margin-bottom: 14px;
+        background: #111;
+        border-radius: 17px;
+        color: #fff;
+    }
+
+    .success-order-number span {
+        color: #aaa;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .success-order-number strong {
+        color: #d4af37;
+        font-size: 23px;
+        font-weight: 950;
+        direction: ltr;
+    }
+
+    /* =====================================================
+       ORDER STATUS
+    ===================================================== */
+
+    .order-status-box {
+        margin: 14px 0 18px;
+        padding: 20px;
+        background: #f8f8f6;
+        border: 1px solid #ededeb;
+        border-radius: 18px;
+    }
+
+    .order-status-title {
+        margin-bottom: 13px;
+        color: #777;
+        font-size: 11px;
+        font-weight: 900;
+    }
+
+    .order-status-value {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 52px;
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-size: 15px;
+        font-weight: 900;
+    }
+
+    .status-icon {
+        font-size: 20px;
+    }
+
+    .status-pending {
+        background: #fff7d6;
+        color: #8a6810;
+    }
+
+    .status-confirmed {
+        background: #e8f1ff;
+        color: #245aa8;
+    }
+
+    .status-preparing {
+        background: #fff0d9;
+        color: #a45b00;
+    }
+
+    .status-ready {
+        background: #e9f8ed;
+        color: #23733b;
+    }
+
+    .status-completed {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .status-unknown {
+        background: #eeeeeb;
+        color: #555;
+    }
+
+    .status-refresh-note {
+        margin-top: 10px;
+        color: #999;
+        font-size: 10px;
+    }
+
+    /* Order info */
+
+    .success-order-info {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    .success-order-info > div {
+        min-width: 0;
+        padding: 17px 12px;
+        background: #f8f8f6;
+        border: 1px solid #ededeb;
+        border-radius: 15px;
+    }
+
+    .success-order-info span {
+        display: block;
+        margin-bottom: 7px;
+        color: #999;
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+    .success-order-info strong {
+        display: block;
+        overflow: hidden;
+        color: #222;
+        font-size: 13px;
+        font-weight: 900;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Actions */
+
+    .success-actions {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 10px;
+        margin-top: 8px;
+    }
+
+    .success-actions a {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 12px 16px;
+        border-radius: 13px;
+        background: #111;
+        color: #d4af37;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 900;
+        transition: .2s ease;
+    }
+
+    .success-actions a:hover {
+        transform: translateY(-2px);
+    }
+
+    .success-actions .success-secondary-btn {
+        background: #f2f2ef;
+        color: #333;
+        border: 1px solid #e5e5e1;
+    }
+
+    /* Security note */
+
+    .success-note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        margin-top: 25px;
+        padding-top: 19px;
+        border-top: 1px solid #eeeeeb;
+    }
+
+    .success-note > span {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: #f7f7f4;
+        font-size: 14px;
+    }
+
+    .success-note p {
+        margin: 0;
+        color: #999;
+        font-size: 10px;
+        line-height: 1.7;
+        text-align: right;
+    }
+
+    /* Footer */
+
+    .order-success-page .public-menu-footer {
+        border-top: 1px solid #e9e9e6;
+        background: #fff;
+    }
+
+    .order-success-page .public-menu-footer strong {
+        color: #111;
+        font-weight: 900;
+    }
+
+    .order-success-page .public-menu-footer p {
+        color: #999;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 600px) {
+
+        .order-success-main {
+            min-height: auto;
+            padding: 30px 13px 40px;
+        }
+
+        .success-card {
+            padding: 31px 17px 24px;
+            border-radius: 24px;
+        }
+
+        .success-icon {
+            width: 78px;
+            height: 78px;
+            margin-bottom: 17px;
+        }
+
+        .success-icon span {
+            width: 50px;
+            height: 50px;
+            font-size: 25px;
+        }
+
+        .success-card h1 {
+            font-size: 23px;
+        }
+
+        .success-message {
+            margin-bottom: 22px;
+            font-size: 12px;
+            line-height: 1.9;
+        }
+
+        .success-order-number {
+            padding: 15px;
+        }
+
+        .success-order-number strong {
+            font-size: 20px;
+        }
+
+        .success-order-info {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .success-order-info > div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 13px 15px;
+        }
+
+        .success-order-info span {
+            margin: 0;
+        }
+
+        .success-order-info strong {
+            text-align: left;
+        }
+
+        .success-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .success-note {
+            align-items: flex-start;
+            text-align: right;
+        }
+
+        .success-back-link {
+            padding: 9px 12px;
+            font-size: 11px;
+        }
+
+    }
+
+</style>
+
+</head><body class="order-success-page"><header class="public-menu-header"><div class="public-menu-header-inner">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="public-brand"
+    >
+
+        <span class="brand-icon">
+            M
+        </span>
+
+        <span>
+            Menu Smart
+        </span>
+
+    </a>
+
+    <a
+        href="{{ url_for('public_menu', slug=order['restaurant_slug']) }}"
+        class="success-back-link"
+    >
+        ← العودة للمنيو
+    </a>
+
+</div>
+
+</header><main class="order-success-main"><section class="success-card"><div class="success-icon">
+
+    <span>
+        ✓
+    </span>
+
+</div>
+
+
+<span class="success-label">
+    تم بنجاح
+</span>
+
+
+<h1>
+    تم استلام طلبك 🎉
+</h1>
+
+
+<p class="success-message">
+    شكرًا لطلبك. تم إرسال بيانات الطلب بنجاح،
+    ويمكنك متابعة حالة طلبك من هنا.
+</p>
+
+
+{% if order %}
+
+    <div class="success-order-number">
+
+        <span>
+            رقم الطلب
+        </span>
+
+        <strong>
+            #{{ order.id }}
+        </strong>
+
+    </div>
+
+
+    <!-- =================================================
+         حالة الطلب الحالية
+    ================================================== -->
+
+    {% set order_status = order.status|default('pending') %}
+
+    <div class="order-status-box">
+
+        <div class="order-status-title">
+            حالة الطلب الحالية
+        </div>
+
+
+        {% if order_status == 'pending' %}
+
+            <div class="order-status-value status-pending">
+
+                <span class="status-icon">
+                    ⏳
+                </span>
+
+                <span>
+                    قيد الانتظار
+                </span>
+
+            </div>
+
+
+        {% elif order_status == 'confirmed' %}
+
+            <div class="order-status-value status-confirmed">
+
+                <span class="status-icon">
+                    ✓
+                </span>
+
+                <span>
+                    تم تأكيد الطلب
+                </span>
+
+            </div>
+
+
+        {% elif order_status == 'preparing' %}
+
+            <div class="order-status-value status-preparing">
+
+                <span class="status-icon">
+                    👨‍🍳
+                </span>
+
+                <span>
+                    قيد التجهيز
+                </span>
+
+            </div>
+
+
+        {% elif order_status == 'ready' %}
+
+            <div class="order-status-value status-ready">
+
+                <span class="status-icon">
+                    📦
+                </span>
+
+                <span>
+                    الطلب جاهز
+                </span>
+
+            </div>
+
+
+        {% elif order_status == 'completed' %}
+
+            <div class="order-status-value status-completed">
+
+                <span class="status-icon">
+                    🎉
+                </span>
+
+                <span>
+                    تم إكمال الطلب
+                </span>
+
+            </div>
+
+
+        {% elif order_status == 'cancelled' %}
+
+            <div class="order-status-value status-cancelled">
+
+                <span class="status-icon">
+                    ✕
+                </span>
+
+                <span>
+                    تم إلغاء الطلب
+                </span>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="order-status-value status-unknown">
+
+                <span class="status-icon">
+                    ℹ️
+                </span>
+
+                <span>
+                    {{ order_status }}
+                </span>
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="status-refresh-note">
+            إذا غيّر المطعم حالة الطلب، حدّث الصفحة لرؤية الحالة الجديدة.
+        </div>
+
+    </div>
+
+
+    <div class="success-order-info">
+
+        {% if order.customer_name %}
+
+            <div>
+
+                <span>
+                    العميل
+                </span>
+
+                <strong>
+                    {{ order.customer_name }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+
+        {% if order.total is defined %}
+
+            <div>
+
+                <span>
+                    الإجمالي
+                </span>
+
+                <strong>
+                    {{ order.total }} جنيه
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+
+        {% if order.payment_method %}
+
+            <div>
+
+                <span>
+                    طريقة الدفع
+                </span>
+
+                <strong>
+
+                    {% if order.payment_method == 'cash' %}
+
+                        الدفع عند الاستلام
+
+                    {% else %}
+
+                        الدفع الإلكتروني
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endif %}
+
+
+<div class="success-actions">
+
+    <a
+        href="{{ url_for('public_menu', slug=order['restaurant_slug']) }}"
+    >
+        العودة إلى المنيو
+        <span>←</span>
+    </a>
+
+
+    <a
+        href="{{ url_for('home') }}"
+        class="success-secondary-btn"
+    >
+        الصفحة الرئيسية
+    </a>
+
+</div>
+
+
+<div class="success-note">
+
+    <span>
+        🔒
+    </span>
+
+    <p>
+        بيانات طلبك تستخدم فقط لمعالجة الطلب
+        والتواصل معك بخصوصه.
+    </p>
+
+</div>
+
+</section></main><footer class="public-menu-footer"><strong>
+    Menu Smart
+</strong>
+
+<p>
+    منصة المنيو الإلكتروني والطلبات الرقمية.
+</p>
+
+</footer><script>
+
+    /*
+     * تنظيف السلة بعد نجاح الطلب.
+     */
+
+    try {
+
+        localStorage.removeItem(
+            "menusmart_cart"
+        );
+
+    } catch (error) {
+
+        console.log(
+            "تعذر تنظيف السلة",
+            error
+        );
+
+    }
+
+</script></body></html>

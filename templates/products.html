@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <title>منتجات المطعم | Menu Smart</title>
+
+    <meta
+        name="description"
+        content="إدارة منتجات المطعم والأسعار والصور في Menu Smart."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/menu.css') }}"
+    >
+
+    <style>
+
+        /* =====================================================
+           PRODUCTS PAGE
+        ===================================================== */
+
+        .products-page {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(212,175,55,0.06),
+                    transparent 35%
+                ),
+                #f6f6f7;
+        }
+
+
+        /* PAGE HERO */
+
+        .products-hero {
+            position: relative;
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 25px;
+
+            padding: 30px;
+
+            margin-bottom: 25px;
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #111111,
+                    #202020
+                );
+
+            color: #fff;
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,0.10);
+        }
+
+
+        .products-hero::after {
+            content: "";
+
+            position: absolute;
+
+            width: 280px;
+            height: 280px;
+
+            left: -130px;
+            top: -140px;
+
+            border-radius: 50%;
+
+            border: 1px solid rgba(212,175,55,0.18);
+
+            box-shadow:
+                0 0 0 35px rgba(212,175,55,0.03),
+                0 0 0 70px rgba(212,175,55,0.02);
+        }
+
+
+        .products-hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+
+        .products-hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-bottom: 8px;
+
+            color: #d4af37;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+
+        .products-hero-label::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #d4af37;
+        }
+
+
+        .products-hero h1 {
+            margin: 0 0 8px;
+
+            font-size: clamp(28px, 4vw, 40px);
+
+            font-weight: 900;
+        }
+
+
+        .products-hero p {
+            max-width: 600px;
+
+            margin: 0;
+
+            color: rgba(255,255,255,0.70);
+
+            font-size: 14px;
+
+            line-height: 1.9;
+        }
+
+
+        .products-hero-actions {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+
+            gap: 9px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .products-add-btn,
+        .products-categories-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 45px;
+
+            padding: 0 18px;
+
+            border-radius: 12px;
+
+            text-decoration: none;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            transition: 0.2s ease;
+        }
+
+
+        .products-add-btn {
+            background: #d4af37;
+
+            color: #111;
+        }
+
+
+        .products-add-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 25px rgba(212,175,55,0.20);
+        }
+
+
+        .products-categories-btn {
+            background: rgba(255,255,255,0.06);
+
+            border: 1px solid rgba(255,255,255,0.15);
+
+            color: #fff;
+        }
+
+
+        .products-categories-btn:hover {
+            background: rgba(255,255,255,0.10);
+        }
+
+
+        /* FILTER */
+
+        .products-toolbar {
+
+            display: grid;
+
+            grid-template-columns: 1fr 220px;
+
+            gap: 12px;
+
+            margin-bottom: 25px;
+
+            padding: 15px;
+
+            background: #fff;
+
+            border: 1px solid #e9e9e9;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.04);
+        }
+
+
+        .products-search {
+
+            position: relative;
+        }
+
+
+        .products-search-icon {
+
+            position: absolute;
+
+            right: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #999;
+
+            font-size: 17px;
+        }
+
+
+        .products-search input,
+        .products-filter select {
+
+            width: 100%;
+
+            height: 46px;
+
+            box-sizing: border-box;
+
+            border: 1px solid #dedede;
+
+            border-radius: 11px;
+
+            background: #fafafa;
+
+            outline: none;
+
+            padding: 0 42px 0 13px;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            transition: 0.2s ease;
+        }
+
+
+        .products-filter select {
+            padding: 0 13px;
+        }
+
+
+        .products-search input:focus,
+        .products-filter select:focus {
+
+            border-color: #d4af37;
+
+            background: #fff;
+
+            box-shadow:
+                0 0 0 4px rgba(212,175,55,0.09);
+        }
+
+
+        /* SECTION HEADER */
+
+        .products-section-head {
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 16px;
+        }
+
+
+        .products-section-label {
+
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #d4af37;
+
+            font-size: 11px;
+
+            font-weight: 900;
+        }
+
+
+        .products-section-head h2 {
+
+            margin: 0;
+
+            font-size: 23px;
+
+            font-weight: 900;
+        }
+
+
+        .products-count {
+
+            padding: 8px 13px;
+
+            border-radius: 50px;
+
+            background: #fff;
+
+            border: 1px solid #e8e8e8;
+
+            color: #777;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .products-count strong {
+            color: #111;
+        }
+
+
+        /* PRODUCT GRID */
+
+        .products-grid-pro {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+
+        /* PRODUCT CARD */
+
+        .product-card-pro {
+
+            overflow: hidden;
+
+            display: flex;
+
+            flex-direction: column;
+
+            background: #fff;
+
+            border: 1px solid #e8e8e8;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.045);
+
+            transition: 0.25s ease;
+        }
+
+
+        .product-card-pro:hover {
+
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 18px 38px rgba(0,0,0,0.09);
+
+            border-color:
+                rgba(212,175,55,0.35);
+        }
+
+
+        /* IMAGE */
+
+        .product-image-pro {
+
+            position: relative;
+
+            width: 100%;
+
+            height: 230px;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eeeeee,
+                    #f7f7f7
+                );
+        }
+
+
+        .product-image-pro img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+            display: block;
+
+            transition: 0.35s ease;
+        }
+
+
+        .product-card-pro:hover
+        .product-image-pro img {
+
+            transform: scale(1.05);
+        }
+
+
+        .product-image-placeholder {
+
+            width: 100%;
+
+            height: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 55px;
+
+            color: #aaa;
+        }
+
+
+        /* STATUS */
+
+        .product-status-pro {
+
+            position: absolute;
+
+            top: 12px;
+
+            right: 12px;
+
+            padding: 6px 10px;
+
+            border-radius: 50px;
+
+            font-size: 10px;
+
+            font-weight: 900;
+
+            backdrop-filter: blur(8px);
+        }
+
+
+        .product-status-pro.active {
+
+            background:
+                rgba(255,255,255,0.92);
+
+            color: #16803a;
+        }
+
+
+        .product-status-pro.inactive {
+
+            background:
+                rgba(255,255,255,0.92);
+
+            color: #c62828;
+        }
+
+
+        /* CONTENT */
+
+        .product-card-body {
+
+            display: flex;
+
+            flex-direction: column;
+
+            flex: 1;
+
+            padding: 18px;
+        }
+
+
+        .product-category {
+
+            color: #d4af37;
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+            margin-bottom: 6px;
+        }
+
+
+        .product-card-body h3 {
+
+            margin: 0 0 7px;
+
+            color: #111;
+
+            font-size: 18px;
+
+            font-weight: 900;
+        }
+
+
+        .product-description {
+
+            min-height: 42px;
+
+            margin: 0;
+
+            color: #777;
+
+            font-size: 12px;
+
+            line-height: 1.8;
+        }
+
+
+        .product-bottom {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-top: 18px;
+
+            padding-top: 14px;
+
+            border-top: 1px solid #eeeeee;
+        }
+
+
+        .product-price {
+
+            color: #111;
+
+            font-size: 19px;
+
+            font-weight: 900;
+        }
+
+
+        .product-price span {
+
+            color: #d4af37;
+
+            font-size: 12px;
+        }
+
+
+        /* ACTIONS */
+
+        .product-actions {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr 1fr;
+
+            gap: 7px;
+
+            padding: 13px 15px;
+
+            background: #fafafa;
+
+            border-top: 1px solid #eeeeee;
+        }
+
+
+        .product-action {
+
+            min-height: 38px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 9px;
+
+            font-family: inherit;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            text-decoration: none;
+
+            cursor: pointer;
+        }
+
+
+        .product-edit {
+
+            background: #fff;
+
+            border: 1px solid #ddd;
+
+            color: #222;
+        }
+
+
+        .product-view {
+
+            background: #111;
+
+            border: 1px solid #111;
+
+            color: #fff;
+        }
+
+
+        .product-delete {
+
+            background: rgba(220,38,38,0.06);
+
+            border: 1px solid rgba(220,38,38,0.14);
+
+            color: #c62828;
+        }
+
+
+        /* EMPTY */
+
+        .products-empty {
+
+            padding: 65px 25px;
+
+            text-align: center;
+
+            background: #fff;
+
+            border: 1px dashed #d7d7d7;
+
+            border-radius: 22px;
+        }
+
+
+        .products-empty-icon {
+
+            width: 78px;
+
+            height: 78px;
+
+            margin: 0 auto 17px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 23px;
+
+            background: #f7f7f7;
+
+            font-size: 35px;
+        }
+
+
+        .products-empty h2 {
+
+            margin: 0 0 7px;
+
+            font-size: 21px;
+        }
+
+
+        .products-empty p {
+
+            max-width: 470px;
+
+            margin: 0 auto 20px;
+
+            color: #777;
+
+            font-size: 13px;
+
+            line-height: 1.8;
+        }
+
+
+        .products-empty-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 43px;
+
+            padding: 0 20px;
+
+            border-radius: 11px;
+
+            background: #111;
+
+            color: #fff;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 950px) {
+
+            .products-grid-pro {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .products-hero {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                padding: 24px;
+            }
+
+
+            .products-hero-actions {
+
+                width: 100%;
+            }
+
+
+            .products-hero-actions a {
+
+                flex: 1;
+            }
+
+
+            .products-toolbar {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 560px) {
+
+            .products-grid-pro {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .products-section-head {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .product-image-pro {
+
+                height: 215px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-page menu-management-page products-page">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="main-header">
+
+    <div class="header-container">
+
+
+        <a
+            href="{{ url_for('home') }}"
+            class="brand"
+        >
+
+            <span class="brand-icon">
+                M
+            </span>
+
+            <span class="brand-name">
+                Menu Smart
+            </span>
+
+        </a>
+
+
+        <div class="dashboard-header-actions">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="dashboard-home-link"
+            >
+                لوحة التحكم
+            </a>
+
+
+            <a
+                href="{{ url_for('categories') }}"
+                class="dashboard-home-link"
+            >
+                الأقسام
+            </a>
+
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="dashboard-logout"
+            >
+                تسجيل الخروج
+            </a>
+
+        </div>
+
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="dashboard-main">
+
+    <div class="dashboard-container">
+
+
+        <!-- HERO -->
+
+        <section class="products-hero">
+
+
+            <div class="products-hero-content">
+
+                <span class="products-hero-label">
+                    إدارة المنيو
+                </span>
+
+                <h1>
+                    منتجات المطعم
+                </h1>
+
+                <p>
+                    أضف منتجاتك وأسعارها وصورها،
+                    ونظّمها داخل أقسام واضحة لعملائك.
+                </p>
+
+            </div>
+
+
+            <div class="products-hero-actions">
+
+                <a
+                    href="{{ url_for('product_add') }}"
+                    class="products-add-btn"
+                >
+                    ＋ إضافة منتج
+                </a>
+
+
+                <a
+                    href="{{ url_for('categories') }}"
+                    class="products-categories-btn"
+                >
+                    الأقسام
+                </a>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- FLASH -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="dashboard-messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="dashboard-message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- TOOLBAR -->
+
+        <section class="products-toolbar">
+
+
+            <div class="products-search">
+
+                <span class="products-search-icon">
+                    🔎
+                </span>
+
+                <input
+                    type="search"
+                    id="productSearch"
+                    placeholder="ابحث عن اسم المنتج..."
+                >
+
+            </div>
+
+
+            <div class="products-filter">
+
+                <select id="categoryFilter">
+
+                    <option value="all">
+                        كل الأقسام
+                    </option>
+
+
+                    {% for category in categories|default([]) %}
+
+                        <option
+                            value="{{ category.id }}"
+                        >
+                            {{ category.name }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- SECTION HEADER -->
+
+        <section class="products-section-head">
+
+            <div>
+
+                <span class="products-section-label">
+                    محتوى المنيو
+                </span>
+
+                <h2>
+                    المنتجات
+                </h2>
+
+            </div>
+
+
+            <div class="products-count">
+
+                <strong>
+                    {{ products|length if products else 0 }}
+                </strong>
+
+                منتج
+
+            </div>
+
+        </section>
+
+
+        {% if products %}
+
+
+            <div
+                class="products-grid-pro"
+                id="productsGrid"
+            >
+
+
+                {% for product in products %}
+
+
+                    <article
+                        class="product-card-pro"
+                        data-name="{{ product.name|lower }}"
+                        data-category="{{ product.category_id|default('', true) }}"
+                    >
+
+
+                        <!-- IMAGE -->
+
+                        <div class="product-image-pro">
+
+
+                         {% if product.image %}
+
+    <img
+        src="{{ url_for(
+            'static',
+            filename='images/uploads/' + product.image
+        ) }}"
+        alt="{{ product.name }}"
+        loading="lazy"
+    >
+
+{% else %}
+
+                                <div class="product-image-placeholder">
+
+                                    {% if product.category_name == 'مشروبات' %}
+
+                                        🥤
+
+                                    {% elif product.category_name == 'حلويات' %}
+
+                                        🍰
+
+                                    {% elif product.category_name == 'بيتزا' %}
+
+                                        🍕
+
+                                    {% elif product.category_name == 'برجر' %}
+
+                                        🍔
+
+                                    {% else %}
+
+                                        🍽️
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if product.available %}
+
+                                <span class="product-status-pro active">
+                                    متاح
+                                </span>
+
+                            {% else %}
+
+                                <span class="product-status-pro inactive">
+                                    غير متاح
+                                </span>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                        <!-- BODY -->
+
+                        <div class="product-card-body">
+
+
+                            <div class="product-category">
+
+                                {{ product.category_name|default(
+                                    'بدون قسم',
+                                    true
+                                ) }}
+
+                            </div>
+
+
+                            <h3>
+                                {{ product.name }}
+                            </h3>
+
+
+                            <p class="product-description">
+
+                                {{ product.description|default(
+                                    'لا يوجد وصف للمنتج.',
+                                    true
+                                ) }}
+
+                            </p>
+
+
+                            <div class="product-bottom">
+
+                                <strong class="product-price">
+
+                                    {{ product.price }}
+
+                                    <span>
+                                        جنيه
+                                    </span>
+
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="product-actions">
+
+
+                            <a
+                                href="{{ url_for(
+                                    'product_edit',
+                                    product_id=product.id
+                                ) }}"
+                                class="product-action product-edit"
+                            >
+                                تعديل
+                            </a>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'public_product',
+                                    slug=restaurant.slug,
+                                    product_id=product.id
+                                ) }}"
+                                class="product-action product-view"
+                                target="_blank"
+                            >
+                                عرض
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'product_delete',
+                                    product_id=product.id
+                                ) }}"
+                                onsubmit="return confirm('هل أنت متأكد من حذف هذا المنتج؟');"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="product-action product-delete"
+                                    style="width:100%;"
+                                >
+                                    حذف
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+            <!-- NO RESULTS -->
+
+            <div
+                id="noProductsFound"
+                class="products-empty"
+                style="display:none;"
+            >
+
+                <div class="products-empty-icon">
+                    🔎
+                </div>
+
+                <h2>
+                    لا توجد نتائج
+                </h2>
+
+                <p>
+                    لم نجد منتجًا مطابقًا للبحث أو القسم المحدد.
+                </p>
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="products-empty">
+
+                <div class="products-empty-icon">
+                    🍽️
+                </div>
+
+                <h2>
+                    لا توجد منتجات حتى الآن
+                </h2>
+
+                <p>
+                    ابدأ بإضافة أول منتج إلى منيو مطعمك،
+                    وبعدها يمكنك إضافة السعر والوصف والصورة.
+                </p>
+
+
+                <a
+                    href="{{ url_for('product_add') }}"
+                    class="products-empty-btn"
+                >
+                    ＋ إضافة أول منتج
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="main-footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <strong>
+                Menu Smart
+            </strong>
+
+            <p>
+                منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                لوحة التحكم
+            </a>
+
+
+            <a href="{{ url_for('categories') }}">
+                الأقسام
+            </a>
+
+
+            <a href="{{ url_for('profile') }}">
+                بيانات المطعم
+            </a>
+
+        </div>
+
+
+        <div class="footer-copy">
+
+            © {{ current_year|default(2026) }} Menu Smart
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+<!-- =====================================================
+     SEARCH + FILTER
+===================================================== -->
+
+<script>
+
+const productSearch =
+    document.getElementById("productSearch");
+
+const categoryFilter =
+    document.getElementById("categoryFilter");
+
+const productCards =
+    document.querySelectorAll(".product-card-pro");
+
+const noProductsFound =
+    document.getElementById("noProductsFound");
+
+
+function filterProducts() {
+
+    const searchValue =
+        productSearch
+            ? productSearch.value
+                .trim()
+                .toLowerCase()
+            : "";
+
+
+    const categoryValue =
+        categoryFilter
+            ? categoryFilter.value
+            : "all";
+
+
+    let visibleCount = 0;
+
+
+    productCards.forEach(function(card) {
+
+        const productName =
+            card.dataset.name || "";
+
+
+        const productCategory =
+            card.dataset.category || "";
+
+
+        const matchesSearch =
+            productName.includes(searchValue);
+
+
+        const matchesCategory =
+            categoryValue === "all" ||
+            productCategory === categoryValue;
+
+
+        if (
+            matchesSearch &&
+            matchesCategory
+        ) {
+
+            card.style.display = "";
+
+            visibleCount++;
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+
+    if (noProductsFound) {
+
+        noProductsFound.style.display =
+            visibleCount === 0
+                ? "block"
+                : "none";
+
+    }
+
+}
+
+
+if (productSearch) {
+
+    productSearch.addEventListener(
+        "input",
+        filterProducts
+    );
+
+}
+
+
+if (categoryFilter) {
+
+    categoryFilter.addEventListener(
+        "change",
+        filterProducts
+    );
+
+}
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<title>
+    تعديل المنيو | Menu Smart
+</title>
+
+<meta
+    name="description"
+    content="تعديل بيانات المنيو الإلكتروني في Menu Smart."
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/menu.css') }}"
+>
+
+</head><body class="dashboard-page menu-management-page"><header class="main-header"><div class="header-container">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="brand"
+    >
+
+        <span class="brand-icon">
+            M
+        </span>
+
+        <span class="brand-name">
+            Menu Smart
+        </span>
+
+    </a>
+
+
+    <div class="dashboard-header-actions">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="dashboard-home-link"
+        >
+            لوحة التحكم
+        </a>
+
+
+        <a
+            href="{{ url_for('menu') }}"
+            class="dashboard-home-link"
+        >
+            المنيو
+        </a>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="dashboard-logout"
+        >
+            تسجيل الخروج
+        </a>
+
+    </div>
+
+</div>
+
+</header><main class="dashboard-main"><div class="dashboard-container">
+
+
+    <section class="menu-page-header">
+
+        <div>
+
+            <span class="dashboard-label">
+                إدارة المطعم
+            </span>
+
+            <h1>
+                تعديل المنيو
+            </h1>
+
+            <p>
+                عدّل بيانات المنيو واحفظ التغييرات
+                لتظهر مباشرة في صفحة المطعم.
+            </p>
+
+        </div>
+
+
+        <div class="menu-header-actions">
+
+            {% if menu and menu.slug %}
+
+                <a
+                    href="{{ url_for('public_menu', slug=menu.slug) }}"
+                    class="dashboard-secondary-btn"
+                    target="_blank"
+                >
+                    عرض المنيو
+                </a>
+
+            {% endif %}
+
+
+            <a
+                href="{{ url_for('menu') }}"
+                class="dashboard-secondary-btn"
+            >
+                ← العودة
+            </a>
+
+        </div>
+
+    </section>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="dashboard-messages">
+
+                {% for category, message in messages %}
+
+                    <div class="dashboard-message {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <section class="menu-edit-layout">
+
+
+        <div class="dashboard-card menu-edit-card">
+
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <span>
+                        بيانات المنيو
+                    </span>
+
+                    <h2>
+                        المعلومات الأساسية
+                    </h2>
+
+                </div>
+
+                <div class="menu-create-icon">
+                    ✏️
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('menu_edit', menu_id=menu.id) }}"
+                enctype="multipart/form-data"
+                class="dashboard-form"
+            >
+
+
+                <div class="form-group">
+
+                    <label for="name">
+                        اسم المنيو
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value="{{ menu.name|default('') }}"
+                        placeholder="اسم المطعم"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="description">
+                        وصف المنيو
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="5"
+                        placeholder="اكتب وصفًا مختصرًا..."
+                    >{{ menu.description|default('') }}</textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label for="slug">
+                            رابط المنيو
+                        </label>
+
+                        <div class="input-with-prefix">
+
+                            <span>
+                                /menu/
+                            </span>
+
+                            <input
+                                type="text"
+                                id="slug"
+                                name="slug"
+                                value="{{ menu.slug|default('') }}"
+                                placeholder="my-restaurant"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="status">
+                            حالة المنيو
+                        </label>
+
+                        <select
+                            id="status"
+                            name="status"
+                        >
+
+                            <option
+                                value="active"
+                                {% if menu.status|default('active') == 'active' %}
+                                selected
+                                {% endif %}
+                            >
+                                نشط
+                            </option>
+
+                            <option
+                                value="inactive"
+                                {% if menu.status|default('active') == 'inactive' %}
+                                selected
+                                {% endif %}
+                            >
+                                غير نشط
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        صورة المنيو الحالية
+                    </label>
+
+
+                    {% if menu.image %}
+
+                        <div class="current-menu-image">
+
+                            <img
+                                src="{{ url_for('static', filename=menu.image) }}"
+                                alt="{{ menu.name }}"
+                            >
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="current-menu-placeholder">
+
+                            <span>
+                                M
+                            </span>
+
+                            <p>
+                                لا توجد صورة حاليًا
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="image">
+                        تغيير الصورة
+                    </label>
+
+                    <div class="upload-box">
+
+                        <input
+                            type="file"
+                            id="image"
+                            name="image"
+                            accept="image/*"
+                        >
+
+                        <div class="upload-content">
+
+                            <span class="upload-icon">
+                                🖼️
+                            </span>
+
+                            <strong>
+                                اختر صورة جديدة
+                            </strong>
+
+                            <small>
+                                PNG أو JPG
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <a
+                        href="{{ url_for('menu') }}"
+                        class="dashboard-secondary-btn"
+                    >
+                        إلغاء
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="dashboard-primary-btn"
+                    >
+                        حفظ التغييرات
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+        <aside class="menu-edit-side">
+
+
+            <div class="dashboard-card menu-edit-info">
+
+                <div class="menu-info-icon">
+                    🔗
+                </div>
+
+                <h3>
+                    رابط المنيو
+                </h3>
+
+                {% if menu and menu.slug %}
+
+                    <div class="menu-url-box">
+
+                        /menu/{{ menu.slug }}
+
+                    </div>
+
+                    <a
+                        href="{{ url_for('public_menu', slug=menu.slug) }}"
+                        target="_blank"
+                        class="dashboard-secondary-btn"
+                    >
+                        فتح المنيو
+                    </a>
+
+                {% else %}
+
+                    <p>
+                        أضف رابطًا للمنيو حتى تتمكن من مشاركته
+                        مع عملائك.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="dashboard-card menu-edit-info">
+
+                <div class="menu-info-icon">
+                    📋
+                </div>
+
+                <h3>
+                    إدارة محتوى المنيو
+                </h3>
+
+                <p>
+                    بعد حفظ بيانات المنيو يمكنك إدارة
+                    الأقسام والمنتجات من الأدوات التالية.
+                </p>
+
+
+                <div class="edit-side-links">
+
+
+                    <a href="{{ url_for('categories') }}">
+
+                        <span>
+                            🗂️
+                        </span>
+
+                        الأقسام
+
+                        <b>
+                            ←
+                        </b>
+
+                    </a>
+
+
+                    <a href="{{ url_for('products') }}">
+
+                        <span>
+                            🍽️
+                        </span>
+
+                        المنتجات
+
+                        <b>
+                            ←
+                        </b>
+
+                    </a>
+
+
+                    <a href="{{ url_for('qr_code') }}">
+
+                        <span>
+                            ▣
+                        </span>
+
+                        رمز QR
+
+                        <b>
+                            ←
+                        </b>
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+
+    </section>
+
+
+</div>
+
+</main><footer class="main-footer"><div class="footer-container">
+
+    <div class="footer-brand">
+
+        <strong>
+            Menu Smart
+        </strong>
+
+        <p>
+            منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+        </p>
+
+    </div>
+
+
+    <div class="footer-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            لوحة التحكم
+        </a>
+
+        <a href="{{ url_for('menu') }}">
+            المنيو
+        </a>
+
+        <a href="{{ url_for('profile') }}">
+            حسابي
+        </a>
+
+    </div>
+
+
+    <div class="footer-copy">
+
+        © {{ current_year }} Menu Smart
+
+    </div>
+
+</div>
+
+</footer></body></html>

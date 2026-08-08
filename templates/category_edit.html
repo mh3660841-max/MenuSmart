@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <title>
+        {% if category %}
+            تعديل القسم
+        {% else %}
+            إضافة قسم
+        {% endif %}
+        | Menu Smart
+    </title>
+
+    <meta
+        name="description"
+        content="إضافة وتعديل أقسام المنيو في Menu Smart."
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/menu.css') }}"
+    >
+
+    <style>
+
+        .menu-management-page {
+            background:
+                radial-gradient(
+                    circle at 90% 0%,
+                    rgba(212,175,55,.06),
+                    transparent 30%
+                ),
+                #f6f6f7;
+        }
+
+        .menu-page-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 25px;
+            margin-bottom: 28px;
+            padding: 28px;
+            border-radius: 22px;
+            background: #111;
+            color: #fff;
+            box-shadow:
+                0 15px 40px rgba(0,0,0,.10);
+        }
+
+        .menu-page-header h1 {
+            margin: 5px 0 8px;
+            color: #fff;
+            font-size: clamp(25px,4vw,34px);
+            font-weight: 900;
+        }
+
+        .menu-page-header p {
+            margin: 0;
+            color: rgba(255,255,255,.62);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .menu-page-header .dashboard-secondary-btn {
+            flex-shrink: 0;
+        }
+
+        .category-edit-layout {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.45fr)
+                minmax(300px,.8fr);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .dashboard-card {
+            background: #fff;
+            border: 1px solid #e9e9ec;
+            border-radius: 22px;
+            box-shadow:
+                0 10px 30px rgba(0,0,0,.045);
+        }
+
+        .category-edit-card {
+            overflow: hidden;
+        }
+
+        .dashboard-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 23px 25px;
+            border-bottom: 1px solid #eeeeef;
+        }
+
+        .dashboard-card-header > div:first-child span {
+            display: block;
+            margin-bottom: 5px;
+            color: #d4af37;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .dashboard-card-header h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .menu-create-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            background: #f7f7f8;
+            font-size: 25px;
+        }
+
+        .dashboard-form {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group > label {
+            display: block;
+            margin-bottom: 8px;
+            color: #222;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="file"],
+        .form-group textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 14px;
+            border: 1px solid #dedee2;
+            border-radius: 12px;
+            background: #fff;
+            color: #171717;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .form-group input[type="file"] {
+            padding: 11px;
+            background: #fafafa;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #d4af37;
+            box-shadow:
+                0 0 0 4px rgba(212,175,55,.10);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 7px;
+            color: #92929a;
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns:
+                1fr
+                1fr;
+            gap: 15px;
+        }
+
+        /* صورة القسم */
+
+        .category-image-box {
+            margin-top: 12px;
+        }
+
+        .category-image-preview {
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 18px;
+            border: 1px solid #e5e5e8;
+            background: #f7f7f8;
+        }
+
+        .category-image-preview img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .category-image-empty {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            border: 1px dashed #d8d8dc;
+            background: #fafafa;
+            color: #999;
+            font-size: 40px;
+        }
+
+        .status-options {
+            display: grid;
+            grid-template-columns:
+                1fr
+                1fr;
+            gap: 10px;
+        }
+
+        .status-option {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px;
+            border: 1px solid #e5e5e8;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .status-option:hover {
+            border-color: rgba(212,175,55,.45);
+            background: #fffdf5;
+        }
+
+        .status-option input {
+            accent-color: #d4af37;
+        }
+
+        .status-option span {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .status-option strong {
+            font-size: 12px;
+        }
+
+        .status-option small {
+            margin: 0;
+            font-size: 9px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 8px;
+            margin-top: 8px;
+            border-top: 1px solid #eeeeef;
+        }
+
+        .category-preview-side {
+            position: sticky;
+            top: 90px;
+        }
+
+        .preview-label {
+            margin-bottom: 10px;
+            color: #777;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .category-live-preview {
+            overflow: hidden;
+            padding: 18px;
+            border-radius: 20px;
+            background:
+                linear-gradient(
+                    145deg,
+                    #111,
+                    #202020
+                );
+            color: #fff;
+            box-shadow:
+                0 15px 35px rgba(0,0,0,.12);
+        }
+
+        .live-preview-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .live-category-icon {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            background: rgba(212,175,55,.13);
+            color: #d4af37;
+            font-size: 25px;
+        }
+
+        .live-preview-image {
+            width: 75px;
+            height: 75px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            background: #2b2b2b;
+        }
+
+        .live-preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .live-preview-top h3 {
+            margin: 0 0 4px;
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .live-preview-top p {
+            margin: 0;
+            color: rgba(255,255,255,.55);
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .live-preview-line {
+            height: 1px;
+            margin: 17px 0;
+            background: rgba(255,255,255,.10);
+        }
+
+        .preview-products-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .preview-products-title strong {
+            font-size: 11px;
+        }
+
+        .preview-products-title span {
+            color: rgba(255,255,255,.42);
+            font-size: 9px;
+        }
+
+        .category-products-preview {
+            display: grid;
+            gap: 8px;
+        }
+
+        .preview-product {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.055);
+            border: 1px solid rgba(255,255,255,.06);
+        }
+
+        .preview-product-image {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #2b2b2b;
+            color: #d4af37;
+            font-size: 20px;
+        }
+
+        .preview-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-product-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .preview-product-info strong {
+            display: block;
+            overflow: hidden;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 900;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .preview-product-info span {
+            display: block;
+            margin-top: 3px;
+            color: #d4af37;
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        .preview-products-empty {
+            padding: 18px 10px;
+            text-align: center;
+            border-radius: 13px;
+            background: rgba(255,255,255,.045);
+            color: rgba(255,255,255,.48);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .preview-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 12px;
+            padding: 14px;
+            border-radius: 15px;
+            background: #fff;
+            border: 1px solid #e9e9ec;
+        }
+
+        .preview-note > span {
+            font-size: 18px;
+        }
+
+        .preview-note p {
+            margin: 0;
+            color: #777;
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 850px) {
+
+            .category-edit-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .category-preview-side {
+                position: static;
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .menu-page-header {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 22px;
+            }
+
+            .menu-page-header .dashboard-secondary-btn {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .status-options {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-card-header {
+                padding: 18px;
+            }
+
+            .dashboard-form {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-page menu-management-page">
+
+
+<header class="main-header">
+
+    <div class="header-container">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="brand"
+        >
+
+            <span class="brand-icon">
+                M
+            </span>
+
+            <span class="brand-name">
+                Menu Smart
+            </span>
+
+        </a>
+
+
+        <div class="dashboard-header-actions">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="dashboard-home-link"
+            >
+                لوحة التحكم
+            </a>
+
+            <a
+                href="{{ url_for('categories') }}"
+                class="dashboard-home-link"
+            >
+                الأقسام
+            </a>
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="dashboard-logout"
+            >
+                تسجيل الخروج
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="dashboard-main">
+
+    <div class="dashboard-container">
+
+
+        <section class="menu-page-header">
+
+            <div>
+
+                <span class="dashboard-label">
+                    إدارة المنيو
+                </span>
+
+                <h1>
+
+                    {% if category %}
+                        تعديل القسم
+                    {% else %}
+                        إضافة قسم جديد
+                    {% endif %}
+
+                </h1>
+
+                <p>
+                    أنشئ أقسامًا منظمة تساعد عملاءك
+                    على الوصول إلى المنتجات بسهولة.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('categories') }}"
+                class="dashboard-secondary-btn"
+            >
+                ← العودة للأقسام
+            </a>
+
+        </section>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="dashboard-messages">
+
+                    {% for category_name, message in messages %}
+
+                        <div class="dashboard-message {{ category_name }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <section class="category-edit-layout">
+
+
+            <div class="dashboard-card category-edit-card">
+
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <span>
+                            بيانات القسم
+                        </span>
+
+                        <h2>
+
+                            {% if category %}
+                                تعديل المعلومات
+                            {% else %}
+                                معلومات القسم
+                            {% endif %}
+
+                        </h2>
+
+                    </div>
+
+
+                    <div class="menu-create-icon">
+                        🗂️
+                    </div>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+
+                    {% if category %}
+
+                        action="{{ url_for(
+                            'category_edit',
+                            category_id=category.id
+                        ) }}"
+
+                    {% else %}
+
+                        action="{{ url_for('category_edit') }}"
+
+                    {% endif %}
+
+                    class="dashboard-form"
+                >
+
+
+                    <div class="form-group">
+
+                        <label for="name">
+                            اسم القسم
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value="{{
+                                category.name
+                                if category
+                                else request.form.get('name', '')
+                            }}"
+                            placeholder="مثال: البرجر"
+                            required
+                        >
+
+                        <small>
+                            اختر اسمًا واضحًا يظهر للعملاء داخل المنيو.
+                        </small>
+
+                    </div>
+
+
+                    <!-- صورة القسم -->
+
+                    <div class="form-group">
+
+                        <label for="image">
+                            صورة القسم
+                        </label>
+
+                        <input
+                            type="file"
+                            id="image"
+                            name="image"
+                            accept="image/png,image/jpeg,image/webp"
+                        >
+
+                        <small>
+                            اختر صورة مناسبة للقسم. الأنواع المسموحة:
+                            JPG - PNG - WEBP
+                        </small>
+
+
+                        <div class="category-image-box">
+
+                            {% if category and category.image %}
+
+                                <div class="category-image-preview">
+
+                                    <img
+                                        src="{{ url_for(
+                                            'static',
+                                            filename='images/uploads/' + category.image
+                                        ) }}"
+                                        alt="{{ category.name }}"
+                                    >
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="category-image-empty">
+                                    🖼️
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="description">
+                            وصف القسم
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="5"
+                            placeholder="مثال: مجموعة البرجر والوجبات السريعة..."
+                        >{{
+                            category.description
+                            if category
+                            else request.form.get('description', '')
+                        }}</textarea>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+
+                        <div class="form-group">
+
+                            <label for="icon">
+                                أيقونة القسم
+                            </label>
+
+                            <input
+                                type="text"
+                                id="icon"
+                                name="icon"
+
+                                value="{{
+                                    category.icon
+                                    if category and category.icon
+                                    else request.form.get('icon', '🍽️')
+                                }}"
+
+                                placeholder="🍔"
+                            >
+
+                            <small>
+                                يمكنك استخدام إيموجي مناسب للقسم.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="sort_order">
+                                ترتيب القسم
+                            </label>
+
+                            <input
+                                type="number"
+                                id="sort_order"
+                                name="sort_order"
+
+                                value="{{
+                                    category.sort_order
+                                    if category and category.sort_order is not none
+                                    else request.form.get('sort_order', 0)
+                                }}"
+
+                                min="0"
+                            >
+
+                            <small>
+                                الرقم الأصغر يظهر أولًا.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            حالة القسم
+                        </label>
+
+
+                        <div class="status-options">
+
+
+                            <label class="status-option">
+
+                                <input
+                                    type="radio"
+                                    name="status"
+                                    value="active"
+
+                                    {% if not category
+                                       or category.is_active|default(true) %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span>
+
+                                    <strong>
+                                        نشط
+                                    </strong>
+
+                                    <small>
+                                        يظهر القسم للعملاء.
+                                    </small>
+
+                                </span>
+
+                            </label>
+
+
+                            <label class="status-option">
+
+                                <input
+                                    type="radio"
+                                    name="status"
+                                    value="inactive"
+
+                                    {% if category
+                                       and not category.is_active|default(true) %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span>
+
+                                    <strong>
+                                        غير نشط
+                                    </strong>
+
+                                    <small>
+                                        يخفي القسم مؤقتًا من المنيو.
+                                    </small>
+
+                                </span>
+
+                            </label>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <a
+                            href="{{ url_for('categories') }}"
+                            class="dashboard-secondary-btn"
+                        >
+                            إلغاء
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="dashboard-primary-btn"
+                        >
+
+                            {% if category %}
+                                حفظ التغييرات
+                            {% else %}
+                                إنشاء القسم
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+
+            <!-- المعاينة -->
+
+            <aside class="category-preview-side">
+
+
+                <div class="preview-label">
+                    معاينة القسم
+                </div>
+
+
+                <div class="category-live-preview">
+
+
+                    <div class="live-preview-top">
+
+
+                        {% if category and category.image %}
+
+                            <div
+                                class="live-preview-image"
+                                id="previewImageBox"
+                            >
+
+                                <img
+                                    id="previewImage"
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='images/uploads/' + category.image
+                                    ) }}"
+                                    alt="{{ category.name }}"
+                                >
+
+                            </div>
+
+                        {% else %}
+
+                            <div
+                                class="live-category-icon"
+                                id="previewIcon"
+                            >
+                                {{
+                                    category.icon
+                                    if category and category.icon
+                                    else '🍽️'
+                                }}
+                            </div>
+
+                        {% endif %}
+
+
+                        <div>
+
+                            <h3 id="previewName">
+
+                                {{
+                                    category.name
+                                    if category
+                                    else 'اسم القسم'
+                                }}
+
+                            </h3>
+
+                            <p id="previewDescription">
+
+                                {{
+                                    category.description
+                                    if category and category.description
+                                    else 'وصف القسم سيظهر هنا'
+                                }}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="live-preview-line"></div>
+
+
+                    <div class="preview-products-title">
+
+                        <strong>
+                            منتجات القسم
+                        </strong>
+
+                        <span>
+                            معاينة
+                        </span>
+
+                    </div>
+
+
+                    <div class="category-products-preview">
+
+
+                        {% if category and category.products %}
+
+
+                            {% for product in category.products[:5] %}
+
+                                <div class="preview-product">
+
+                                    <div class="preview-product-image">
+
+                                        {% if product.image %}
+
+                                            <img
+                                                src="{{ url_for(
+                                                    'static',
+                                                    filename=product.image
+                                                ) }}"
+                                                alt="{{ product.name }}"
+                                                loading="lazy"
+                                            >
+
+                                        {% else %}
+
+                                            🍽️
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div class="preview-product-info">
+
+                                        <strong>
+                                            {{ product.name }}
+                                        </strong>
+
+                                        <span>
+                                            {{ product.price|default(0) }} جنيه
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+
+                        {% else %}
+
+
+                            <div class="preview-products-empty">
+
+                                🍽️
+
+                                <br>
+
+                                لا توجد منتجات في هذا القسم حتى الآن.
+
+                                <br>
+
+                                أضف المنتجات من صفحة المنتجات.
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="preview-note">
+
+                    <span>
+                        💡
+                    </span>
+
+                    <p>
+                        يمكنك إنشاء أقسام مثل:
+                        البرجر، البيتزا، الوجبات،
+                        المشروبات والحلويات.
+                    </p>
+
+                </div>
+
+
+            </aside>
+
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+<footer class="main-footer">
+
+    <div class="footer-container">
+
+
+        <div class="footer-brand">
+
+            <strong>
+                Menu Smart
+            </strong>
+
+            <p>
+                منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                لوحة التحكم
+            </a>
+
+            <a href="{{ url_for('categories') }}">
+                الأقسام
+            </a>
+
+            <a href="{{ url_for('profile') }}">
+                حسابي
+            </a>
+
+        </div>
+
+
+        <div class="footer-copy">
+
+            © {{ current_year|default(2026) }}
+
+            Menu Smart
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+const nameInput =
+    document.getElementById("name");
+
+const descriptionInput =
+    document.getElementById("description");
+
+const iconInput =
+    document.getElementById("icon");
+
+const imageInput =
+    document.getElementById("image");
+
+const previewName =
+    document.getElementById("previewName");
+
+const previewDescription =
+    document.getElementById("previewDescription");
+
+const previewIcon =
+    document.getElementById("previewIcon");
+
+
+if (nameInput && previewName) {
+
+    nameInput.addEventListener(
+        "input",
+        function () {
+
+            previewName.textContent =
+                this.value.trim() || "اسم القسم";
+
+        }
+    );
+
+}
+
+
+if (descriptionInput && previewDescription) {
+
+    descriptionInput.addEventListener(
+        "input",
+        function () {
+
+            previewDescription.textContent =
+                this.value.trim() ||
+                "وصف القسم سيظهر هنا";
+
+        }
+    );
+
+}
+
+
+if (iconInput && previewIcon) {
+
+    iconInput.addEventListener(
+        "input",
+        function () {
+
+            previewIcon.textContent =
+                this.value.trim() || "🍽️";
+
+        }
+    );
+
+}
+
+
+/* معاينة الصورة قبل الحفظ */
+
+if (imageInput) {
+
+    imageInput.addEventListener(
+        "change",
+        function () {
+
+            const file =
+                this.files && this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                return;
+            }
+
+            const imageUrl =
+                URL.createObjectURL(file);
+
+
+            let imageBox =
+                document.getElementById(
+                    "previewImageBox"
+                );
+
+
+            if (!imageBox) {
+
+                imageBox =
+                    document.createElement("div");
+
+                imageBox.id =
+                    "previewImageBox";
+
+                imageBox.className =
+                    "live-preview-image";
+
+
+                const oldIcon =
+                    document.getElementById(
+                        "previewIcon"
+                    );
+
+                if (oldIcon) {
+
+                    oldIcon.replaceWith(
+                        imageBox
+                    );
+
+                } else {
+
+                    const top =
+                        document.querySelector(
+                            ".live-preview-top"
+                        );
+
+                    if (top) {
+
+                        top.insertBefore(
+                            imageBox,
+                            top.firstElementChild
+                        );
+
+                    }
+
+                }
+
+            }
+
+
+            imageBox.innerHTML = "";
+
+
+            const image =
+                document.createElement("img");
+
+            image.id =
+                "previewImage";
+
+            image.src =
+                imageUrl;
+
+            image.alt =
+                "معاينة صورة القسم";
+
+
+            imageBox.appendChild(image);
+
+        }
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

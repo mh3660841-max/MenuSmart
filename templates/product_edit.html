@@ -1,0 +1,886 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111111"
+>
+
+<title>
+    تعديل المنتج | Menu Smart
+</title>
+
+<meta
+    name="description"
+    content="تعديل بيانات المنتج في منيو Menu Smart."
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/menu.css') }}"
+>
+
+</head><body class="dashboard-page menu-management-page"><header class="main-header"><div class="header-container">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="brand"
+    >
+
+        <span class="brand-icon">
+            M
+        </span>
+
+        <span class="brand-name">
+            Menu Smart
+        </span>
+
+    </a>
+
+
+    <div class="dashboard-header-actions">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="dashboard-home-link"
+        >
+            لوحة التحكم
+        </a>
+
+        <a
+            href="{{ url_for('products') }}"
+            class="dashboard-home-link"
+        >
+            المنتجات
+        </a>
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="dashboard-logout"
+        >
+            تسجيل الخروج
+        </a>
+
+    </div>
+
+</div>
+
+</header><main class="dashboard-main"><div class="dashboard-container">
+
+
+    <section class="menu-page-header">
+
+        <div>
+
+            <span class="dashboard-label">
+                إدارة المنيو
+            </span>
+
+            <h1>
+                تعديل المنتج
+            </h1>
+
+            <p>
+                عدّل بيانات المنتج أو السعر أو الصورة
+                ثم احفظ التغييرات.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('products') }}"
+            class="dashboard-secondary-btn"
+        >
+            ← العودة للمنتجات
+        </a>
+
+    </section>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="dashboard-messages">
+
+                {% for category, message in messages %}
+
+                    <div class="dashboard-message {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <section class="product-form-layout">
+
+
+        <div class="dashboard-card product-form-card">
+
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <span>
+                        بيانات المنتج
+                    </span>
+
+                    <h2>
+                        تعديل المعلومات
+                    </h2>
+
+                </div>
+
+                <div class="menu-create-icon">
+                    ✏️
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+
+                action="{{ url_for(
+                    'product_edit',
+                    product_id=product.id
+                ) }}"
+
+                enctype="multipart/form-data"
+
+                class="dashboard-form"
+            >
+
+
+                <div class="form-group">
+
+                    <label for="name">
+                        اسم المنتج
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+
+                        value="{{
+                            product.name
+                            if product
+                            else request.form.get('name', '')
+                        }}"
+
+                        placeholder="مثال: برجر كلاسيك"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label for="price">
+                            السعر
+                        </label>
+
+                        <div class="price-input">
+
+                            <input
+                                type="number"
+                                id="price"
+                                name="price"
+
+                                value="{{
+                                    product.price
+                                    if product
+                                    else request.form.get('price', '')
+                                }}"
+
+                                placeholder="150"
+                                min="0"
+                                step="0.01"
+                                required
+                            >
+
+                            <span>
+                                جنيه
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="old_price">
+                            السعر القديم
+                        </label>
+
+                        <div class="price-input">
+
+                            <input
+                                type="number"
+                                id="old_price"
+                                name="old_price"
+
+                                value="{{
+                                    product.old_price
+                                    if product
+                                    else request.form.get('old_price', '')
+                                }}"
+
+                                placeholder="180"
+                                min="0"
+                                step="0.01"
+                            >
+
+                            <span>
+                                جنيه
+                            </span>
+
+                        </div>
+
+                        <small>
+                            اختياري لإظهار سعر قبل الخصم.
+                        </small>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="category_id">
+                        القسم
+                    </label>
+
+                    <select
+                        id="category_id"
+                        name="category_id"
+                        required
+                    >
+
+                        <option value="">
+                            اختر القسم
+                        </option>
+
+
+                        {% for category in categories|default([]) %}
+
+                            <option
+                                value="{{ category.id }}"
+
+                                {% if product
+                                   and product.category_id
+                                   == category.id %}
+
+                                    selected
+
+                                {% elif request.form.get('category_id')
+                                      == category.id|string %}
+
+                                    selected
+
+                                {% endif %}
+                            >
+
+                                {{ category.icon|default('🍽️') }}
+
+                                {{ category.name }}
+
+                            </option>
+
+                        {% endfor %}
+
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="description">
+                        وصف المنتج
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="5"
+                        placeholder="مثال: لحم طازج مع جبنة وصوص خاص..."
+                    >{{
+                        product.description
+                        if product
+                        else request.form.get('description', '')
+                    }}</textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        صورة المنتج
+                    </label>
+
+
+                    {% if product and product.image %}
+
+                        <div class="current-image">
+
+                            <img
+                                src="{{ url_for(
+                                    'static',
+                                    filename=product.image
+                                ) }}"
+                                alt="{{ product.name }}"
+                                id="currentImage"
+                            >
+
+                            <span>
+                                الصورة الحالية
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="upload-box">
+
+                        <input
+                            type="file"
+                            id="image"
+                            name="image"
+                            accept="image/*"
+                        >
+
+                        <div class="upload-content">
+
+                            <span class="upload-icon">
+                                🖼️
+                            </span>
+
+                            <strong>
+                                تغيير صورة المنتج
+                            </strong>
+
+                            <small>
+                                PNG أو JPG
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        حالة المنتج
+                    </label>
+
+
+                    <div class="status-options">
+
+
+                        <label class="status-option">
+
+                            <input
+                                type="radio"
+                                name="status"
+                                value="active"
+
+                                {% if not product
+                                   or product.is_active|default(true) %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span>
+
+                                <strong>
+                                    متاح
+                                </strong>
+
+                                <small>
+                                    يظهر المنتج للعملاء.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <label class="status-option">
+
+                            <input
+                                type="radio"
+                                name="status"
+                                value="inactive"
+
+                                {% if product
+                                   and not product.is_active|default(true) %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span>
+
+                                <strong>
+                                    مخفي
+                                </strong>
+
+                                <small>
+                                    يخفي المنتج من المنيو.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <a
+                        href="{{ url_for('products') }}"
+                        class="dashboard-secondary-btn"
+                    >
+                        إلغاء
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="dashboard-primary-btn"
+                    >
+                        حفظ التغييرات
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+        <aside class="product-preview-side">
+
+
+            <div class="preview-label">
+                المعاينة
+            </div>
+
+
+            <div class="product-live-preview">
+
+
+                <div class="product-live-image">
+
+                    {% if product and product.image %}
+
+                        <img
+                            id="previewImage"
+
+                            src="{{ url_for(
+                                'static',
+                                filename=product.image
+                            ) }}"
+
+                            alt="{{ product.name }}"
+                        >
+
+                        <span
+                            id="previewEmoji"
+                            style="display:none;"
+                        >
+                            🍔
+                        </span>
+
+                    {% else %}
+
+                        <span id="previewEmoji">
+                            🍔
+                        </span>
+
+                        <img
+                            id="previewImage"
+                            src=""
+                            alt=""
+                            style="display:none;"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="product-live-content">
+
+
+                    <div
+                        class="product-live-category"
+                        id="previewCategory"
+                    >
+
+                        {% if product and product.category_name %}
+
+                            {{ product.category_name }}
+
+                        {% else %}
+
+                            اختر القسم
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <h3 id="previewName">
+
+                        {{ product.name
+                           if product
+                           else 'اسم المنتج' }}
+
+                    </h3>
+
+
+                    <p id="previewDescription">
+
+                        {{ product.description
+                           if product and product.description
+                           else 'وصف المنتج سيظهر هنا' }}
+
+                    </p>
+
+
+                    <div class="product-live-price">
+
+                        <strong id="previewPrice">
+
+                            {{ product.price
+                               if product
+                               else '0' }}
+
+                        </strong>
+
+                        <span>
+                            جنيه
+                        </span>
+
+
+                        <del
+                            id="previewOldPrice"
+
+                            {% if not product
+                               or not product.old_price %}
+
+                                style="display:none;"
+
+                            {% endif %}
+                        >
+
+                            {% if product and product.old_price %}
+
+                                {{ product.old_price }}
+                                جنيه
+
+                            {% endif %}
+
+                        </del>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="preview-note">
+
+                <span>
+                    💡
+                </span>
+
+                <p>
+                    الصورة والبيانات التي تراها هنا
+                    هي شكل تقريبي لما سيظهر للعميل.
+                </p>
+
+            </div>
+
+
+        </aside>
+
+
+    </section>
+
+
+</div>
+
+</main><footer class="main-footer"><div class="footer-container">
+
+    <div class="footer-brand">
+
+        <strong>
+            Menu Smart
+        </strong>
+
+        <p>
+            منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+        </p>
+
+    </div>
+
+
+    <div class="footer-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            لوحة التحكم
+        </a>
+
+        <a href="{{ url_for('products') }}">
+            المنتجات
+        </a>
+
+        <a href="{{ url_for('categories') }}">
+            الأقسام
+        </a>
+
+    </div>
+
+
+    <div class="footer-copy">
+
+        © {{ current_year }} Menu Smart
+
+    </div>
+
+</div>
+
+</footer><script>
+
+const nameInput =
+    document.getElementById("name");
+
+const descriptionInput =
+    document.getElementById("description");
+
+const priceInput =
+    document.getElementById("price");
+
+const oldPriceInput =
+    document.getElementById("old_price");
+
+const categoryInput =
+    document.getElementById("category_id");
+
+const imageInput =
+    document.getElementById("image");
+
+
+const previewName =
+    document.getElementById("previewName");
+
+const previewDescription =
+    document.getElementById("previewDescription");
+
+const previewPrice =
+    document.getElementById("previewPrice");
+
+const previewOldPrice =
+    document.getElementById("previewOldPrice");
+
+const previewCategory =
+    document.getElementById("previewCategory");
+
+const previewImage =
+    document.getElementById("previewImage");
+
+const previewEmoji =
+    document.getElementById("previewEmoji");
+
+
+if (nameInput) {
+
+    nameInput.addEventListener(
+        "input",
+        function () {
+
+            previewName.textContent =
+                this.value.trim() ||
+                "اسم المنتج";
+
+        }
+    );
+
+}
+
+
+if (descriptionInput) {
+
+    descriptionInput.addEventListener(
+        "input",
+        function () {
+
+            previewDescription.textContent =
+                this.value.trim() ||
+                "وصف المنتج سيظهر هنا";
+
+        }
+    );
+
+}
+
+
+if (priceInput) {
+
+    priceInput.addEventListener(
+        "input",
+        function () {
+
+            previewPrice.textContent =
+                this.value || "0";
+
+        }
+    );
+
+}
+
+
+if (oldPriceInput) {
+
+    oldPriceInput.addEventListener(
+        "input",
+        function () {
+
+            if (this.value) {
+
+                previewOldPrice.style.display =
+                    "inline";
+
+                previewOldPrice.textContent =
+                    this.value + " جنيه";
+
+            } else {
+
+                previewOldPrice.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
+
+
+if (categoryInput) {
+
+    categoryInput.addEventListener(
+        "change",
+        function () {
+
+            if (this.selectedIndex > 0) {
+
+                previewCategory.textContent =
+                    this.options[
+                        this.selectedIndex
+                    ].text.trim();
+
+            } else {
+
+                previewCategory.textContent =
+                    "اختر القسم";
+
+            }
+
+        }
+    );
+
+}
+
+
+if (imageInput) {
+
+    imageInput.addEventListener(
+        "change",
+        function () {
+
+            const file =
+                this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function (event) {
+
+                    previewImage.src =
+                        event.target.result;
+
+                    previewImage.style.display =
+                        "block";
+
+                    if (previewEmoji) {
+
+                        previewEmoji.style.display =
+                            "none";
+
+                    }
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
+
+</script></body></html>

@@ -1065,7 +1065,7 @@ body.public-menu-page{
                     {% if product.image %}
 
                     <img
-                        src="{{ product.image }}"
+                        src="{{ product.image }}" decoding="async"
                         alt="{{ product.name }}"
                         loading="lazy"
                     >

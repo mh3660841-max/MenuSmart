@@ -950,10 +950,7 @@ body.public-menu-page{
         {% if restaurant.logo %}
 
             <img
-                src="{{ url_for(
-                    'static',
-                    filename='images/uploads/' ~ restaurant.logo
-                ) }}"
+                src="{{ restaurant.logo }}"
                 alt="{{ restaurant.name }}"
             >
 
@@ -1068,10 +1065,7 @@ body.public-menu-page{
                     {% if product.image %}
 
                     <img
-                        src="{{ url_for(
-                            'static',
-                            filename='images/uploads/' + product.image
-                        ) }}"
+                        src="{{ product.image }}"
                         alt="{{ product.name }}"
                         loading="lazy"
                     >

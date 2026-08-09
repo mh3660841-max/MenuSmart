@@ -23,6 +23,14 @@ import sqlite3
 import uuid
 import qrcode
 import base64
+import cloudinary
+import cloudinary.uploader
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 from io import BytesIO
 
 from database import (
@@ -49,7 +57,7 @@ app.config["SECRET_KEY"] = SECRET_KEY
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
+
 
 
 # =========================================================
@@ -635,12 +643,6 @@ def add_no_cache_headers(response):
 
 def save_uploaded_image(image):
 
-    if not image:
-        return None
-
-    if not image.filename:
-        return None
-
     original_name = secure_filename(
         image.filename
     )
@@ -657,23 +659,25 @@ def save_uploaded_image(image):
     )[1].lower()
 
     if extension not in ALLOWED_IMAGE_EXTENSIONS:
-
         return None
 
-    filename = (
-        uuid.uuid4().hex
-        + "."
-        + extension
-    )
+    try:
 
-    file_path = os.path.join(
-        CATEGORY_PRODUCT_UPLOAD_FOLDER,
-        filename
-    )
+        result = cloudinary.uploader.upload(
+            image,
+            folder="menusmart"
+        )
 
-    image.save(file_path)
+        return result.get("secure_url")
 
-    return filename
+    except Exception as e:
+
+        print(
+            "CLOUDINARY UPLOAD ERROR:",
+            e
+        )
+
+        return None
 
 
 # =========================================================

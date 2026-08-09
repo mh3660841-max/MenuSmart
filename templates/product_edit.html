@@ -354,16 +354,12 @@
 
                     {% if product and product.image %}
 
-                        <div class="current-image">
+                       <div class="current-image">
 
-                            <img
-                                src="{{ url_for(
-                                    'static',
-                                    filename=product.image
-                                ) }}"
-                                alt="{{ product.name }}"
-                                id="currentImage"
-                            >
+    <img
+        src="{% if product.image.startswith('http') %}{{ product.image }}{% else %}{{ url_for('static', filename='images/uploads/' ~ product.image) }}{% endif %}"
+        id="currentImage"
+    >
 
                             <span>
                                 الصورة الحالية
@@ -515,13 +511,10 @@
 
                     {% if product and product.image %}
 
-                        <img
+                       <img
                             id="previewImage"
 
-                            src="{{ url_for(
-                                'static',
-                                filename=product.image
-                            ) }}"
+                            src="{% if product.image.startswith('http') %}{{ product.image }}{% else %}{{ url_for('static', filename='images/uploads/' ~ product.image) }}{% endif %}"
 
                             alt="{{ product.name }}"
                         >

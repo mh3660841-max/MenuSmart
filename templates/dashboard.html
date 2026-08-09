@@ -475,11 +475,7 @@
                 {% if restaurant.logo %}
 
                     <img
-                        src="{{ url_for(
-                            'static',
-                            filename='images/uploads/' + restaurant.logo
-                        ) }}"
-                        alt="{{ restaurant.name }}"
+                       src="{{ restaurant.logo }}"
                     >
 
                 {% else %}

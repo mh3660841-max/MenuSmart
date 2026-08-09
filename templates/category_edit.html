@@ -755,10 +755,7 @@
                                 <div class="category-image-preview">
 
                                     <img
-                                        src="{{ url_for(
-                                            'static',
-                                            filename='images/uploads/' + category.image
-                                        ) }}"
+                                        src="{{ category.image }}"
                                         alt="{{ category.name }}"
                                     >
 
@@ -983,10 +980,7 @@
 
                                 <img
                                     id="previewImage"
-                                    src="{{ url_for(
-                                        'static',
-                                        filename='images/uploads/' + category.image
-                                    ) }}"
+                                  src="{{ category.image }}"
                                     alt="{{ category.name }}"
                                 >
 
@@ -1066,10 +1060,7 @@
                                         {% if product.image %}
 
                                             <img
-                                                src="{{ url_for(
-                                                    'static',
-                                                    filename=product.image
-                                                ) }}"
+                                                src="{% if product.image.startswith('http') %}{{ product.image }}{% else %}{{ url_for('static', filename='images/uploads/' ~ product.image) }}{% endif %}"
                                                 alt="{{ product.name }}"
                                                 loading="lazy"
                                             >

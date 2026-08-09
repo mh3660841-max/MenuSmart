@@ -1090,10 +1090,7 @@
                     {% if restaurant.logo %}
 
                         <img
-                            src="{{ url_for(
-                                'static',
-                                filename='images/uploads/' ~ restaurant.logo
-                            ) }}"
+                            src="{{ restaurant.logo }}"
                             alt="{{ restaurant.name }}"
                         >
 
@@ -1245,10 +1242,7 @@
                                         {% if product.image %}
 
                                             <img
-                                                src="{{ url_for(
-                                                    'static',
-                                                    filename='images/uploads/' ~ product.image
-                                                ) }}"
+                                                src="{{ product.image }}"
                                                 alt="{{ product.name }}"
                                                 loading="lazy"
                                             >
@@ -1385,10 +1379,7 @@
                                 {% if product.image %}
 
                                     <img
-                                        src="{{ url_for(
-                                            'static',
-                                            filename='images/uploads/' ~ product.image
-                                        ) }}"
+                                        src="{{ product.image }}"
                                         alt="{{ product.name }}"
                                         loading="lazy"
                                     >

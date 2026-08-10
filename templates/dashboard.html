@@ -329,7 +329,78 @@
                 </span>
 
             </button>
+<!-- الإشعارات -->
 
+<div class="notification-wrapper">
+
+    <button
+        type="button"
+        class="notification-button"
+        id="notificationButton"
+        aria-label="الإشعارات"
+        title="الإشعارات"
+    >
+
+        <span class="notification-icon">
+            🔔
+        </span>
+
+        <span
+            class="notification-badge"
+            id="notificationBadge"
+            hidden
+        >
+            0
+        </span>
+
+    </button>
+
+
+    <div
+        class="notification-panel"
+        id="notificationPanel"
+        hidden
+    >
+
+        <div class="notification-panel-header">
+
+    <strong>
+        الإشعارات
+    </strong>
+
+    <div class="notification-header-actions">
+
+        <span id="notificationCount">
+            0 جديد
+        </span>
+
+        <button
+            type="button"
+            class="notification-read-all"
+            id="notificationReadAll"
+        >
+            قراءة الكل
+        </button>
+
+    </div>
+
+</div>
+
+
+        <div
+            class="notification-list"
+            id="notificationList"
+        >
+
+            <div class="notification-empty">
+                لا توجد إشعارات جديدة
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
             <!-- الحساب -->
 
@@ -534,146 +605,164 @@
                 class="stat-card stat-purple"
             >
 
-                <div class="stat-icon">
-                    🗂️
-                </div>
+               <div class="stat-icon">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H10l2 2h5.5A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-11Z"/>
+        <path d="M4 9h16"/>
+    </svg>
+</div>
 
 
-                <div class="stat-content">
+<div class="stat-content">
 
-                    <span>
-                        الأقسام
-                    </span>
-
-
-                    <strong>
-                        {{ categories_count|default(0) }}
-                    </strong>
+    <span>
+        الأقسام
+    </span>
 
 
-                    <small>
-                        أقسام المنيو
-                    </small>
-
-                </div>
+    <strong>
+        {{ categories_count|default(0) }}
+    </strong>
 
 
-                <span class="stat-arrow">
-                    ←
-                </span>
+    <small>
+        أقسام المنيو
+    </small>
 
-            </a>
-
-
-            <a
-                href="{{ url_for('products') }}"
-                class="stat-card stat-green"
-            >
-
-                <div class="stat-icon">
-                    🍔
-                </div>
+</div>
 
 
-                <div class="stat-content">
+<span class="stat-arrow">
+    ←
+</span>
 
-                    <span>
-                        المنتجات
-                    </span>
-
-
-                    <strong>
-                        {{ products_count|default(0) }}
-                    </strong>
+</a>
 
 
-                    <small>
-                        منتجات المنيو
-                    </small>
+<a
+    href="{{ url_for('products') }}"
+    class="stat-card stat-green"
+>
 
-                </div>
-
-
-                <span class="stat-arrow">
-                    ←
-                </span>
-
-            </a>
-
-
-            <a
-                href="{{ url_for('orders') }}"
-                class="stat-card stat-orange"
-            >
-
-                <div class="stat-icon">
-                    🛒
-                </div>
+    <div class="stat-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 10h16"/>
+            <path d="M5 10c.5-3 3-5 7-5s6.5 2 7 5"/>
+            <path d="M5 13h14"/>
+            <path d="M6 17h12"/>
+            <path d="M7 20h10"/>
+        </svg>
+    </div>
 
 
-                <div class="stat-content">
+    <div class="stat-content">
 
-                    <span>
-                        الطلبات
-                    </span>
-
-
-                    <strong>
-                        {{ orders_count|default(0) }}
-                    </strong>
+        <span>
+            المنتجات
+        </span>
 
 
-                    <small>
-                        إجمالي الطلبات
-                    </small>
-
-                </div>
+        <strong>
+            {{ products_count|default(0) }}
+        </strong>
 
 
-                <span class="stat-arrow">
-                    ←
-                </span>
+        <small>
+            منتجات المنيو
+        </small>
 
-            </a>
-
-
-            <a
-                href="{{ url_for('customers') }}"
-                class="stat-card stat-blue"
-            >
-
-                <div class="stat-icon">
-                    👥
-                </div>
+    </div>
 
 
-                <div class="stat-content">
+    <span class="stat-arrow">
+        ←
+    </span>
 
-                    <span>
-                        العملاء
-                    </span>
-
-
-                    <strong>
-                        {{ customers_count|default(0) }}
-                    </strong>
+</a>
 
 
-                    <small>
-                        عملاء المطعم
-                    </small>
+<a
+    href="{{ url_for('orders') }}"
+    class="stat-card stat-orange"
+>
 
-                </div>
+    <div class="stat-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 4h2l2.2 11h10.9L21 8H6"/>
+            <circle cx="9" cy="19" r="1.5"/>
+            <circle cx="18" cy="19" r="1.5"/>
+        </svg>
+    </div>
 
 
-                <span class="stat-arrow">
-                    ←
-                </span>
+    <div class="stat-content">
 
-            </a>
+        <span>
+            الطلبات
+        </span>
 
 
-        </section>
+        <strong>
+            {{ orders_count|default(0) }}
+        </strong>
+
+
+        <small>
+            إجمالي الطلبات
+        </small>
+
+    </div>
+
+
+    <span class="stat-arrow">
+        ←
+    </span>
+
+</a>
+
+
+<a
+    href="{{ url_for('customers') }}"
+    class="stat-card stat-blue"
+>
+
+    <div class="stat-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="9" cy="8" r="3"/>
+            <path d="M3.5 19c.5-3.2 2.3-5 5.5-5s5 1.8 5.5 5"/>
+            <circle cx="17" cy="9" r="2.5"/>
+            <path d="M15 14c2.5.1 4.3 1.7 5 4"/>
+        </svg>
+    </div>
+
+
+    <div class="stat-content">
+
+        <span>
+            العملاء
+        </span>
+
+
+        <strong>
+            {{ customers_count|default(0) }}
+        </strong>
+
+
+        <small>
+            عملاء المطعم
+        </small>
+
+    </div>
+
+
+    <span class="stat-arrow">
+        ←
+    </span>
+
+</a>
+
+
+</section>
 
 
         <!-- =================================================
@@ -713,9 +802,12 @@
                     class="quick-action"
                 >
 
-                    <div class="quick-action-icon">
-                        🗂️
-                    </div>
+                   <div class="quick-action-icon">
+    <img
+        src="{{ url_for('static', filename='icons/categories.png') }}"
+        alt="أقسام المنيو"
+    >
+</div>
 
 
                     <div class="quick-action-content">
@@ -744,9 +836,12 @@
                     class="quick-action"
                 >
 
-                    <div class="quick-action-icon">
-                        🍔
-                    </div>
+                 <div class="quick-action-icon">
+    <img
+        src="{{ url_for('static', filename='icons/products.png') }}"
+        alt="المنتجات"
+    >
+</div>
 
 
                     <div class="quick-action-content">
@@ -775,9 +870,12 @@
                     class="quick-action"
                 >
 
-                    <div class="quick-action-icon">
-                        🛒
-                    </div>
+                  <div class="quick-action-icon">
+    <img
+        src="{{ url_for('static', filename='icons/orders.png') }}"
+        alt="الطلبات"
+    >
+</div>
 
 
                     <div class="quick-action-content">
@@ -806,10 +904,12 @@
                     class="quick-action"
                 >
 
-                    <div class="quick-action-icon">
-                        👥
-                    </div>
-
+                  <div class="quick-action-icon">
+    <img
+        src="{{ url_for('static', filename='icons/customers.png') }}"
+        alt="العملاء"
+    >
+</div>
 
                     <div class="quick-action-content">
 
@@ -837,9 +937,12 @@
                     class="quick-action"
                 >
 
-                    <div class="quick-action-icon">
-                        📊
-                    </div>
+                 <div class="quick-action-icon">
+    <img
+        src="{{ url_for('static', filename='icons/analytics.png') }}"
+        alt="التحليلات"
+    >
+</div>
 
 
                     <div class="quick-action-content">
@@ -868,9 +971,12 @@
                     class="quick-action"
                 >
 
-                    <div class="quick-action-icon">
-                        📱
-                    </div>
+                 <div class="quick-action-icon">
+    <img
+        src="{{ url_for('static', filename='icons/qr.png') }}"
+        alt="QR Code"
+    >
+</div>
 
 
                     <div class="quick-action-content">
@@ -899,9 +1005,12 @@
                     class="quick-action"
                 >
 
-                    <div class="quick-action-icon">
-                        ⚙️
-                    </div>
+                  <div class="quick-action-icon">
+    <img
+        src="{{ url_for('static', filename='icons/settings.png') }}"
+        alt="الإعدادات"
+    >
+</div>
 
 
                     <div class="quick-action-content">
@@ -931,8 +1040,11 @@
                 >
 
                     <div class="quick-action-icon">
-                        🏪
-                    </div>
+    <img
+        src="{{ url_for('static', filename='icons/restaurant.png') }}"
+        alt="بيانات المطعم"
+    >
+</div>
 
 
                     <div class="quick-action-content">
@@ -955,6 +1067,121 @@
 
                 </a>
 
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             STAFF MANAGEMENT
+        ================================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="dashboard-section-header">
+
+                <div>
+
+                    <span>
+                        فريق العمل
+                    </span>
+
+                    <h2>
+                        إدارة الموظفين
+                    </h2>
+
+                </div>
+
+                <span class="section-description">
+                    إنشاء حسابات الموظفين وإدارة صلاحياتهم
+                </span>
+
+            </div>
+
+
+            <div class="employee-create-card">
+
+                <form
+                    method="POST"
+                    action="{{ url_for('add_staff') }}"
+                >
+
+                    <div class="form-group">
+
+                        <label for="employee_name">
+                            اسم الموظف
+                        </label>
+
+                        <input
+                            type="text"
+                            id="employee_name"
+                            name="name"
+                            placeholder="أدخل اسم الموظف"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="employee_password">
+                            كلمة المرور
+                        </label>
+
+                        <input
+                            type="password"
+                            id="employee_password"
+                            name="password"
+                            placeholder="أدخل كلمة مرور الموظف"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="employee_role">
+                            صلاحية الموظف
+                        </label>
+
+                        <select
+                            id="employee_role"
+                            name="role"
+                            required
+                        >
+
+                            <option value="orders">
+                                الطلبات
+                            </option>
+
+                            <option value="products">
+                                المنتجات
+                            </option>
+
+                            <option value="cashier">
+                                الكاشير
+                            </option>
+
+                            <option value="manager">
+                                مدير
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="dashboard-primary-btn"
+                    >
+                        إنشاء حساب الموظف
+                    </button>
+
+                </form>
 
             </div>
 
@@ -1570,7 +1797,318 @@
 <script
     src="{{ url_for('static', filename='js/dashboard.js') }}"
 ></script>
+<script>
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
 
+(function () {
+
+    const button = document.getElementById(
+        "notificationButton"
+    );
+
+    const panel = document.getElementById(
+        "notificationPanel"
+    );
+
+    const badge = document.getElementById(
+        "notificationBadge"
+    );
+
+    const countText = document.getElementById(
+        "notificationCount"
+    );
+
+    const list = document.getElementById(
+        "notificationList"
+    );
+const readAllButton = document.getElementById(
+    "notificationReadAll"
+);
+
+    if (!button || !panel || !badge || !countText || !list) {
+        return;
+    }
+
+
+    let lastUnreadCount = 0;
+
+const notificationSound = new Audio(
+    "{{ url_for('static', filename='sounds/new-order.mp3') }}"
+);
+
+notificationSound.preload = "auto";
+
+    function escapeHtml(value) {
+
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    function updateBadge(count) {
+
+        if (count > 0) {
+
+            badge.hidden = false;
+
+            badge.textContent =
+                count > 99 ? "99+" : count;
+
+            countText.textContent =
+                count + " جديد";
+
+        } else {
+
+            badge.hidden = true;
+
+            badge.textContent = "0";
+
+            countText.textContent =
+                "لا يوجد جديد";
+        }
+    }
+
+
+    function renderNotifications(notifications) {
+
+        if (!notifications || notifications.length === 0) {
+
+            list.innerHTML = `
+                <div class="notification-empty">
+                    لا توجد إشعارات
+                </div>
+            `;
+
+            return;
+        }
+
+
+        list.innerHTML = notifications.map(function (item) {
+
+            const unreadClass =
+                item.is_read ? "" : "unread";
+
+            return `
+                <div
+                    class="notification-item ${unreadClass}"
+                    data-id="${item.id}"
+                >
+
+                    <div class="notification-item-title">
+                        ${escapeHtml(item.title)}
+                    </div>
+
+                    <div class="notification-item-message">
+                        ${escapeHtml(item.message)}
+                    </div>
+
+                    <div class="notification-item-time">
+                        ${escapeHtml(item.created_at)}
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+    }
+
+
+    async function loadNotifications() {
+
+        try {
+
+            const response = await fetch(
+                "{{ url_for('api_notifications') }}",
+                {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    cache: "no-store"
+                }
+            );
+
+
+            if (!response.ok) {
+                return;
+            }
+
+
+            const data =
+                await response.json();
+
+
+            const unreadCount =
+                Number(data.unread_count || 0);
+
+
+            updateBadge(unreadCount);
+
+            renderNotifications(
+                data.notifications || []
+            );
+
+
+         if (unreadCount > lastUnreadCount) {
+
+    notificationSound.currentTime = 0;
+
+    notificationSound.play().catch(function (error) {
+
+        console.log(
+            "Notification sound blocked:",
+            error
+        );
+
+    });
+}
+
+lastUnreadCount = unreadCount;
+
+        } catch (error) {
+
+            console.error(
+                "Notification error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    button.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+            panel.hidden = !panel.hidden;
+
+        }
+    );
+readAllButton.addEventListener(
+    "click",
+    async function (event) {
+
+        event.stopPropagation();
+
+        try {
+
+            const response = await fetch(
+                "/api/notifications/read-all",
+                {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With":
+                            "XMLHttpRequest"
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                return;
+            }
+
+            await loadNotifications();
+
+        } catch (error) {
+
+            console.error(
+                "Read all notifications error:",
+                error
+            );
+
+        }
+
+    }
+);
+
+    panel.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+        }
+    );
+panel.addEventListener(
+    "click",
+    async function (event) {
+
+        const notificationItem =
+            event.target.closest(
+                ".notification-item"
+            );
+
+        if (!notificationItem) {
+            return;
+        }
+
+        const notificationId =
+            notificationItem.dataset.id;
+
+        if (!notificationId) {
+            return;
+        }
+
+        try {
+
+            await fetch(
+                `/api/notifications/${notificationId}/read`,
+                {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With":
+                            "XMLHttpRequest"
+                    }
+                }
+            );
+
+            await loadNotifications();
+
+        } catch (error) {
+
+            console.error(
+                "Mark notification read error:",
+                error
+            );
+
+        }
+
+    }
+);
+
+    document.addEventListener(
+        "click",
+        function () {
+
+            panel.hidden = true;
+
+        }
+    );
+
+
+    loadNotifications();
+
+
+    setInterval(
+        loadNotifications,
+        5000
+    );
+
+})();
+</script>
 
 </body>
 

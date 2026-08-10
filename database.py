@@ -427,6 +427,32 @@ def init_db():
 
 
         # =====================================================
+        # موظفو المطعم
+        # =====================================================
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS restaurant_staff (
+                id BIGSERIAL PRIMARY KEY,
+                restaurant_id BIGINT NOT NULL,
+                user_id BIGINT NOT NULL,
+                role TEXT NOT NULL DEFAULT 'orders',
+                is_active INTEGER NOT NULL DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+                UNIQUE (restaurant_id, user_id),
+
+                FOREIGN KEY (restaurant_id)
+                    REFERENCES restaurants(id)
+                    ON DELETE CASCADE,
+
+                FOREIGN KEY (user_id)
+                    REFERENCES users(id)
+                    ON DELETE CASCADE
+            )
+            """
+        )
+
+        # =====================================================
         # إعدادات المطعم
         # =====================================================
 

@@ -5,11 +5,13 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <meta name="theme-color" content="#111111">
+    <meta name="theme-color"
+          content="#111111">
 
-    <title>أقسام المنيو | Menu Smart</title>
+    <title>إدارة الأقسام | Menu Smart</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
@@ -17,42 +19,84 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/dashboard.css') }}">
 
+
     <style>
 
         * {
             box-sizing: border-box;
         }
 
+        :root {
+            --black: #111111;
+            --black-soft: #181818;
+            --gold: #d4af37;
+            --gold-dark: #a9851e;
+            --bg: #f5f6f8;
+            --card: #ffffff;
+            --border: #e8e8e8;
+            --text: #171717;
+            --muted: #858585;
+            --danger: #c62828;
+            --success: #198754;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             margin: 0;
-            background: #f5f6f8;
-            color: #171717;
+            background: var(--bg);
+            color: var(--text);
             font-family: inherit;
         }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+
+        /* =========================================
+           PAGE
+        ========================================= */
 
         .categories-page {
             min-height: 100vh;
         }
 
-        /* =========================
-           HEADER
-        ========================= */
+
+        /* =========================================
+           TOPBAR
+        ========================================= */
 
         .categories-topbar {
-            background: #111;
-            color: #fff;
-            border-bottom: 1px solid #222;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            background: rgba(17,17,17,.97);
+
+            border-bottom: 1px solid rgba(255,255,255,.08);
+
+            backdrop-filter: blur(14px);
         }
 
         .categories-topbar-inner {
-            max-width: 1180px;
+            max-width: 1200px;
+            min-height: 70px;
+
             margin: auto;
-            min-height: 72px;
             padding: 0 20px;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             gap: 20px;
         }
 
@@ -60,40 +104,53 @@
             display: flex;
             align-items: center;
             gap: 11px;
+
             color: #fff;
             text-decoration: none;
-            font-weight: 900;
+
             font-size: 18px;
+            font-weight: 900;
         }
 
         .categories-brand-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 11px;
+            width: 39px;
+            height: 39px;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
-            background: #d4af37;
-            color: #111;
-            font-weight: 900;
+            border-radius: 12px;
+
+            background: var(--gold);
+            color: var(--black);
+
+            font-size: 18px;
+            font-weight: 1000;
+
+            box-shadow:
+                0 6px 18px rgba(212,175,55,.15);
         }
 
         .categories-nav {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
         }
 
         .categories-nav a {
-            text-decoration: none;
-            color: rgba(255,255,255,.7);
             padding: 9px 13px;
-            border-radius: 9px;
-            font-size: 13px;
-            font-weight: 700;
-            transition: .2s;
+
+            border-radius: 10px;
+
+            color: rgba(255,255,255,.68);
+
+            text-decoration: none;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            transition: .2s ease;
         }
 
         .categories-nav a:hover {
@@ -102,140 +159,274 @@
         }
 
         .categories-nav .logout {
-            color: #ffb4b4;
+            color: #ffb3b3;
         }
 
 
-        /* =========================
-           PAGE
-        ========================= */
+        /* =========================================
+           MAIN
+        ========================================= */
 
         .categories-wrapper {
-            max-width: 1180px;
+            max-width: 1200px;
+
             margin: auto;
-            padding: 35px 20px 70px;
+
+            padding:
+                38px 20px
+                80px;
         }
 
 
-        /* =========================
-           TITLE
-        ========================= */
+        /* =========================================
+           PAGE HEADER
+        ========================================= */
 
         .categories-heading {
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 25px;
+
+            gap: 25px;
+
+            margin-bottom: 28px;
         }
 
-        .categories-heading small {
-            display: block;
-            color: #b28d20;
-            font-size: 12px;
-            font-weight: 900;
-            margin-bottom: 7px;
+        .heading-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            margin-bottom: 8px;
+
+            color: var(--gold-dark);
+
+            font-size: 11px;
+            font-weight: 1000;
+            letter-spacing: .6px;
+        }
+
+        .heading-label::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--gold);
         }
 
         .categories-heading h1 {
             margin: 0;
-            font-size: 32px;
-            font-weight: 900;
-            letter-spacing: -.7px;
+
+            font-size: 34px;
+            line-height: 1.2;
+
+            font-weight: 1000;
+
+            letter-spacing: -.8px;
         }
 
         .categories-heading p {
-            margin: 8px 0 0;
-            color: #777;
-            font-size: 14px;
+            margin: 9px 0 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+            line-height: 1.8;
         }
 
         .back-dashboard {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
+
             gap: 8px;
 
-            padding: 11px 17px;
+            min-height: 44px;
+
+            padding: 0 17px;
 
             background: #fff;
-            border: 1px solid #e3e3e3;
-            border-radius: 11px;
+
+            border: 1px solid var(--border);
+            border-radius: 12px;
 
             color: #222;
+
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 800;
+
+            font-size: 12px;
+            font-weight: 900;
+
+            box-shadow:
+                0 5px 16px rgba(0,0,0,.03);
+
+            transition: .2s ease;
+        }
+
+        .back-dashboard:hover {
+            transform: translateY(-2px);
+
+            border-color: var(--gold);
+
+            box-shadow:
+                0 10px 22px rgba(0,0,0,.06);
         }
 
 
-        /* =========================
-           ADD BOX
-        ========================= */
+        /* =========================================
+           FLASH MESSAGES
+        ========================================= */
+
+        .dashboard-messages {
+            margin-bottom: 20px;
+        }
+
+        .dashboard-message {
+            padding: 13px 15px;
+
+            border-radius: 12px;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .dashboard-message.success {
+            background: #eaf8ef;
+            color: #18794e;
+        }
+
+        .dashboard-message.danger {
+            background: #fff0f0;
+            color: #b42323;
+        }
+
+
+        /* =========================================
+           ADD CATEGORY
+        ========================================= */
 
         .category-add-box {
-            background: #111;
-            border-radius: 20px;
-            padding: 25px;
+            position: relative;
 
-            margin-bottom: 35px;
+            overflow: hidden;
 
-            box-shadow: 0 14px 35px rgba(0,0,0,.08);
+            background:
+                linear-gradient(
+                    135deg,
+                    #111111,
+                    #191919
+                );
+
+            border-radius: 22px;
+
+            padding: 27px;
+
+            margin-bottom: 38px;
+
+            box-shadow:
+                0 18px 40px rgba(0,0,0,.11);
+        }
+
+        .category-add-box::after {
+            content: "";
+
+            position: absolute;
+
+            width: 220px;
+            height: 220px;
+
+            left: -90px;
+            bottom: -130px;
+
+            border-radius: 50%;
+
+            border: 1px solid rgba(212,175,55,.16);
+
+            pointer-events: none;
         }
 
         .category-add-top {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 20px;
+
+            gap: 13px;
+
+            margin-bottom: 21px;
         }
 
         .category-add-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 13px;
+            width: 48px;
+            height: 48px;
+
+            flex: 0 0 48px;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
-            background: rgba(212,175,55,.14);
-            color: #d4af37;
-            font-size: 21px;
+            border-radius: 14px;
+
+            background: rgba(212,175,55,.13);
+
+            color: var(--gold);
+
+            font-size: 22px;
+            font-weight: 900;
         }
 
         .category-add-top h2 {
-            color: #fff;
             margin: 0 0 4px;
+
+            color: #fff;
+
             font-size: 18px;
+            font-weight: 900;
         }
 
         .category-add-top p {
-            color: rgba(255,255,255,.55);
             margin: 0;
-            font-size: 12px;
+
+            color: rgba(255,255,255,.53);
+
+            font-size: 11px;
         }
 
         .category-form {
+            position: relative;
+            z-index: 2;
+
             display: grid;
-            grid-template-columns: 1fr 1.5fr auto;
-            gap: 12px;
+
+            grid-template-columns:
+                1fr
+                1.5fr
+                auto;
+
+            gap: 11px;
         }
 
         .category-form input {
             width: 100%;
-            height: 48px;
-
-            border: 1px solid #333;
-            border-radius: 11px;
-
-            background: #1b1b1b;
-            color: #fff;
+            height: 49px;
 
             padding: 0 15px;
+
             outline: none;
 
-            font-family: inherit;
-            font-size: 13px;
+            border: 1px solid #333;
+
+            border-radius: 11px;
+
+            background: #1d1d1d;
+
+            color: #fff;
+
+            font-size: 12px;
+
+            transition: .2s;
         }
 
         .category-form input::placeholder {
@@ -243,59 +434,91 @@
         }
 
         .category-form input:focus {
-            border-color: #d4af37;
+            border-color: var(--gold);
+
+            box-shadow:
+                0 0 0 3px rgba(212,175,55,.08);
         }
 
         .category-form button {
-            height: 48px;
+            height: 49px;
+
+            padding: 0 23px;
 
             border: 0;
             border-radius: 11px;
 
-            padding: 0 22px;
+            background: var(--gold);
 
-            background: #d4af37;
             color: #111;
 
-            font-family: inherit;
-            font-weight: 900;
+            font-size: 12px;
+            font-weight: 1000;
 
             cursor: pointer;
-            transition: .2s;
+
+            transition: .2s ease;
         }
 
         .category-form button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(212,175,55,.2);
+
+            box-shadow:
+                0 9px 23px rgba(212,175,55,.18);
+        }
+
+        .category-form button:active {
+            transform: translateY(0);
         }
 
 
-        /* =========================
-           SECTION TITLE
-        ========================= */
+        /* =========================================
+           SECTION HEADER
+        ========================================= */
 
         .categories-list-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             margin-bottom: 16px;
         }
 
-        .categories-list-head h2 {
+        .categories-list-title {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .categories-list-title h2 {
             margin: 0;
+
             font-size: 21px;
+            font-weight: 1000;
+        }
+
+        .categories-list-title span {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--gold);
         }
 
         .categories-counter {
             padding: 7px 12px;
+
+            border: 1px solid var(--border);
             border-radius: 50px;
 
             background: #fff;
-            border: 1px solid #e5e5e5;
 
-            color: #777;
-            font-size: 12px;
-            font-weight: 700;
+            color: var(--muted);
+
+            font-size: 11px;
+            font-weight: 800;
         }
 
         .categories-counter strong {
@@ -303,29 +526,67 @@
         }
 
 
-        /* =========================
-           CARDS
-        ========================= */
+        /* =========================================
+           CATEGORY CARDS
+        ========================================= */
 
         .categories-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 16px;
         }
 
         .category-item {
-            background: #fff;
-            border: 1px solid #e7e7e7;
-            border-radius: 17px;
+            position: relative;
+
             overflow: hidden;
 
-            transition: .22s ease;
+            background: #fff;
+
+            border: 1px solid var(--border);
+
+            border-radius: 18px;
+
+            transition:
+                transform .22s ease,
+                border-color .22s ease,
+                box-shadow .22s ease;
+        }
+
+        .category-item::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            right: 0;
+            left: 0;
+
+            height: 3px;
+
+            background: var(--gold);
+
+            transform: scaleX(0);
+
+            transform-origin: center;
+
+            transition: .22s;
         }
 
         .category-item:hover {
             transform: translateY(-4px);
-            border-color: #d4af37;
-            box-shadow: 0 14px 30px rgba(0,0,0,.07);
+
+            border-color: #d9bd62;
+
+            box-shadow:
+                0 17px 35px rgba(0,0,0,.07);
+        }
+
+        .category-item:hover::before {
+            transform: scaleX(1);
         }
 
         .category-item-main {
@@ -337,39 +598,49 @@
             align-items: center;
             justify-content: space-between;
 
-            margin-bottom: 20px;
+            margin-bottom: 19px;
         }
 
         .category-number {
-            width: 46px;
-            height: 46px;
+            width: 49px;
+            height: 49px;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
-            border-radius: 13px;
+            border-radius: 15px;
 
-            background: #f7f4e9;
-            color: #a17d18;
+            background: #f8f5e9;
 
-            font-size: 20px;
+            font-size: 23px;
+
+            transition: .2s;
+        }
+
+        .category-item:hover .category-number {
+            background: #111;
+            transform: scale(1.04);
         }
 
         .category-status {
             padding: 5px 9px;
+
             border-radius: 50px;
 
             background: #eaf8ef;
-            color: #198754;
 
-            font-size: 10px;
-            font-weight: 900;
+            color: var(--success);
+
+            font-size: 9px;
+            font-weight: 1000;
         }
 
         .category-item h3 {
             margin: 0 0 7px;
+
             font-size: 19px;
+            font-weight: 1000;
         }
 
         .category-item-description {
@@ -378,7 +649,9 @@
             margin: 0;
 
             color: #888;
+
             font-size: 12px;
+
             line-height: 1.8;
         }
 
@@ -393,20 +666,30 @@
             border-top: 1px solid #eee;
 
             color: #999;
-            font-size: 11px;
+
+            font-size: 10px;
+            font-weight: 700;
         }
 
         .category-actions {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+
+            grid-template-columns:
+                1fr 1fr;
 
             border-top: 1px solid #eee;
+
             background: #fafafa;
+        }
+
+        .category-actions form {
+            margin: 0;
         }
 
         .category-actions a,
         .category-actions button {
-            min-height: 43px;
+            width: 100%;
+            min-height: 44px;
 
             display: flex;
             align-items: center;
@@ -414,142 +697,283 @@
 
             border: 0;
 
+            background: transparent;
+
             font-family: inherit;
-            font-size: 12px;
-            font-weight: 800;
+
+            font-size: 11px;
+            font-weight: 900;
 
             text-decoration: none;
+
             cursor: pointer;
+
+            transition: .2s;
         }
 
         .category-edit {
             color: #333;
+
             border-left: 1px solid #eee !important;
-            background: #fff;
+        }
+
+        .category-edit:hover {
+            background: #f7f7f7;
+            color: #111;
         }
 
         .category-delete {
-            color: #c62828;
-            background: #fffafa;
+            color: var(--danger);
+
+            background: #fffafa !important;
+        }
+
+        .category-delete:hover {
+            background: #fff1f1 !important;
         }
 
 
-        /* =========================
-           EMPTY
-        ========================= */
+        /* =========================================
+           EMPTY STATE
+        ========================================= */
 
         .categories-empty {
-            background: #fff;
-            border: 1px dashed #d8d8d8;
-            border-radius: 18px;
-            padding: 55px 20px;
+            padding: 65px 20px;
+
             text-align: center;
+
+            background: #fff;
+
+            border: 1px dashed #d5d5d5;
+
+            border-radius: 20px;
         }
 
         .categories-empty-icon {
-            width: 65px;
-            height: 65px;
+            width: 68px;
+            height: 68px;
+
             margin: 0 auto 15px;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
-            border-radius: 18px;
-            background: #f5f5f5;
+            border-radius: 20px;
 
-            font-size: 28px;
+            background: #f7f7f7;
+
+            font-size: 29px;
         }
 
         .categories-empty h2 {
             margin: 0 0 7px;
+
             font-size: 19px;
+            font-weight: 1000;
         }
 
         .categories-empty p {
-            margin: 0 auto 20px;
             max-width: 430px;
 
+            margin: 0 auto 20px;
+
             color: #888;
-            line-height: 1.8;
-            font-size: 13px;
+
+            font-size: 12px;
+            line-height: 1.9;
         }
 
 
-        /* =========================
-           SUGGESTIONS
-        ========================= */
+        /* =========================================
+           POPULAR CATEGORIES
+        ========================================= */
 
         .category-suggestions {
-            margin-top: 40px;
+            margin-top: 45px;
+        }
+
+        .category-suggestions-head {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            margin-bottom: 18px;
+        }
+
+        .category-suggestions-title-icon {
+            width: 43px;
+            height: 43px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background: #111;
+
+            color: var(--gold);
+
+            font-size: 18px;
         }
 
         .category-suggestions h2 {
-            margin: 0 0 15px;
+            margin: 0;
+
             font-size: 20px;
+            font-weight: 1000;
+        }
+
+        .category-suggestions-subtitle {
+            margin: 4px 0 0;
+
+            color: #888;
+
+            font-size: 11px;
         }
 
         .suggestions-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
+
+            grid-template-columns:
+                repeat(6, 1fr);
+
+            gap: 12px;
         }
 
         .suggestion {
-            min-height: 90px;
+            position: relative;
+
+            min-height: 116px;
 
             display: flex;
             flex-direction: column;
+
             align-items: center;
             justify-content: center;
-            gap: 7px;
+
+            gap: 10px;
+
+            overflow: hidden;
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
 
             background: #fff;
-            border: 1px solid #e7e7e7;
-            border-radius: 14px;
 
-            font-size: 12px;
-            font-weight: 800;
+            color: #222;
 
-            transition: .2s;
+            cursor: pointer;
+
+            transition:
+                transform .22s ease,
+                border-color .22s ease,
+                box-shadow .22s ease;
         }
 
-        .suggestion span:first-child {
-            font-size: 25px;
+        .suggestion::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            right: 0;
+            left: 0;
+
+            height: 3px;
+
+            background: var(--gold);
+
+            transform: scaleX(0);
+
+            transition: .22s;
         }
 
         .suggestion:hover {
-            transform: translateY(-3px);
-            border-color: #d4af37;
+            transform: translateY(-5px);
+
+            border-color: #d9bd62;
+
+            box-shadow:
+                0 15px 30px rgba(0,0,0,.07);
         }
 
+        .suggestion:hover::before {
+            transform: scaleX(1);
+        }
 
-        /* =========================
+     .suggestion-icon {
+    width: 100%;
+    height: 150px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background: #f8f5e9;
+
+    transition: .22s ease;
+}
+
+
+.suggestion-icon img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition: transform .3s ease;
+}
+
+
+..suggestion:hover .suggestion-icon img {
+    transform: scale(1.05);
+}
+
+
+.suggestion:hover .suggestion-icon {
+    transform: scale(1.02);
+
+    background: #111;
+}
+
+
+.suggestion-name {
+    font-size: 14px;
+    font-weight: 900;
+
+    line-height: 1.4;
+}
+
+
+        /* =========================================
            MOBILE
-        ========================= */
+        ========================================= */
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
 
             .categories-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:
+                    repeat(2, 1fr);
             }
 
             .suggestions-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .category-form {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .category-form button {
-                grid-column: 1 / -1;
+                grid-template-columns:
+                    repeat(3, 1fr);
             }
 
         }
 
 
-        @media (max-width: 650px) {
+        @media (max-width: 760px) {
 
             .categories-topbar-inner {
                 min-height: 64px;
@@ -560,25 +984,27 @@
             }
 
             .categories-wrapper {
-                padding: 25px 13px 50px;
+                padding:
+                    27px 14px
+                    60px;
             }
 
             .categories-heading {
-                align-items: flex-start;
+                align-items: stretch;
+
                 flex-direction: column;
             }
 
             .categories-heading h1 {
-                font-size: 27px;
+                font-size: 28px;
             }
 
             .back-dashboard {
                 width: 100%;
-                justify-content: center;
             }
 
             .category-add-box {
-                padding: 18px;
+                padding: 19px;
             }
 
             .category-form {
@@ -586,7 +1012,7 @@
             }
 
             .category-form button {
-                grid-column: auto;
+                width: 100%;
             }
 
             .categories-grid {
@@ -594,7 +1020,34 @@
             }
 
             .suggestions-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 420px) {
+
+            .categories-brand {
+                font-size: 16px;
+            }
+
+            .categories-brand-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .categories-heading h1 {
+                font-size: 25px;
+            }
+
+            .category-add-top h2 {
+                font-size: 16px;
+            }
+
+            .suggestion {
+                min-height: 105px;
             }
 
         }
@@ -607,6 +1060,10 @@
 <body class="categories-page">
 
 
+<!-- =========================================
+     TOPBAR
+========================================= -->
+
 <header class="categories-topbar">
 
     <div class="categories-topbar-inner">
@@ -614,9 +1071,13 @@
         <a href="{{ url_for('home') }}"
            class="categories-brand">
 
-            <span class="categories-brand-icon">M</span>
+            <span class="categories-brand-icon">
+                M
+            </span>
 
-            <span>Menu Smart</span>
+            <span>
+                Menu Smart
+            </span>
 
         </a>
 
@@ -633,7 +1094,9 @@
 
             <a href="{{ url_for('logout') }}"
                class="logout">
+
                 تسجيل الخروج
+
             </a>
 
         </nav>
@@ -643,23 +1106,31 @@
 </header>
 
 
+<!-- =========================================
+     MAIN
+========================================= -->
+
 <main>
 
     <div class="categories-wrapper">
 
 
+        <!-- PAGE HEADER -->
+
         <div class="categories-heading">
 
             <div>
 
-                <small>MENU MANAGEMENT</small>
+                <div class="heading-label">
+                    MENU MANAGEMENT
+                </div>
 
                 <h1>
                     أقسام المنيو
                 </h1>
 
                 <p>
-                    أنشئ أقسام مطعمك ورتّب المنتجات بطريقة واضحة.
+                    نظّم منيو مطعمك في أقسام واضحة وسهلة التصفح.
                 </p>
 
             </div>
@@ -668,12 +1139,16 @@
             <a href="{{ url_for('dashboard') }}"
                class="back-dashboard">
 
-                ← العودة للوحة التحكم
+                <span>←</span>
+
+                العودة للوحة التحكم
 
             </a>
 
         </div>
 
+
+        <!-- FLASH MESSAGES -->
 
         {% with messages = get_flashed_messages(with_categories=true) %}
 
@@ -696,6 +1171,8 @@
         {% endwith %}
 
 
+        <!-- ADD CATEGORY -->
+
         <section class="category-add-box">
 
             <div class="category-add-top">
@@ -711,7 +1188,7 @@
                     </h2>
 
                     <p>
-                        مثال: برجر، بيتزا، مشروبات، حلويات
+                        أضف قسمًا مثل برجر، بيتزا، مشروبات أو حلويات.
                     </p>
 
                 </div>
@@ -721,12 +1198,15 @@
 
             <form method="POST"
                   action="{{ url_for('category_add') }}"
-                  class="category-form">
+                  class="category-form"
+                  id="categoryForm">
 
                 <input
                     type="text"
                     name="name"
+                    id="categoryName"
                     placeholder="اسم القسم"
+                    autocomplete="off"
                     required
                 >
 
@@ -734,6 +1214,7 @@
                     type="text"
                     name="description"
                     placeholder="وصف مختصر للقسم"
+                    autocomplete="off"
                 >
 
                 <button type="submit">
@@ -745,13 +1226,22 @@
         </section>
 
 
+        <!-- CURRENT CATEGORIES -->
+
         <section>
 
             <div class="categories-list-head">
 
-                <h2>
-                    أقسام المطعم
-                </h2>
+                <div class="categories-list-title">
+
+                    <span></span>
+
+                    <h2>
+                        أقسام المطعم
+                    </h2>
+
+                </div>
+
 
                 <div class="categories-counter">
 
@@ -882,53 +1372,175 @@
         </section>
 
 
+        <!-- POPULAR CATEGORIES -->
+
         <section class="category-suggestions">
 
-            <h2>
-                أقسام شائعة للمطاعم
-            </h2>
+            <div class="category-suggestions-head">
 
-
-            <div class="suggestions-grid">
-
-                <div class="suggestion">
-                    <span>🍔</span>
-                    <span>برجر</span>
+                <div class="category-suggestions-title-icon">
+                    ✦
                 </div>
 
-                <div class="suggestion">
-                    <span>🍕</span>
-                    <span>بيتزا</span>
-                </div>
+                <div>
 
-                <div class="suggestion">
-                    <span>🍗</span>
-                    <span>وجبات</span>
-                </div>
+          <h2>
+    أقسام شائعة للمطاعم
+</h2>
 
-                <div class="suggestion">
-                    <span>🥤</span>
-                    <span>مشروبات</span>
-                </div>
+<p class="category-suggestions-subtitle">
+    أشهر الأقسام المناسبة لقوائم المطاعم
+</p>
 
-                <div class="suggestion">
-                    <span>🍰</span>
-                    <span>حلويات</span>
-                </div>
+</div>
 
-                <div class="suggestion">
-                    <span>☕</span>
-                    <span>ساخنة</span>
-                </div>
+</div>
 
-            </div>
 
-        </section>
+<div class="suggestions-grid">
+
+
+    <div class="suggestion">
+
+        <div class="suggestion-icon">
+            <img
+                src="{{ url_for('static', filename='images/categories/burger.png') }}"
+                alt="برجر"
+            >
+        </div>
+
+        <span class="suggestion-name">
+            برجر
+        </span>
+
+    </div>
+
+
+    <div class="suggestion">
+
+        <div class="suggestion-icon">
+            <img
+                src="{{ url_for('static', filename='images/categories/pizza.png') }}"
+                alt="بيتزا"
+            >
+        </div>
+
+        <span class="suggestion-name">
+            بيتزا
+        </span>
+
+    </div>
+
+
+    <div class="suggestion">
+
+        <div class="suggestion-icon">
+            <img
+                src="{{ url_for('static', filename='images/categories/meals.png') }}"
+                alt="وجبات"
+            >
+        </div>
+
+        <span class="suggestion-name">
+            وجبات
+        </span>
+
+    </div>
+
+
+    <div class="suggestion">
+
+        <div class="suggestion-icon">
+            <img
+                src="{{ url_for('static', filename='images/categories/drinks.png') }}"
+                alt="مشروبات"
+            >
+        </div>
+
+        <span class="suggestion-name">
+            مشروبات
+        </span>
+
+    </div>
+
+
+    <div class="suggestion">
+
+        <div class="suggestion-icon">
+            <img
+                src="{{ url_for('static', filename='images/categories/desserts.jpg') }}"
+                alt="حلويات"
+            >
+        </div>
+
+        <span class="suggestion-name">
+            حلويات
+        </span>
+
+    </div>
+
+
+    <div class="suggestion">
+
+        <div class="suggestion-icon">
+            <img
+                src="{{ url_for('static', filename='images/categories/hot.png') }}"
+                alt="ساخنة"
+            >
+        </div>
+
+        <span class="suggestion-name">
+            ساخنة
+        </span>
+
+    </div>
+
+
+</div>
+
+</section>
 
 
     </div>
 
 </main>
+
+
+<script>
+
+    /* =========================================
+       QUICK CATEGORY SELECTION
+    ========================================= */
+
+    const suggestions =
+        document.querySelectorAll(".suggestion");
+
+    const categoryName =
+        document.getElementById("categoryName");
+
+
+    suggestions.forEach(function (item) {
+
+        item.addEventListener("click", function () {
+
+            const category =
+                this.dataset.category;
+
+            categoryName.value =
+                category;
+
+            categoryName.focus();
+
+            categoryName.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        });
+
+    });
+
+</script>
 
 
 </body>

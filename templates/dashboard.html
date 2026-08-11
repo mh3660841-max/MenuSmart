@@ -452,7 +452,7 @@
              WELCOME
         ================================================== -->
 
-        <section class="dashboard-welcome">
+             <section class="dashboard-welcome">
 
             <div class="welcome-content">
 
@@ -461,14 +461,17 @@
                 </span>
 
 
-                <h1>
-                    أهلاً بك{% if user %} {{ user.name }}{% endif %} 👋
-                </h1>
+                <div class="restaurant-marquee">
+                    <span>
+                        {% if restaurant %}
+                            {{ restaurant.name }}
+                        {% endif %}
+                    </span>
+                </div>
 
 
                 <p>
-                    من هنا يمكنك إدارة مطعمك والمنيو
-                    والمنتجات والطلبات والعملاء بسهولة.
+من هنا يمكنك إدارة نشاطك التجاري ومنتجاتك ومنيوك وطلبات عملائك بسهولة من مكان واحد.
                 </p>
 
             </div>
@@ -533,237 +536,260 @@
         {% endwith %}
 
 
-        <!-- =================================================
-             RESTAURANT
-        ================================================== -->
+    <!-- =================================================
+     RESTAURANT LOGO
+================================================== -->
 
-        {% if restaurant %}
+{% if restaurant %}
 
-        <section class="restaurant-banner">
+<section class="restaurant-banner">
 
-            <div class="restaurant-avatar">
+    <div class="restaurant-avatar">
 
-                {% if restaurant.logo %}
+        {% if restaurant.logo %}
 
-                    <img
-                       src="{{ restaurant.logo }}"
-                    >
-
-                {% else %}
-
-                    <span>🏪</span>
-
-                {% endif %}
-
-            </div>
-
-
-            <div class="restaurant-info">
-
-                <span>
-                    المطعم الحالي
-                </span>
-
-
-                <h2>
-                    {{ restaurant.name }}
-                </h2>
-
-
-                {% if restaurant.description %}
-
-                    <p>
-                        {{ restaurant.description }}
-                    </p>
-
-                {% endif %}
-
-            </div>
-
-
-            <a
-                href="{{ url_for('profile') }}"
-                class="dashboard-secondary-btn"
+            <img
+                src="{{ restaurant.logo }}"
+                alt="شعار المطعم"
             >
-                تعديل بيانات المطعم
-            </a>
 
-        </section>
+        {% else %}
+
+            <span>🏪</span>
 
         {% endif %}
 
-
-        <!-- =================================================
-             STATISTICS
-        ================================================== -->
-
-        <section class="dashboard-stats">
-
-
-            <a
-                href="{{ url_for('categories') }}"
-                class="stat-card stat-purple"
-            >
-
-               <div class="stat-icon">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H10l2 2h5.5A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-11Z"/>
-        <path d="M4 9h16"/>
-    </svg>
-</div>
-
-
-<div class="stat-content">
-
-    <span>
-        الأقسام
-    </span>
-
-
-    <strong>
-        {{ categories_count|default(0) }}
-    </strong>
-
-
-    <small>
-        أقسام المنيو
-    </small>
-
-</div>
-
-
-<span class="stat-arrow">
-    ←
-</span>
-
-</a>
-
-
-<a
-    href="{{ url_for('products') }}"
-    class="stat-card stat-green"
->
-
-    <div class="stat-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 10h16"/>
-            <path d="M5 10c.5-3 3-5 7-5s6.5 2 7 5"/>
-            <path d="M5 13h14"/>
-            <path d="M6 17h12"/>
-            <path d="M7 20h10"/>
-        </svg>
     </div>
-
-
-    <div class="stat-content">
-
-        <span>
-            المنتجات
-        </span>
-
-
-        <strong>
-            {{ products_count|default(0) }}
-        </strong>
-
-
-        <small>
-            منتجات المنيو
-        </small>
-
-    </div>
-
-
-    <span class="stat-arrow">
-        ←
-    </span>
-
-</a>
-
-
-<a
-    href="{{ url_for('orders') }}"
-    class="stat-card stat-orange"
->
-
-    <div class="stat-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 4h2l2.2 11h10.9L21 8H6"/>
-            <circle cx="9" cy="19" r="1.5"/>
-            <circle cx="18" cy="19" r="1.5"/>
-        </svg>
-    </div>
-
-
-    <div class="stat-content">
-
-        <span>
-            الطلبات
-        </span>
-
-
-        <strong>
-            {{ orders_count|default(0) }}
-        </strong>
-
-
-        <small>
-            إجمالي الطلبات
-        </small>
-
-    </div>
-
-
-    <span class="stat-arrow">
-        ←
-    </span>
-
-</a>
-
-
-<a
-    href="{{ url_for('customers') }}"
-    class="stat-card stat-blue"
->
-
-    <div class="stat-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="9" cy="8" r="3"/>
-            <path d="M3.5 19c.5-3.2 2.3-5 5.5-5s5 1.8 5.5 5"/>
-            <circle cx="17" cy="9" r="2.5"/>
-            <path d="M15 14c2.5.1 4.3 1.7 5 4"/>
-        </svg>
-    </div>
-
-
-    <div class="stat-content">
-
-        <span>
-            العملاء
-        </span>
-
-
-        <strong>
-            {{ customers_count|default(0) }}
-        </strong>
-
-
-        <small>
-            عملاء المطعم
-        </small>
-
-    </div>
-
-
-    <span class="stat-arrow">
-        ←
-    </span>
-
-</a>
-
 
 </section>
 
+{% endif %}
+
+ <!-- =================================================
+     STATISTICS
+================================================== -->
+
+<section class="dashboard-stats">
+
+
+    <a
+        href="{{ url_for('categories') }}"
+        class="stat-card stat-purple"
+    >
+
+        <div class="stat-icon">
+
+            <!-- الأقسام -->
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l2 2h5.5A2.5 2.5 0 0 1 20 9.5v8A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5z"/>
+                <path d="M4 10h16"/>
+                <path d="M8 14h8"/>
+                <path d="M8 17h5"/>
+            </svg>
+
+        </div>
+
+
+        <div class="stat-content">
+
+            <span>
+                الأقسام
+            </span>
+
+            <strong>
+                {{ categories_count|default(0) }}
+            </strong>
+
+            <small>
+                أقسام المنيو
+            </small>
+
+        </div>
+
+
+        <span class="stat-arrow">
+            ←
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('products') }}"
+        class="stat-card stat-green"
+    >
+
+        <div class="stat-icon">
+
+            <!-- المنتجات -->
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M5 8h14"/>
+                <path d="M6 8l1-3h10l1 3"/>
+                <path d="M6 8v11h12V8"/>
+                <path d="M9 12h6"/>
+                <path d="M9 15h4"/>
+            </svg>
+
+        </div>
+
+
+        <div class="stat-content">
+
+            <span>
+                المنتجات
+            </span>
+
+            <strong>
+                {{ products_count|default(0) }}
+            </strong>
+
+            <small>
+                منتجات المنيو
+            </small>
+
+        </div>
+
+
+        <span class="stat-arrow">
+            ←
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('orders') }}"
+        class="stat-card stat-orange"
+    >
+
+        <div class="stat-icon">
+
+            <!-- الطلبات -->
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M4 5h2l2 10h9l2-7H7"/>
+                <circle
+                    cx="10"
+                    cy="19"
+                    r="1.5"
+                />
+                <circle
+                    cx="17"
+                    cy="19"
+                    r="1.5"
+                />
+                <path d="M9 8h7"/>
+            </svg>
+
+        </div>
+
+
+        <div class="stat-content">
+
+            <span>
+                الطلبات
+            </span>
+
+            <strong>
+                {{ orders_count|default(0) }}
+            </strong>
+
+            <small>
+                إجمالي الطلبات
+            </small>
+
+        </div>
+
+
+        <span class="stat-arrow">
+            ←
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('customers') }}"
+        class="stat-card stat-blue"
+    >
+
+        <div class="stat-icon">
+
+            <!-- العملاء -->
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <circle
+                    cx="9"
+                    cy="8"
+                    r="3"
+                />
+                <path d="M3.5 19c.5-3.2 2.5-5 5.5-5s5 1.8 5.5 5"/>
+                <circle
+                    cx="17"
+                    cy="9"
+                    r="2.5"
+                />
+                <path d="M15 14c2.5.2 4.5 1.8 5 4"/>
+            </svg>
+
+        </div>
+
+
+        <div class="stat-content">
+
+            <span>
+                العملاء
+            </span>
+
+            <strong>
+                {{ customers_count|default(0) }}
+            </strong>
+
+            <small>
+                عملاء المطعم
+            </small>
+
+        </div>
+
+
+        <span class="stat-arrow">
+            ←
+        </span>
+
+    </a>
+
+
+</section>
 
         <!-- =================================================
              QUICK ACTIONS
@@ -1073,120 +1099,6 @@
         </section>
 
 
-        <!-- =================================================
-             STAFF MANAGEMENT
-        ================================================== -->
-
-        <section class="dashboard-section">
-
-            <div class="dashboard-section-header">
-
-                <div>
-
-                    <span>
-                        فريق العمل
-                    </span>
-
-                    <h2>
-                        إدارة الموظفين
-                    </h2>
-
-                </div>
-
-                <span class="section-description">
-                    إنشاء حسابات الموظفين وإدارة صلاحياتهم
-                </span>
-
-            </div>
-
-
-            <div class="employee-create-card">
-
-                <form
-                    method="POST"
-                    action="{{ url_for('add_staff') }}"
-                >
-
-                    <div class="form-group">
-
-                        <label for="employee_name">
-                            اسم الموظف
-                        </label>
-
-                        <input
-                            type="text"
-                            id="employee_name"
-                            name="name"
-                            placeholder="أدخل اسم الموظف"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="employee_password">
-                            كلمة المرور
-                        </label>
-
-                        <input
-                            type="password"
-                            id="employee_password"
-                            name="password"
-                            placeholder="أدخل كلمة مرور الموظف"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="employee_role">
-                            صلاحية الموظف
-                        </label>
-
-                        <select
-                            id="employee_role"
-                            name="role"
-                            required
-                        >
-
-                            <option value="orders">
-                                الطلبات
-                            </option>
-
-                            <option value="products">
-                                المنتجات
-                            </option>
-
-                            <option value="cashier">
-                                الكاشير
-                            </option>
-
-                            <option value="manager">
-                                مدير
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="dashboard-primary-btn"
-                    >
-                        إنشاء حساب الموظف
-                    </button>
-
-                </form>
-
-            </div>
-
-        </section>
-
 
         <!-- =================================================
              MENU PREVIEW
@@ -1204,7 +1116,7 @@
 
 
                     <h2>
-                        منيو مطعمك
+          Menu Smart
                     </h2>
 
                 </div>
@@ -1249,7 +1161,7 @@
 
 
                     <h3>
-                        منيو إلكتروني خاص بمطعمك
+               منيو إلكتروني احترافي لنشاطك التجاري
                     </h3>
 
 

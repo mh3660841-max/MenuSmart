@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>لوحة الموظف - MenuSmart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #222;
+        }
+
+        .employee-page {
+            min-height: 100vh;
+            padding: 30px 16px;
+        }
+
+        .employee-container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .employee-header {
+            background: #111;
+            color: white;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .employee-header h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .employee-header p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        .employee-card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-row:last-child {
+            border-bottom: 0;
+        }
+
+        .info-label {
+            color: #777;
+        }
+
+        .info-value {
+            font-weight: bold;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            background: #f0f0f0;
+        }
+
+        .logout-btn {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            background: #c62828;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+
+            .employee-page {
+                padding: 20px 12px;
+            }
+
+            .employee-header {
+                padding: 20px;
+            }
+
+            .info-row {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="employee-page">
+
+    <div class="employee-container">
+
+        <div class="employee-header">
+
+            <h1>
+                أهلاً {{ user.name }}
+            </h1>
+
+            <p>
+                لوحة الموظف في MenuSmart
+            </p>
+
+        </div>
+
+
+        <div class="employee-card">
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    اسم الموظف
+                </span>
+
+                <span class="info-value">
+                    {{ user.name }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    المطعم
+                </span>
+
+                <span class="info-value">
+                    {{ staff.restaurant_name }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    الصلاحية
+                </span>
+
+                <span class="info-value role-badge">
+                    {{ staff.role }}
+                </span>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="logout-btn"
+            >
+                تسجيل الخروج
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

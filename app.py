@@ -549,34 +549,7 @@ def current_restaurant():
 # =========================================================
 
 def current_language():
-    restaurant = current_restaurant()
-
-    if not restaurant:
-        return "ar"
-
-    settings_data = query_db(
-        """
-        SELECT language
-        FROM restaurant_settings
-        WHERE restaurant_id = %s
-        LIMIT 1
-        """,
-        [restaurant["id"]],
-        one=True
-    )
-
-    if not settings_data:
-        return "ar"
-
-    language = settings_data.get("language") or "ar"
-
-    if language not in ("ar", "en", "fr"):
-        return "ar"
-
-    return language
-
-    return language
-
+    return "ar"
 
 # =========================================================
 # نظام اللغات

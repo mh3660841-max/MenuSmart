@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ current_language }}" dir="{{ "rtl" if current_language == "ar" else "ltr" }}">
 
 <head>
 
@@ -644,7 +644,7 @@
             </strong>
 
             <small>
-                أقسام {{ t('menu') }}
+                {{ t('menu_sections') }}
             </small>
 
         </div>
@@ -695,7 +695,7 @@
             </strong>
 
             <small>
-                منتجات {{ t('menu') }}
+                {{ t('menu_products') }}
             </small>
 
         </div>
@@ -753,7 +753,7 @@
             </strong>
 
             <small>
-                إجمالي {{ t('orders') }}
+                {{ t('total_orders_label') }}
             </small>
 
         </div>
@@ -871,12 +871,12 @@
                     <div class="quick-action-content">
 
                         <strong>
-                            أقسام {{ t('menu') }}
+                            {{ t('menu_sections') }}
                         </strong>
 
 
                         <p>
-                            إنشاء وتنظيم أقسام {{ t('menu') }}
+                            إنشاء وتنظيم {{ t('menu_sections') }}
                         </p>
 
                     </div>
@@ -994,7 +994,7 @@
                     <div class="quick-action-content">
 
                         <strong>
-                            التحليلات
+                            {{ t('analytics') }}
                         </strong>
 
 
@@ -1030,7 +1030,7 @@
 
 
                         <p>
-                            مشاركة {{ t('menu') }} عبر QR Code
+                            {{ t('share_menu_qr') }}
                         </p>
 
                     </div>
@@ -1061,7 +1061,7 @@
 
 
                         <p>
-                            تخصيص إعدادات {{ t('menu') }}
+                            {{ t('customize_menu') }}
                         </p>
 
                     </div>
@@ -1144,7 +1144,7 @@
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        فتح {{ t('menu') }} ←
+                        {{ t('open_menu_arrow') }}
                     </a>
 
                 {% endif %}
@@ -1177,7 +1177,7 @@
 
 
                     <p>
-                        أضف {{ t('categories') }} و{{ t('products') }} والأسعار،
+                        {{ t('add_menu_items') }}
                         {{ t('shown_to_customers') }}
                     </p>
 
@@ -1286,7 +1286,7 @@
                             <div class="order-number">
 
                                 <span>
-                                    طلب
+                                    {{ t('order') }}
                                 </span>
 
 
@@ -1319,7 +1319,7 @@
 
 
                                 <span>
-                                    جنيه
+                                    {{ t('currency_egp') }}
                                 </span>
 
                             </div>
@@ -1330,37 +1330,37 @@
                                 {% if order.status == 'completed' %}
 
                                     <span class="status completed">
-                                        مكتمل
+                                        {{ t('completed') }}
                                     </span>
 
                                 {% elif order.status == 'cancelled' %}
 
                                     <span class="status cancelled">
-                                        ملغي
+                                        {{ t('cancelled') }}
                                     </span>
 
                                 {% elif order.status == 'pending' %}
 
                                     <span class="status pending">
-                                        قيد الانتظار
+                                        {{ t('pending') }}
                                     </span>
 
                                 {% elif order.status == 'confirmed' %}
 
                                     <span class="status confirmed">
-                                        مؤكد
+                                        {{ t('confirmed') }}
                                     </span>
 
                                 {% elif order.status == 'preparing' %}
 
                                     <span class="status preparing">
-                                        قيد التجهيز
+                                        {{ t('preparing') }}
                                     </span>
 
                                 {% elif order.status == 'ready' %}
 
                                     <span class="status ready">
-                                        جاهز
+                                        {{ t('ready') }}
                                     </span>
 
                                 {% else %}
@@ -1730,7 +1730,7 @@ notificationSound.preload = "auto";
 
             list.innerHTML = `
                 <div class="notification-empty">
-                    لا توجد إشعارات
+                    {{ t('no_notifications') }}
                 </div>
             `;
 

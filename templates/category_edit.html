@@ -17,16 +17,16 @@
 
     <title>
         {% if category %}
-            تعديل القسم
+            {{ t('edit_category') }}
         {% else %}
-            إضافة قسم
+            {{ t('add_category') }}
         {% endif %}
         | Menu Smart
     </title>
 
     <meta
         name="description"
-        content="إضافة وتعديل أقسام المنيو في Menu Smart."
+        content="{{ t('category_page_description') }}"
     >
 
     <link
@@ -600,9 +600,9 @@
                 <h1>
 
                     {% if category %}
-                        تعديل القسم
+                        {{ t('edit_category') }}
                     {% else %}
-                        إضافة قسم جديد
+                        {{ t('add_category') }} جديد
                     {% endif %}
 
                 </h1>

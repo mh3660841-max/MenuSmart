@@ -575,6 +575,8 @@ def current_language():
 
     return language
 
+    return language
+
 
 # =========================================================
 # نظام اللغات
@@ -823,6 +825,124 @@ TRANSLATIONS = {
         "ready_for_work": "Prêt à l'emploi",
     },
 }
+
+
+
+# =========================================================
+# ترجمات Dashboard الإضافية
+# =========================================================
+TRANSLATIONS["ar"].update({
+    "menu_sections": "أقسام المنيو",
+    "menu_products": "منتجات المنيو",
+    "total_orders_label": "إجمالي الطلبات",
+    "create_menu_sections": "إنشاء وتنظيم أقسام المنيو",
+    "analytics": "التحليلات",
+    "share_menu_qr": "مشاركة المنيو عبر QR Code",
+    "customize_menu": "تخصيص إعدادات المنيو",
+    "open_menu_arrow": "فتح المنيو ←",
+    "add_menu_items": "أضف الأقسام والمنتجات والأسعار،",
+    "order": "طلب",
+    "currency_egp": "جنيه",
+    "completed": "مكتمل",
+    "cancelled": "ملغي",
+    "pending": "قيد الانتظار",
+    "confirmed": "مؤكد",
+    "preparing": "قيد التجهيز",
+    "ready": "جاهز",
+})
+
+TRANSLATIONS["en"].update({
+    "menu_sections": "Menu Sections",
+    "menu_products": "Menu Products",
+    "total_orders_label": "Total Orders",
+    "create_menu_sections": "Create and organize menu sections",
+    "analytics": "Analytics",
+    "share_menu_qr": "Share Menu via QR Code",
+    "customize_menu": "Customize Menu Settings",
+    "open_menu_arrow": "Open Menu →",
+    "add_menu_items": "Add sections, products and prices,",
+    "order": "Order",
+    "currency_egp": "EGP",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "preparing": "Preparing",
+    "ready": "Ready",
+})
+
+TRANSLATIONS["fr"].update({
+    "menu_sections": "Sections du menu",
+    "menu_products": "Produits du menu",
+    "total_orders_label": "Total des commandes",
+    "create_menu_sections": "Créer et organiser les sections du menu",
+    "analytics": "Analyses",
+    "share_menu_qr": "Partager le menu via QR Code",
+    "customize_menu": "Personnaliser les paramètres du menu",
+    "open_menu_arrow": "Ouvrir le menu →",
+    "add_menu_items": "Ajoutez les sections, produits et prix,",
+    "order": "Commande",
+    "currency_egp": "EGP",
+    "completed": "Terminée",
+    "cancelled": "Annulée",
+    "pending": "En attente",
+    "confirmed": "Confirmée",
+    "preparing": "En préparation",
+    "ready": "Prête",
+})
+TRANSLATIONS["ar"].update({
+    "edit_category": "تعديل القسم",
+    "add_category": "إضافة قسم",
+    "category_page_description": "إضافة وتعديل أقسام المنيو في Menu Smart.",
+})
+
+TRANSLATIONS["en"].update({
+    "edit_category": "Edit Category",
+    "add_category": "Add Category",
+    "category_page_description": "Add and edit menu categories in Menu Smart.",
+})
+
+TRANSLATIONS["fr"].update({
+    "edit_category": "Modifier la catégorie",
+    "add_category": "Ajouter une catégorie",
+    "category_page_description": "Ajouter et modifier les catégories du menu dans Menu Smart.",
+})
+
+TRANSLATIONS["ar"].update({
+    "analytics": "التحليلات",
+    "login": "تسجيل الدخول",
+    "smarter": "بشكل أذكى",
+    "manage_categories": "إدارة الأقسام",
+    "add_product": "إضافة منتج",
+    "create_account": "إنشاء حساب",
+    "checkout": "إتمام الطلب",
+    "employee_dashboard": "لوحة الموظف",
+    "employee_login": "دخول الموظف",
+})
+
+TRANSLATIONS["en"].update({
+    "analytics": "Analytics",
+    "login": "Login",
+    "smarter": "Smarter.",
+    "manage_categories": "Manage Categories",
+    "add_product": "Add Product",
+    "create_account": "Create Account",
+    "checkout": "Checkout",
+    "employee_dashboard": "Employee Dashboard",
+    "employee_login": "Employee Login",
+})
+
+TRANSLATIONS["fr"].update({
+    "analytics": "Analyses",
+    "login": "Connexion",
+    "smarter": "Plus intelligemment.",
+    "manage_categories": "Gestion des catégories",
+    "add_product": "Ajouter un produit",
+    "create_account": "Créer un compte",
+    "checkout": "Finaliser la commande",
+    "employee_dashboard": "Tableau de bord employé",
+    "employee_login": "Connexion employé",
+})
 
 
 def translate(key):
@@ -1844,7 +1964,7 @@ def login():
         # =================================================
 
         return redirect(
-        url_for("home")
+        url_for("dashboard")
     )
 
     return render_template("login.html")
@@ -2430,6 +2550,15 @@ def settings():
             "EGP"
         )
 
+        language = request.form.get("language", "ar").strip().lower()
+
+        print("=== LANGUAGE DEBUG ===")
+        print("FORM:", request.form)
+        print("LANGUAGE:", repr(language))
+
+        if language not in ("ar", "en", "fr"):
+            language = "ar"
+
         allow_orders = (
             1
             if request.form.get("allow_orders")
@@ -2469,6 +2598,7 @@ def settings():
                     primary_color = %s,
                     secondary_color = %s,
                     currency = %s,
+                    language = %s,
                     allow_orders = %s,
                     allow_delivery = %s,
                     delivery_fee = %s,
@@ -2479,6 +2609,7 @@ def settings():
                     primary_color,
                     secondary_color,
                     currency,
+                    language,
                     allow_orders,
                     allow_delivery,
                     delivery_fee,
@@ -2496,11 +2627,12 @@ def settings():
                     primary_color,
                     secondary_color,
                     currency,
+                    language,
                     allow_orders,
                     allow_delivery,
                     delivery_fee
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
@@ -2519,7 +2651,7 @@ def settings():
         )
 
         return redirect(
-            url_for("settings")
+            url_for("dashboard")
         )
 
     settings_data = query_db(
@@ -3384,45 +3516,27 @@ def product_delete(product_id):
 def dashboard():
     restaurant = current_restaurant()
 
-    categories_count = query_db(
+    stats = query_db(
         """
-        SELECT COUNT(*) AS count
-        FROM categories
-        WHERE restaurant_id = %s
+        SELECT
+            (SELECT COUNT(*) FROM categories WHERE restaurant_id = %s) AS categories_count,
+            (SELECT COUNT(*) FROM products WHERE restaurant_id = %s) AS products_count,
+            (SELECT COUNT(*) FROM orders WHERE restaurant_id = %s) AS orders_count,
+            (SELECT COUNT(*) FROM customers WHERE restaurant_id = %s) AS customers_count
         """,
-        [restaurant["id"]],
+        [
+            restaurant["id"],
+            restaurant["id"],
+            restaurant["id"],
+            restaurant["id"]
+        ],
         one=True
-    )["count"]
+    )
 
-    products_count = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM products
-        WHERE restaurant_id = %s
-        """,
-        [restaurant["id"]],
-        one=True
-    )["count"]
-
-    orders_count = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM orders
-        WHERE restaurant_id = %s
-        """,
-        [restaurant["id"]],
-        one=True
-    )["count"]
-
-    customers_count = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM customers
-        WHERE restaurant_id = %s
-        """,
-        [restaurant["id"]],
-        one=True
-    )["count"]
+    categories_count = stats["categories_count"]
+    products_count = stats["products_count"]
+    orders_count = stats["orders_count"]
+    customers_count = stats["customers_count"]
 
     recent_orders = query_db(
         """

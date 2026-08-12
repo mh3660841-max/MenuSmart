@@ -410,202 +410,46 @@
 <div class="form-grid">
 
     <div class="form-group">
+    <label for="currency">العملة</label>
 
-        <label for="restaurant_name">
-            اسم النشاط
-        </label>
+    <select id="currency" name="currency">
+        <option value="EGP" {% if settings and settings.currency == "EGP" %}selected{% endif %}>
+            جنيه مصري
+        </option>
 
-        <input
-            type="text"
-            id="restaurant_name"
-            name="restaurant_name"
-            value="{{ restaurant.name|default('') }}"
-            placeholder="مثال: كافيه الذوق"
-        >
+        <option value="SAR" {% if settings and settings.currency == "SAR" %}selected{% endif %}>
+            ريال سعودي
+        </option>
 
-    </div>
+        <option value="AED" {% if settings and settings.currency == "AED" %}selected{% endif %}>
+            درهم إماراتي
+        </option>
 
-
-    <div class="form-group">
-
-        <label for="phone">
-            رقم الهاتف
-        </label>
-
-        <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value="{{ restaurant.phone|default('') }}"
-            placeholder="رقم هاتف النشاط"
-        >
-
-    </div>
-
-
-    <div class="form-group full-width">
-
-        <label for="address">
-            العنوان
-        </label>
-
-        <input
-            type="text"
-            id="address"
-            name="address"
-            value="{{ restaurant.address|default('') }}"
-            placeholder="عنوان النشاط"
-        >
-
-    </div>
-
-
-    <div class="form-group full-width">
-
-        <label for="description">
-            وصف النشاط
-        </label>
-
-        <textarea
-            id="description"
-            name="description"
-            rows="4"
-            placeholder="اكتب وصفًا قصيرًا عن النشاط..."
-        >{{ restaurant.description|default('') }}</textarea>
-
-    </div>
-
+        <option value="USD" {% if settings and settings.currency == "USD" %}selected{% endif %}>
+            دولار أمريكي
+        </option>
+    </select>
 </div>
 
+<div class="form-group">
+    <label for="language">لغة المنصة</label>
 
-<div class="settings-form-footer">
+    <select id="language" name="language">
+        <option value="ar" {% if settings and settings.language == "ar" %}selected{% endif %}>
+            العربية
+        </option>
 
-    <button
-        type="submit"
-        class="dashboard-primary-btn"
-    >
-        حفظ بيانات النشاط
-    </button>
+        <option value="en" {% if settings and settings.language == "en" %}selected{% endif %}>
+            English
+        </option>
 
+        <option value="fr" {% if settings and settings.language == "fr" %}selected{% endif %}>
+            Français
+        </option>
+    </select>
 </div>
 
-</form>
-
-</section>
-
-
-<!-- =====================================================
-     إعدادات المنيو
-===================================================== -->
-
-<section
-    class="dashboard-card settings-section"
-    id="menu"
->
-
-<div class="dashboard-card-header">
-
-    <div>
-
-        <span>
-            تخصيص المنيو
-        </span>
-
-        <h2>
-            إعدادات المنيو
-        </h2>
-
-    </div>
-
-    <div
-        class="settings-icon"
-        aria-hidden="true"
-    >
-
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        >
-
-            <path d="M6 4h12"></path>
-            <path d="M6 8h12"></path>
-            <path d="M6 12h12"></path>
-            <path d="M6 16h8"></path>
-            <path d="M6 20h6"></path>
-
-        </svg>
-
-    </div>
-
-</div>
-
-
-<form
-    method="POST"
-    action="{{ url_for('settings') }}"
-    class="settings-form"
->
-
-<div class="form-grid">
-
-
-    <div class="form-group">
-
-        <label for="currency">
-            العملة
-        </label>
-
-        <select
-            id="currency"
-            name="currency"
-        >
-
-            <option
-                value="EGP"
-                {% if settings and settings.currency == 'EGP' %}
-                    selected
-                {% endif %}
-            >
-                جنيه مصري
-            </option>
-
-            <option
-                value="SAR"
-                {% if settings and settings.currency == 'SAR' %}
-                    selected
-                {% endif %}
-            >
-                ريال سعودي
-            </option>
-
-            <option
-                value="AED"
-                {% if settings and settings.currency == 'AED' %}
-                    selected
-                {% endif %}
-            >
-                درهم إماراتي
-            </option>
-
-            <option
-                value="USD"
-                {% if settings and settings.currency == 'USD' %}
-                    selected
-                {% endif %}
-            >
-                دولار أمريكي
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div class="form-group">
+<div class="form-group">
 
         <label>
             حالة المنيو

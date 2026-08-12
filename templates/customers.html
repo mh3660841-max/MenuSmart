@@ -19,7 +19,7 @@
 
     <meta
         name="description"
-        content="إدارة عملاء المطعم في Menu Smart."
+        content="إدارة عملاء النشاط في Menu Smart."
     >
 
     <link
@@ -174,8 +174,8 @@
         }
 
         .customer-summary-icon {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
 
             display: flex;
             align-items: center;
@@ -183,27 +183,134 @@
 
             flex-shrink: 0;
 
-            border-radius: 14px;
+            border-radius: 16px;
 
-            background: #f8f1d8;
+            background:
+                linear-gradient(
+                    145deg,
+                    #fffaf0 0%,
+                    #f8f1d8 100%
+                );
 
-            font-size: 21px;
+            border: 1px solid rgba(212,175,55,.18);
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,.055),
+                inset 0 1px 0 rgba(255,255,255,.9);
+
+            color: #a88316;
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .customer-summary-icon svg {
+            width: 25px;
+            height: 25px;
+
+            display: block;
+
+            fill: none;
+            stroke: currentColor;
+
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .customer-summary-card:hover
+        .customer-summary-icon {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 26px rgba(0,0,0,.09),
+                0 0 0 4px rgba(212,175,55,.08);
         }
 
         .customer-summary-card:nth-child(2)
         .customer-summary-icon {
-            background: #e9f1ff;
+            background:
+                linear-gradient(
+                    145deg,
+                    #f5f8ff 0%,
+                    #e9f1ff 100%
+                );
+
+            border-color: rgba(74,119,190,.12);
+            color: #4775b8;
         }
 
         .customer-summary-card:nth-child(3)
         .customer-summary-icon {
-            background: #e7f6ed;
+            background:
+                linear-gradient(
+                    145deg,
+                    #f4fff8 0%,
+                    #e7f6ed 100%
+                );
+
+            border-color: rgba(52,143,91,.12);
+            color: #32895b;
         }
 
         .customer-summary-card:nth-child(4)
         .customer-summary-icon {
-            background: #fff0dd;
+            background:
+                linear-gradient(
+                    145deg,
+                    #fff8ee 0%,
+                    #fff0dd 100%
+                );
+
+            border-color: rgba(190,126,48,.12);
+            color: #b8752c;
         }
+
+        .customers-empty-icon,
+        #customersEmpty .empty-menu-icon {
+            width: 70px;
+            height: 70px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 18px;
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #fffaf0 0%,
+                    #f8f1d8 100%
+                );
+
+            border: 1px solid rgba(212,175,55,.18);
+
+            box-shadow:
+                0 12px 28px rgba(0,0,0,.065),
+                inset 0 1px 0 rgba(255,255,255,.95);
+
+            color: #a88316;
+        }
+
+        .customers-empty-icon svg,
+        #customersEmpty .empty-menu-icon svg {
+            width: 32px;
+            height: 32px;
+
+            display: block;
+
+            fill: none;
+            stroke: currentColor;
+
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
 
         .customer-summary-content {
             min-width: 0;
@@ -1047,7 +1154,7 @@
                     </h1>
 
                     <p>
-                        تابع عملاء مطعمك وراجع بيانات الطلبات
+                        تابع عملاء نشاطك وراجع بيانات الطلبات
                         الخاصة بهم بسهولة.
                     </p>
 
@@ -1074,7 +1181,7 @@
                 <div class="customer-summary-card">
 
                     <div class="customer-summary-icon">
-                        👥
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 20c.6-3.3 2.4-5 5.5-5s4.9 1.7 5.5 5"></path><path d="M15 5.5a3 3 0 0 1 0 5.5"></path><path d="M16 15c2.5.3 4.1 1.9 4.5 5"></path></svg>
                     </div>
 
                     <div class="customer-summary-content">
@@ -1095,7 +1202,7 @@
                 <div class="customer-summary-card">
 
                     <div class="customer-summary-icon">
-                        🛒
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l1.5 10h9.5l2-7H7"></path><circle cx="9" cy="19" r="1.5"></circle><circle cx="17" cy="19" r="1.5"></circle></svg>
                     </div>
 
                     <div class="customer-summary-content">
@@ -1116,7 +1223,7 @@
                 <div class="customer-summary-card">
 
                     <div class="customer-summary-icon">
-                        💰
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18"></path><path d="M16.5 7.5c0-1.7-1.8-3-4.5-3s-4.5 1.3-4.5 3 1.8 3 4.5 3 4.5 1.3 4.5 3-1.8 3-4.5 3-4.5-1.3-4.5-3"></path></svg>
                     </div>
 
                     <div class="customer-summary-content">
@@ -1137,7 +1244,7 @@
                 <div class="customer-summary-card">
 
                     <div class="customer-summary-icon">
-                        ⭐
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9L12 3.5z"></path></svg>
                     </div>
 
                     <div class="customer-summary-content">
@@ -1176,7 +1283,7 @@
                         </span>
 
                         <h2>
-                            عملاء مطعمك
+                            عملاء نشاطك
                         </h2>
 
                     </div>
@@ -1297,7 +1404,7 @@
                                                     {% else %}
 
                                                         <small>
-                                                            عميل المطعم
+                                                            عميل النشاط
                                                         </small>
 
                                                     {% endif %}

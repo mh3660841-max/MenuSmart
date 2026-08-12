@@ -255,7 +255,7 @@ body.dashboard-page {
 
     text-decoration: none;
 
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 850;
 
@@ -340,6 +340,7 @@ body.dashboard-page {
    ========================================================= */
 
 .dashboard-welcome {
+    min-height: 190px;
     position: relative;
 
     display: flex;
@@ -434,7 +435,7 @@ body.dashboard-page {
     color:
         var(--ms-gold);
 
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 900;
 }
@@ -725,7 +726,7 @@ body.dashboard-page {
     color:
         var(--ms-gold-dark);
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 900;
 }
@@ -750,7 +751,7 @@ body.dashboard-page {
     color:
         var(--ms-muted);
 
-    font-size: 11px;
+    font-size: 13px;
 
     line-height: 1.7;
 }
@@ -896,7 +897,7 @@ body.dashboard-page {
     line-height: 1.4;
 }
 
-..stat-content strong {
+.stat-content strong {
     display: block;
 
     color:
@@ -918,7 +919,7 @@ body.dashboard-page {
     color:
         #888;
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 700;
 
@@ -990,7 +991,7 @@ body.dashboard-page {
     color:
         var(--ms-gold-dark);
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 900;
 }
@@ -1012,7 +1013,7 @@ body.dashboard-page {
     color:
         #999;
 
-    font-size: 10px;
+    font-size: 12px;
 }
 
 
@@ -1022,7 +1023,7 @@ body.dashboard-page {
 
     text-decoration: none;
 
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 900;
 }
@@ -1095,7 +1096,7 @@ body.dashboard-page {
 }
 
 
-..quick-action-icon {
+.quick-action-icon {
     width: 43px;
     height: 43px;
 
@@ -1114,8 +1115,8 @@ body.dashboard-page {
 
 
 .quick-action-icon img {
-    width: 26px;
-    height: 26px;
+    width: 44px;
+    height: 44px;
 
     object-fit: contain;
 
@@ -1138,7 +1139,7 @@ body.dashboard-page {
     color:
         var(--ms-black);
 
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 900;
 
@@ -1156,7 +1157,7 @@ body.dashboard-page {
     color:
         #999;
 
-    font-size: 9px;
+    font-size: 13px;
 
     line-height: 1.6;
 
@@ -1299,7 +1300,7 @@ body.dashboard-page {
     color:
         var(--ms-gold);
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 900;
 }
@@ -1327,7 +1328,7 @@ body.dashboard-page {
     color:
         rgba(255, 255, 255, .62);
 
-    font-size: 11px;
+    font-size: 13px;
 
     line-height: 1.8;
 }
@@ -1351,7 +1352,7 @@ body.dashboard-page {
     color:
         rgba(255, 255, 255, .55);
 
-    font-size: 9px;
+    font-size: 13px;
 
     white-space: nowrap;
 
@@ -1461,7 +1462,7 @@ body.dashboard-page {
     color:
         #999;
 
-    font-size: 10px;
+    font-size: 12px;
 }
 
 
@@ -1493,7 +1494,7 @@ body.dashboard-page {
     color:
         #aaa;
 
-    font-size: 9px;
+    font-size: 13px;
 }
 
 
@@ -1513,7 +1514,7 @@ body.dashboard-page {
     color:
         #999;
 
-    font-size: 9px;
+    font-size: 13px;
 }
 
 
@@ -1537,7 +1538,7 @@ body.dashboard-page {
     color:
         #777;
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 850;
 }
@@ -1642,7 +1643,7 @@ body.dashboard-page {
     color:
         #999;
 
-    font-size: 10px;
+    font-size: 12px;
 
     line-height: 1.8;
 }
@@ -1698,7 +1699,7 @@ body.dashboard-page {
     color:
         var(--ms-gold-dark);
 
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 900;
 }
@@ -1726,7 +1727,7 @@ body.dashboard-page {
     color:
         #777;
 
-    font-size: 11px;
+    font-size: 13px;
 
     line-height: 1.8;
 }
@@ -1883,7 +1884,7 @@ body.dashboard-page {
     .dashboard-nav .nav-item {
         padding-inline: 9px;
 
-        font-size: 10px;
+        font-size: 12px;
     }
 
 
@@ -1936,6 +1937,7 @@ body.dashboard-page {
 
 
     .dashboard-welcome {
+    min-height: 190px;
         align-items: flex-start;
 
         flex-direction: column;
@@ -1956,7 +1958,7 @@ body.dashboard-page {
 
 
     .welcome-content p {
-        font-size: 11px;
+        font-size: 13px;
     }
 
 
@@ -2061,7 +2063,7 @@ body.dashboard-page {
 
 
     .menu-preview-content p {
-        font-size: 10px;
+        font-size: 12px;
     }
 
 
@@ -2212,6 +2214,7 @@ body.dashboard-page {
 
 
     .dashboard-welcome {
+    min-height: 190px;
         padding:
             22px 17px;
     }
@@ -2240,7 +2243,7 @@ body.dashboard-page {
     }
 
 
-    ..stat-content strong {
+    .stat-content strong {
     font-size: 25px;
 }
 
@@ -2304,7 +2307,7 @@ body.dashboard-page {
 
 
     .menu-preview-content p {
-        font-size: 9px;
+        font-size: 13px;
     }
 
 
@@ -2322,7 +2325,7 @@ body.dashboard-page {
 
 
     .order-customer strong {
-        font-size: 11px;
+        font-size: 13px;
     }
 
 
@@ -2373,11 +2376,11 @@ body.dashboard-page {
 
 
     .stat-content span {
-        font-size: 9px;
+        font-size: 13px;
     }
 
 
-    ..stat-content strong {
+    .stat-content strong {
     font-size: 25px;
 }
 
@@ -2446,7 +2449,7 @@ body.dashboard-page {
 
     color: var(--ms-gold-dark);
 
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 950;
 
     letter-spacing: .2px;
@@ -2641,7 +2644,7 @@ body.dashboard-page {
 
     color: var(--ms-muted);
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 800;
 }
@@ -2718,7 +2721,7 @@ body.dashboard-page {
 
     color: var(--ms-gold-dark);
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 950;
 }
@@ -2785,7 +2788,7 @@ body.dashboard-page {
 
     font-family: inherit;
 
-    font-size: 11px;
+    font-size: 13px;
 
     outline: none;
 
@@ -2832,7 +2835,7 @@ body.dashboard-page {
 
     font-family: inherit;
 
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 800;
 
@@ -2896,7 +2899,7 @@ body.dashboard-page {
     border-bottom:
         1px solid var(--ms-border);
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 950;
 
@@ -2920,7 +2923,7 @@ body.dashboard-page {
     border-bottom:
         1px solid #eeeeeb;
 
-    font-size: 11px;
+    font-size: 13px;
 
     vertical-align: middle;
 }
@@ -3003,7 +3006,7 @@ body.dashboard-page {
 
     color: var(--ms-black);
 
-    font-size: 11px;
+    font-size: 14px;
 
     font-weight: 900;
 }
@@ -3018,7 +3021,7 @@ body.dashboard-page {
 
     color: #999;
 
-    font-size: 9px;
+    font-size: 11px;
 
     white-space: nowrap;
 
@@ -3048,7 +3051,7 @@ body.dashboard-page {
 
     direction: ltr;
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 750;
 }
@@ -3078,7 +3081,7 @@ body.dashboard-page {
 .muted-text {
     color: #aaa;
 
-    font-size: 9px;
+    font-size: 13px;
 }
 
 
@@ -3086,7 +3089,7 @@ body.dashboard-page {
 .order-date {
     color: #777;
 
-    font-size: 10px;
+    font-size: 12px;
 
     white-space: nowrap;
 }
@@ -3112,7 +3115,7 @@ body.dashboard-page {
 
     color: var(--ms-black);
 
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 950;
 }
@@ -3139,7 +3142,7 @@ body.dashboard-page {
 
     color: #777;
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 900;
 
@@ -3210,7 +3213,7 @@ body.dashboard-page {
 
     text-decoration: none;
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 900;
 
@@ -3288,7 +3291,7 @@ body.dashboard-page {
 
     color: #999;
 
-    font-size: 10px;
+    font-size: 12px;
 
     line-height: 1.8;
 }
@@ -3315,7 +3318,7 @@ body.dashboard-page {
 
 
     .menu-page-header p {
-        font-size: 11px;
+        font-size: 13px;
     }
 
 
@@ -3539,7 +3542,7 @@ body.dashboard-page {
     color:
         var(--ms-gold-dark);
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 950;
 }
@@ -3567,7 +3570,7 @@ body.dashboard-page {
     color:
         var(--ms-muted);
 
-    font-size: 11px;
+    font-size: 13px;
 
     line-height: 1.8;
 }
@@ -3689,7 +3692,7 @@ body.dashboard-page {
     color:
         rgba(255, 255, 255, .55);
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 800;
 }
@@ -3714,7 +3717,7 @@ body.dashboard-page {
     color:
         rgba(255, 255, 255, .58);
 
-    font-size: 10px;
+    font-size: 12px;
 }
 
 
@@ -3729,14 +3732,14 @@ body.dashboard-page {
 
     justify-content: center;
 
-    min-height: 34px;
+    min-height: 40px;
 
     padding:
         0 13px;
 
     border-radius: 9px;
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 900;
 
@@ -3833,7 +3836,7 @@ body.dashboard-page {
     color:
         #999;
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 800;
 }
@@ -3951,7 +3954,7 @@ body.dashboard-page {
     color:
         var(--ms-gold-dark);
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 950;
 }
@@ -4062,7 +4065,7 @@ body.dashboard-page {
     color:
         #999;
 
-    font-size: 9px;
+    font-size: 13px;
 }
 
 
@@ -4124,7 +4127,7 @@ body.dashboard-page {
     color:
         #777;
 
-    font-size: 10px;
+    font-size: 12px;
 }
 
 
@@ -4132,7 +4135,7 @@ body.dashboard-page {
     color:
         var(--ms-black);
 
-    font-size: 11px;
+    font-size: 13px;
 
     font-weight: 900;
 }
@@ -4232,7 +4235,7 @@ body.dashboard-page {
     color:
         #999;
 
-    font-size: 9px;
+    font-size: 13px;
 }
 
 
@@ -4293,7 +4296,7 @@ body.dashboard-page {
     color:
         var(--ms-black);
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 850;
 
@@ -4319,7 +4322,7 @@ body.dashboard-page {
     color:
         var(--ms-black);
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 900;
 }
@@ -4348,7 +4351,7 @@ body.dashboard-page {
 
     font-family: inherit;
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 800;
 
@@ -4386,7 +4389,7 @@ body.dashboard-page {
 
     font-family: inherit;
 
-    font-size: 10px;
+    font-size: 12px;
 
     font-weight: 900;
 
@@ -4452,7 +4455,7 @@ body.dashboard-page {
 
     text-decoration: none;
 
-    font-size: 9px;
+    font-size: 13px;
 
     font-weight: 900;
 
@@ -4590,7 +4593,7 @@ body.dashboard-page {
 
 
     .order-details-header p {
-        font-size: 10px;
+        font-size: 12px;
     }
 
 
@@ -4607,7 +4610,7 @@ body.dashboard-page {
 
 
     .order-hero-content p {
-        font-size: 9px;
+        font-size: 13px;
     }
 
 
@@ -4629,7 +4632,7 @@ body.dashboard-page {
 
 
     .order-meta-card strong {
-        font-size: 10px;
+        font-size: 12px;
     }
 
 
@@ -4677,12 +4680,12 @@ body.dashboard-page {
 
 
     .order-product-info strong {
-        font-size: 10px;
+        font-size: 12px;
     }
 
 
     .order-product-price strong {
-        font-size: 10px;
+        font-size: 12px;
     }
 
 
@@ -4949,7 +4952,7 @@ body.dashboard-page {
     border-radius: 20px;
     background: #e53935;
     color: #fff;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: bold;
     line-height: 19px;
     text-align: center;
@@ -5018,7 +5021,7 @@ body.dashboard-page {
 
 .notification-item-time {
     margin-top: 7px;
-    font-size: 11px;
+    font-size: 13px;
     color: #999;
 }
 
@@ -5066,39 +5069,6 @@ body.dashboard-page {
 .notification-read-all:hover {
     background: #f2f2f2;
     color: #222;
-}
-/* =========================================================
-   QUICK ACTIONS - PREMIUM ICONS
-========================================================= */
-
-.quick-action-icon {
-    width: 64px;
-    height: 64px;
-
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    overflow: hidden;
-}
-
-.quick-action-icon img {
-    width: 56px;
-    height: 56px;
-
-    object-fit: contain;
-
-    display: block;
-
-    transition:
-        transform 0.25s ease,
-        filter 0.25s ease;
-}
-
-.quick-action:hover .quick-action-icon img {
-    transform: scale(1.08);
 }
 /* =========================================================
 MENU SMART — SETTINGS PAGE
@@ -5882,4 +5852,127 @@ SETTINGS — MOBILE
     to {
         transform: translateX(-100%);
     }
-}}
+}
+/* =====================================================
+MENU SMART — ANALYTICS STAT ICONS
+أيقونات صفحة التقارير والإحصائيات
+===================================================== */
+
+.analytics-stat-icon {
+width: 52px;
+height: 52px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+flex-shrink: 0;
+
+border-radius: 15px;
+
+font-size: 24px;
+line-height: 1;
+
+background: #f8f4e6;
+color: #b08a16;
+
+box-shadow:
+    inset 0 0 0 1px rgba(212, 175, 55, 0.12),
+    0 6px 16px rgba(0, 0, 0, 0.05);
+
+transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+}
+
+/* حركة بسيطة عند المرور */
+
+.analytics-stat:hover .analytics-stat-icon {
+transform: translateY(-2px);
+
+background: #fff8df;
+
+box-shadow:
+    inset 0 0 0 1px rgba(212, 175, 55, 0.20),
+    0 8px 20px rgba(0, 0, 0, 0.08);
+
+}
+
+/* المبيعات */
+
+.analytics-stat:nth-child(1) .analytics-stat-icon {
+background: #fff8df;
+color: #b08a16;
+}
+
+/* الطلبات */
+
+.analytics-stat:nth-child(2) .analytics-stat-icon {
+background: #eef6ff;
+color: #2563eb;
+}
+
+/* العملاء */
+
+.analytics-stat:nth-child(3) .analytics-stat-icon {
+background: #eefbf3;
+color: #16a34a;
+}
+
+/* متوسط الطلب */
+
+.analytics-stat:nth-child(4) .analytics-stat-icon {
+background: #fff1e8;
+color: #ea580c;
+}
+
+/* موبايل */
+
+@media (max-width: 600px) {
+
+.analytics-stat-icon {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 13px;
+
+    font-size: 21px;
+}
+
+}
+/* FIX — Dashboard Welcome Card */
+.dashboard-welcome {
+    min-height: 190px;
+    box-sizing: border-box;
+}
+
+.dashboard-welcome .welcome-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.dashboard-welcome .welcome-actions {
+    width: 150px;
+    min-width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-welcome .dashboard-primary-btn {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+    .dashboard-welcome {
+        min-height: 210px;
+    }
+
+    .dashboard-welcome .welcome-actions {
+        width: 130px;
+        min-width: 130px;
+    }
+}

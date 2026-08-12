@@ -8,11 +8,11 @@
 
     <meta name="theme-color" content="#111111">
 
-    <title>الملف الشخصي | Menu Smart</title>
+    <title>{{ t('profile_title') }} | Menu Smart</title>
 
     <meta
         name="description"
-        content="إدارة بيانات المطعم في Menu Smart."
+        content="{{ t('profile_description') }}"
     >
 
     <link
@@ -951,15 +951,15 @@
                 <div>
 
                     <span class="profile-eyebrow">
-                        الحساب والمطعم
+                        الحساب
                     </span>
 
                     <h1>
-                        بيانات المطعم
+                        {{ t('business_data') }}
                     </h1>
 
                     <p>
-                        تحكم في بيانات مطعمك الأساسية وظهورها داخل المنيو الإلكتروني.
+                        {{ t('business_data_description') }}
                     </p>
 
                 </div>
@@ -969,7 +969,7 @@
                     href="{{ url_for('dashboard') }}"
                     class="profile-back"
                 >
-                    ← العودة للوحة التحكم
+                    {{ t('back_dashboard') }}
                 </a>
 
             </section>
@@ -1019,11 +1019,11 @@
                         <div>
 
                             <h2>
-                                بيانات المطعم
+                                {{ t('business_data') }}
                             </h2>
 
                             <p>
-                                هذه البيانات ستظهر للعملاء داخل المنيو.
+                                {{ t('customer_visible_data') }}
                             </p>
 
                         </div>
@@ -1047,7 +1047,7 @@
                             <div class="profile-field">
 
                                 <label for="restaurant_name">
-                                    اسم المطعم أو الكافيه
+                                    {{ t('business_name') }}
                                 </label>
 
                                 <input
@@ -1055,7 +1055,7 @@
                                     id="restaurant_name"
                                     name="restaurant_name"
                                     value="{{ restaurant.name|default('') }}"
-                                    placeholder="مثال: مطعم الذوق"
+                                    placeholder="{{ t('business_name_placeholder') }}"
                                     required
                                 >
 
@@ -1065,7 +1065,7 @@
                             <div class="profile-field">
 
                                 <label for="phone">
-                                    رقم هاتف المطعم
+                                    {{ t('business_phone') }}
                                 </label>
 
                                 <input
@@ -1087,7 +1087,7 @@
                         <div class="profile-field">
 
                             <label for="address">
-                                عنوان المطعم
+                                {{ t('business_address') }}
                             </label>
 
                             <input
@@ -1095,7 +1095,7 @@
                                 id="address"
                                 name="address"
                                 value="{{ restaurant.address|default('') }}"
-                                placeholder="مثال: الجيزة - شارع..."
+                                placeholder="{{ t('business_address_placeholder') }}"
                             >
 
                         </div>
@@ -1106,28 +1106,48 @@
                         <div class="profile-field">
 
                             <label for="description">
-                                وصف المطعم
+                                {{ t('business_description') }}
                             </label>
 
                             <textarea
                                 id="description"
                                 name="description"
-                                placeholder="اكتب وصفًا مختصرًا عن المطعم أو الكافيه..."
+                                placeholder="{{ t('business_description_placeholder') }}"
                             >{{ restaurant.description|default('') }}</textarea>
 
                             <span class="field-hint">
-                                مثال: مطعم متخصص في البرجر والمشروبات والحلويات.
+                                {{ t('business_description_example') }}
                             </span>
 
                         </div>
 
+
+                        <!-- LANGUAGE -->
+                        <div class="profile-field">
+                            <label for="language">
+                                {{ t('platform_language') }}
+                            </label>
+
+                            <select
+                                id="language"
+                                name="language"
+                            >
+                                <option value="ar">العربية</option>
+                                <option value="en">English</option>
+                                <option value="fr">Français</option>
+                            </select>
+
+                            <span class="field-hint">
+                                {{ t('choose_platform_language') }}
+                            </span>
+                        </div>
 
                         <!-- LOGO -->
 
                         <div class="profile-field">
 
                             <label for="logo">
-                                شعار المطعم
+                                {{ t('business_logo') }}
                             </label>
 
                             <div class="logo-upload">
@@ -1140,7 +1160,7 @@
                                 >
 
                                 <span class="field-hint">
-                                    PNG أو JPG أو WEBP — اختياري.
+                                    {{ t('logo_formats') }}
                                 </span>
 
 
@@ -1157,7 +1177,7 @@
                                         </div>
 
                                         <div class="logo-current-text">
-                                            الشعار الحالي
+                                            {{ t('current_logo') }}
                                         </div>
 
                                     </div>
@@ -1177,9 +1197,9 @@
                         >
 
                             {% if restaurant %}
-                                حفظ بيانات المطعم
+                                حفظ {{ t('business_data') }}
                             {% else %}
-                                إنشاء المطعم
+                                {{ t('create_business') }}
                             {% endif %}
 
                         </button>
@@ -1220,22 +1240,20 @@
 
 
                         <span class="restaurant-preview-label">
-                            معاينة المطعم
+                            {{ t('business_preview') }}
                         </span>
 
 
                         <h2>
 
-                            {{ restaurant.name if restaurant else 'مطعمك هنا' }}
+                            {{ restaurant.name if restaurant else 'نشاطك هنا' }}
 
                         </h2>
 
 
                         <p>
 
-                            {{ restaurant.description
-                            if restaurant and restaurant.description
-                            else 'أنشئ بيانات مطعمك وابدأ في بناء منيو إلكتروني احترافي.' }}
+                              {{ restaurant.description if restaurant and restaurant.description else t('default_business_preview') }}
 
                         </p>
 
@@ -1243,11 +1261,11 @@
                         <div class="preview-status">
 
                             <span>
-                                حالة المنيو
+                                {{ t('menu_status') }}
                             </span>
 
                             <strong>
-                                جاهز للعمل
+                                {{ t('ready_for_work') }}
                             </strong>
 
                         </div>
@@ -1256,97 +1274,6 @@
                     </div>
 
 
-                    <!-- MANAGEMENT -->
-
-                    <div class="side-links">
-
-
-                        <h3>
-                            إدارة المطعم
-                        </h3>
-
-
-                        <a
-                            href="{{ url_for('dashboard') }}"
-                            class="side-link"
-                        >
-
-                            <span class="side-link-icon">
-                                📊
-                            </span>
-
-                            <span>
-                                لوحة التحكم
-                            </span>
-
-                            <b>
-                                ←
-                            </b>
-
-                        </a>
-
-
-                        <a
-                            href="{{ url_for('categories') }}"
-                            class="side-link"
-                        >
-
-                            <span class="side-link-icon">
-                                🗂️
-                            </span>
-
-                            <span>
-                                أقسام المنيو
-                            </span>
-
-                            <b>
-                                ←
-                            </b>
-
-                        </a>
-
-
-                        <a
-                            href="{{ url_for('products') }}"
-                            class="side-link"
-                        >
-
-                            <span class="side-link-icon">
-                                🍽️
-                            </span>
-
-                            <span>
-                                المنتجات
-                            </span>
-
-                            <b>
-                                ←
-                            </b>
-
-                        </a>
-
-
-                        <a
-                            href="{{ url_for('settings') }}"
-                            class="side-link"
-                        >
-
-                            <span class="side-link-icon">
-                                ⚙️
-                            </span>
-
-                            <span>
-                                إعدادات المطعم
-                            </span>
-
-                            <b>
-                                ←
-                            </b>
-
-                        </a>
-
-
-                    </div>
 
 
                 </aside>
@@ -1375,7 +1302,7 @@
                 </strong>
 
                 <p>
-                    منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+                    {{ t('smart_platform') }}
                 </p>
 
             </div>

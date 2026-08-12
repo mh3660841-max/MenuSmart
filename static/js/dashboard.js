@@ -912,7 +912,7 @@ function initOrderNotifications() {
 
 
     /*
-     * فحص كل 5 ثواني.
+     * فحص كل 10 ثواني.
      */
 
     setInterval(
@@ -921,7 +921,7 @@ function initOrderNotifications() {
             fetchLatestOrders(false);
 
         },
-        5000
+        10000
     );
 
 }

@@ -16,7 +16,7 @@
 
 <meta
     name="description"
-    content="إنشاء منيو إلكتروني جديد لمطعمك في Menu Smart."
+    content="إنشاء منيو إلكتروني جديد لنشاطك في Menu Smart."
 >
 
 <link
@@ -89,7 +89,7 @@
         <div>
 
             <span class="dashboard-label">
-                إدارة المطعم
+                إدارة النشاط
             </span>
 
             <h1>
@@ -97,7 +97,7 @@
             </h1>
 
             <p>
-                أنشئ المنيو الخاص بمطعمك ثم أضف الأقسام
+                أنشئ المنيو الخاص بنشاطك ثم أضف الأقسام
                 والمنتجات والأسعار والصور.
             </p>
 
@@ -180,7 +180,7 @@
                         type="text"
                         id="name"
                         name="name"
-                        placeholder="مثال: منيو مطعم البيت"
+                        placeholder="مثال: منيو نشاطك"
                         value="{{ request.form.get('name', '') }}"
                         required
                     >
@@ -350,11 +350,11 @@
                     <div>
 
                         <h3 id="previewName">
-                            اسم مطعمك
+                            اسم نشاطك
                         </h3>
 
                         <p id="previewDescription">
-                            وصف المطعم سيظهر هنا
+                            وصف النشاط سيظهر هنا
                         </p>
 
                     </div>
@@ -445,7 +445,7 @@
                         </strong>
 
                         <p>
-                            المشروبات الخاصة بالمطعم
+                            المشروبات الخاصة بالنشاط
                         </p>
 
                         <b>
@@ -536,7 +536,7 @@ if (nameInput) {
     nameInput.addEventListener("input", function () {
 
         previewName.textContent =
-            this.value.trim() || "اسم مطعمك";
+            this.value.trim() || "اسم نشاطك";
 
     });
 
@@ -548,7 +548,7 @@ if (descriptionInput) {
     descriptionInput.addEventListener("input", function () {
 
         previewDescription.textContent =
-            this.value.trim() || "وصف المطعم سيظهر هنا";
+            this.value.trim() || "وصف النشاط سيظهر هنا";
 
     });
 

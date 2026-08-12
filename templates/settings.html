@@ -21,7 +21,7 @@
 
 <meta
     name="description"
-    content="إدارة إعدادات حساب ومطعم Menu Smart."
+    content="إدارة إعدادات حساب ونشاط Menu Smart."
 >
 
 <link
@@ -104,7 +104,7 @@
     <div>
 
         <span class="dashboard-label">
-            الحساب والمطعم
+            الحساب
         </span>
 
         <h1>
@@ -112,7 +112,7 @@
         </h1>
 
         <p>
-            تحكم في بيانات المطعم وإعدادات المنيو
+            تحكم في بيانات النشاط وإعدادات المنيو
             وحسابك من مكان واحد.
         </p>
 
@@ -160,7 +160,7 @@
 
     </span>
 
-    بيانات المطعم
+    بيانات النشاط
 
 </a>
 
@@ -353,7 +353,7 @@
 
 
 <!-- =====================================================
-     بيانات المطعم
+     بيانات النشاط
 ===================================================== -->
 
 <section
@@ -370,7 +370,7 @@
         </span>
 
         <h2>
-            بيانات المطعم
+            بيانات النشاط
         </h2>
 
     </div>
@@ -412,7 +412,7 @@
     <div class="form-group">
 
         <label for="restaurant_name">
-            اسم المطعم
+            اسم النشاط
         </label>
 
         <input
@@ -420,7 +420,7 @@
             id="restaurant_name"
             name="restaurant_name"
             value="{{ restaurant.name|default('') }}"
-            placeholder="مثال: مطعم الذوق"
+            placeholder="مثال: كافيه الذوق"
         >
 
     </div>
@@ -437,7 +437,7 @@
             id="phone"
             name="phone"
             value="{{ restaurant.phone|default('') }}"
-            placeholder="رقم هاتف المطعم"
+            placeholder="رقم هاتف النشاط"
         >
 
     </div>
@@ -454,7 +454,7 @@
             id="address"
             name="address"
             value="{{ restaurant.address|default('') }}"
-            placeholder="عنوان المطعم"
+            placeholder="عنوان النشاط"
         >
 
     </div>
@@ -463,14 +463,14 @@
     <div class="form-group full-width">
 
         <label for="description">
-            وصف المطعم
+            وصف النشاط
         </label>
 
         <textarea
             id="description"
             name="description"
             rows="4"
-            placeholder="اكتب وصفًا قصيرًا عن المطعم..."
+            placeholder="اكتب وصفًا قصيرًا عن النشاط..."
         >{{ restaurant.description|default('') }}</textarea>
 
     </div>
@@ -484,7 +484,7 @@
         type="submit"
         class="dashboard-primary-btn"
     >
-        حفظ بيانات المطعم
+        حفظ بيانات النشاط
     </button>
 
 </div>
@@ -746,7 +746,7 @@
 
 <form
     method="POST"
-    action="{{ url_for('add_staff') }}"
+    action="{{ url_for("add_staff") }}"
 >
 
     <div class="form-group">

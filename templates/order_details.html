@@ -1698,7 +1698,7 @@
 
                     <img
                       src="{{ restaurant.logo }}"
-                        alt="{{ restaurant.name|default('المطعم') }}"
+                        alt="{{ restaurant.name|default('النشاط') }}"
                     >
 
                 {% else %}
@@ -1714,7 +1714,7 @@
 
             <h2 class="invoice-restaurant-name">
 
-                {{ restaurant.name|default('اسم المطعم') }}
+                {{ restaurant.name|default('اسم النشاط') }}
 
             </h2>
 
@@ -2026,7 +2026,7 @@
 
 
             <div class="invoice-footer-powered">
-                هذه الفاتورة صادرة من {{ restaurant.name|default('المطعم') }}
+                هذه الفاتورة صادرة من {{ restaurant.name|default('النشاط') }}
             </div>
 
 

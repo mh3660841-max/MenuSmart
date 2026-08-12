@@ -34,816 +34,911 @@
 
 <style>
 
-    /* =====================================================
-       ANALYTICS PAGE
-    ===================================================== */
+/* =========================================================
+   ANALYTICS
+========================================================= */
 
-    .analytics-page {
-        background:
-            linear-gradient(
-                180deg,
-                #fafafa 0%,
-                #f4f4f1 100%
-            );
-    }
-
-
-    /* =====================================================
-       HEADER
-    ===================================================== */
-
-    .analytics-page-header {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 25px;
-    }
-
-    .analytics-page-title {
-        min-width: 0;
-    }
-
-    .analytics-page-title > span {
-        display: block;
-        margin-bottom: 6px;
-        color: #a98516;
-        font-size: 10px;
-        font-weight: 950;
-    }
-
-    .analytics-page-title h1 {
-        margin: 0 0 7px;
-        color: #111;
-        font-size: clamp(27px, 4vw, 36px);
-        line-height: 1.2;
-        font-weight: 950;
-        letter-spacing: -.6px;
-    }
-
-    .analytics-page-title p {
-        margin: 0;
-        color: #777;
-        font-size: 12px;
-        line-height: 1.8;
-    }
+.analytics-page {
+    background:
+        linear-gradient(
+            180deg,
+            #fafafa 0%,
+            #f4f4f1 100%
+        );
+}
 
 
-    /* =====================================================
-       STATS
-    ===================================================== */
+/* =========================================================
+   HEADER
+========================================================= */
+
+.analytics-page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.analytics-page-title {
+    min-width: 0;
+}
+
+.analytics-page-title > span {
+    display: block;
+    margin-bottom: 6px;
+    color: #a98516;
+    font-size: 10px;
+    font-weight: 950;
+}
+
+.analytics-page-title h1 {
+    margin: 0 0 7px;
+    color: #111;
+    font-size: clamp(27px, 4vw, 36px);
+    line-height: 1.2;
+    font-weight: 950;
+}
+
+.analytics-page-title p {
+    margin: 0;
+    color: #777;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.analytics-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.analytics-stat {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid #e6e6e1;
+    border-radius: 18px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.045);
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.analytics-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 35px rgba(0,0,0,.075);
+}
+
+.analytics-stat::after {
+    content: "";
+    position: absolute;
+    left: -25px;
+    bottom: -35px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(212,175,55,.055);
+    pointer-events: none;
+}
+
+.analytics-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 17px;
+}
+
+
+.analytics-stat-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffaf0 0%,
+            #f8f1d8 100%
+        );
+
+    border: 1px solid rgba(212,175,55,.18);
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.055),
+        inset 0 1px 0 rgba(255,255,255,.9);
+
+    color: #a88316;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.analytics-stat-icon svg {
+    width: 25px;
+    height: 25px;
+
+    display: block;
+
+    fill: none;
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.analytics-stat:hover .analytics-stat-icon {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 26px rgba(0,0,0,.09),
+        0 0 0 4px rgba(212,175,55,.08);
+}
+
+.analytics-stat:nth-child(2) .analytics-stat-icon {
+    background:
+        linear-gradient(
+            145deg,
+            #f5f8ff 0%,
+            #eaf1ff 100%
+        );
+
+    border-color: rgba(74,119,190,.12);
+    color: #4775b8;
+}
+
+.analytics-stat:nth-child(3) .analytics-stat-icon {
+    background:
+        linear-gradient(
+            145deg,
+            #f4fff8 0%,
+            #e8f7ed 100%
+        );
+
+    border-color: rgba(52,143,91,.12);
+    color: #32895b;
+}
+
+.analytics-stat:nth-child(4) .analytics-stat-icon {
+    background:
+        linear-gradient(
+            145deg,
+            #fff8ee 0%,
+            #fff0df 100%
+        );
+
+    border-color: rgba(190,126,48,.12);
+    color: #b8752c;
+}
+
+.analytics-insight-icon svg {
+    width: 21px;
+    height: 21px;
+
+    display: block;
+
+    fill: none;
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.analytics-insight:hover .analytics-insight-icon {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(0,0,0,.08),
+        0 0 0 3px rgba(212,175,55,.07);
+}
+
+
+.analytics-stat-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #888;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.analytics-stat-value {
+    display: block;
+    color: #111;
+    font-size: 25px;
+    line-height: 1.15;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+.analytics-stat-note {
+    display: block;
+    margin-top: 8px;
+    color: #999;
+    font-size: 9px;
+}
+
+.analytics-stat-note.positive {
+    color: #25804e;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.analytics-main-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.5fr)
+        minmax(300px, .8fr);
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.analytics-card {
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e6e6e1;
+    border-radius: 20px;
+    box-shadow: 0 9px 30px rgba(0,0,0,.045);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.analytics-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 19px 20px;
+    border-bottom: 1px solid #eeeeeb;
+    background: linear-gradient(
+        180deg,
+        #fff,
+        #fcfcfa
+    );
+}
+
+.analytics-card-header > div {
+    min-width: 0;
+}
+
+.analytics-card-header span {
+    display: block;
+    margin-bottom: 4px;
+    color: #a98516;
+    font-size: 9px;
+    font-weight: 950;
+}
+
+.analytics-card-header h2 {
+    margin: 0;
+    color: #111;
+    font-size: 17px;
+    font-weight: 950;
+}
+
+
+/* =========================================================
+   PERIOD
+========================================================= */
+
+.analytics-period {
+    height: 38px;
+    min-width: 125px;
+    padding: 0 10px;
+    border: 1px solid #deded9;
+    border-radius: 9px;
+    background: #fafaf8;
+    color: #222;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 800;
+    outline: none;
+}
+
+
+
+/* =========================================================
+   ANALYTICS CHART — PROFESSIONAL UPGRADE
+========================================================= */
+
+.analytics-chart-wrap {
+    padding: 22px;
+}
+
+.analytics-chart {
+    position: relative;
+    height: 300px;
+    display: flex;
+    gap: 14px;
+}
+
+.chart-y-axis {
+    width: 38px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4px 0 30px;
+}
+
+.chart-y-axis span {
+    color: #aaa;
+    font-size: 8px;
+    font-weight: 700;
+    direction: ltr;
+    text-align: left;
+}
+
+.chart-area {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    border-bottom: 1px solid #deded8;
+    border-radius: 12px 12px 0 0;
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(212,175,55,.025),
+            rgba(255,255,255,.75)
+        );
+}
+
+.chart-lines {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.chart-line {
+    width: 100%;
+    height: 1px;
+    background: rgba(0,0,0,.055);
+}
+
+.chart-bars {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 8px;
+    padding: 12px 8px 0;
+}
+
+.chart-group {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+}
+
+.chart-bar {
+    position: relative;
+    width: 12px;
+    min-height: 3px;
+    border-radius: 7px 7px 2px 2px;
+    transition:
+        height .45s ease,
+        transform .2s ease,
+        opacity .2s ease;
+    cursor: pointer;
+}
+
+.chart-bar.sales {
+    background: linear-gradient(
+        180deg,
+        #d4af37 0%,
+        #a88316 100%
+    );
+    box-shadow: 0 5px 14px rgba(168,131,22,.16);
+}
+
+.chart-bar.orders {
+    background: linear-gradient(
+        180deg,
+        #8d8d8d 0%,
+        #4e4e4e 100%
+    );
+    box-shadow: 0 5px 14px rgba(0,0,0,.10);
+}
+
+.chart-bar:hover {
+    transform: translateY(-4px);
+    opacity: .82;
+}
+
+.chart-day {
+    position: absolute;
+    left: 50%;
+    bottom: -27px;
+    transform: translateX(-50%);
+    color: #999;
+    font-size: 8px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.chart-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 34px;
+    padding-top: 14px;
+    border-top: 1px solid #eeeeea;
+}
+
+.chart-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #777;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.chart-legend i {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.legend-sales {
+    background: #d4af37;
+    box-shadow: 0 0 0 4px rgba(212,175,55,.10);
+}
+
+.legend-orders {
+    background: #555;
+    box-shadow: 0 0 0 4px rgba(0,0,0,.06);
+}
+
+/* =========================================================
+   LEGEND
+========================================================= */
+
+.chart-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 20px 18px;
+}
+
+.chart-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #777;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.chart-legend i {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.legend-sales {
+    background: #d4af37;
+}
+
+.legend-orders {
+    background: #222;
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+.top-products-list {
+    padding: 7px 20px 12px;
+}
+
+.top-product {
+    display: grid;
+    grid-template-columns:
+        27px 45px minmax(0,1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 0;
+    border-bottom: 1px solid #eeeeeb;
+}
+
+.top-product:last-child {
+    border-bottom: 0;
+}
+
+.top-product-rank {
+    width: 27px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #f5f5f2;
+    color: #777;
+    font-size: 9px;
+    font-weight: 950;
+}
+
+.top-product:first-child .top-product-rank {
+    background: #f8f1d8;
+    color: #98700b;
+}
+
+.top-product-image {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 11px;
+    background: #f8f1d8;
+    font-size: 18px;
+}
+
+.top-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.top-product-info {
+    min-width: 0;
+}
+
+.top-product-info strong {
+    display: block;
+    overflow: hidden;
+    margin-bottom: 3px;
+    color: #111;
+    font-size: 10px;
+    font-weight: 900;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.top-product-info span {
+    color: #999;
+    font-size: 8px;
+}
+
+.top-product-sales {
+    color: #111;
+    font-size: 10px;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.analytics-empty {
+    padding: 55px 20px;
+    text-align: center;
+}
+
+.analytics-empty-icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    border-radius: 18px;
+    background: #f8f1d8;
+    font-size: 25px;
+}
+
+.analytics-empty h3 {
+    margin: 0 0 6px;
+    color: #111;
+    font-size: 15px;
+    font-weight: 950;
+}
+
+.analytics-empty p {
+    max-width: 300px;
+    margin: 0 auto;
+    color: #999;
+    font-size: 9px;
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   BOTTOM
+========================================================= */
+
+.analytics-bottom-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr);
+    gap: 18px;
+}
+
+
+/* =========================================================
+   DISTRIBUTION
+========================================================= */
+
+.distribution-list {
+    padding: 12px 20px 20px;
+}
+
+.distribution-item {
+    padding: 11px 0;
+}
+
+.distribution-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.distribution-info span {
+    color: #777;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.distribution-info strong {
+    color: #111;
+    font-size: 11px;
+    font-weight: 950;
+}
+
+.distribution-track {
+    height: 7px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #f0f0ec;
+}
+
+.distribution-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: #d4af37;
+    transition: width .5s ease;
+}
+
+.distribution-item:nth-child(2)
+.distribution-fill {
+    background: #e49b45;
+}
+
+.distribution-item:nth-child(3)
+.distribution-fill {
+    background: #547cb9;
+}
+
+.distribution-item:nth-child(4)
+.distribution-fill {
+    background: #c75a5a;
+}
+
+
+/* =========================================================
+   INSIGHTS
+========================================================= */
+
+.analytics-insights {
+    padding: 10px 20px 20px;
+}
+
+.analytics-insight {
+    display: grid;
+    grid-template-columns:
+        37px minmax(0,1fr);
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eeeeeb;
+}
+
+.analytics-insight:last-child {
+    border-bottom: 0;
+}
+
+.analytics-insight-icon {
+    width: 37px;
+    height: 37px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #f8f1d8;
+    font-size: 15px;
+}
+
+.analytics-insight strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #111;
+    font-size: 10px;
+    font-weight: 950;
+}
+
+.analytics-insight p {
+    margin: 0;
+    color: #888;
+    font-size: 9px;
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 950px) {
 
     .analytics-stats-grid {
-        display: grid;
         grid-template-columns:
-            repeat(4, minmax(0, 1fr));
-        gap: 14px;
-        margin-bottom: 20px;
+            repeat(2,minmax(0,1fr));
+    }
+
+    .analytics-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .analytics-page-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .analytics-page-header
+    .dashboard-secondary-btn {
+        width: 100%;
+    }
+
+    .analytics-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .analytics-stats-grid {
+        gap: 8px;
     }
 
     .analytics-stat {
-        position: relative;
-        min-width: 0;
-        overflow: hidden;
-        padding: 18px;
-        background: #fff;
-        border: 1px solid #e6e6e1;
-        border-radius: 18px;
-        box-shadow: 0 8px 28px rgba(0,0,0,.045);
-        transition:
-            transform .2s ease,
-            box-shadow .2s ease;
-    }
-
-    .analytics-stat:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 14px 35px rgba(0,0,0,.075);
-    }
-
-    .analytics-stat::after {
-        content: "";
-        position: absolute;
-        left: -25px;
-        bottom: -35px;
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        background: rgba(212,175,55,.055);
-        pointer-events: none;
-    }
-
-    .analytics-stat-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        margin-bottom: 17px;
+        padding: 13px;
+        border-radius: 15px;
     }
 
     .analytics-stat-icon {
-        width: 45px;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 13px;
-        background: #f8f1d8;
-        font-size: 19px;
-    }
-
-    .analytics-stat:nth-child(2)
-    .analytics-stat-icon {
-        background: #eaf1ff;
-    }
-
-    .analytics-stat:nth-child(3)
-    .analytics-stat-icon {
-        background: #e8f7ed;
-    }
-
-    .analytics-stat:nth-child(4)
-    .analytics-stat-icon {
-        background: #fff0df;
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        font-size: 16px;
     }
 
     .analytics-stat-label {
-        display: block;
-        margin-bottom: 6px;
-        color: #888;
-        font-size: 10px;
-        font-weight: 800;
+        font-size: 8px;
     }
 
     .analytics-stat-value {
-        display: block;
-        color: #111;
-        font-size: 25px;
-        line-height: 1.15;
-        font-weight: 950;
-        white-space: nowrap;
-    }
-
-    .analytics-stat-note {
-        display: block;
-        margin-top: 8px;
-        color: #999;
-        font-size: 9px;
-        line-height: 1.5;
-    }
-
-    .analytics-stat-note.positive {
-        color: #25804e;
-        font-weight: 800;
-    }
-
-
-    /* =====================================================
-       MAIN GRID
-    ===================================================== */
-
-    .analytics-main-grid {
-        display: grid;
-        grid-template-columns:
-            minmax(0, 1.5fr)
-            minmax(300px, .8fr);
-        gap: 18px;
-        align-items: stretch;
-        margin-bottom: 18px;
+        font-size: 19px;
     }
 
     .analytics-card {
-        min-width: 0;
-        overflow: hidden;
-        background: #fff;
-        border: 1px solid #e6e6e1;
-        border-radius: 20px;
-        box-shadow: 0 9px 30px rgba(0,0,0,.045);
+        border-radius: 16px;
     }
-
-
-    /* =====================================================
-       CARD HEADER
-    ===================================================== */
 
     .analytics-card-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 15px;
-        padding: 19px 20px;
-        border-bottom: 1px solid #eeeeeb;
-        background:
-            linear-gradient(
-                180deg,
-                #fff,
-                #fcfcfa
-            );
+        padding: 16px;
     }
-
-    .analytics-card-header > div {
-        min-width: 0;
-    }
-
-    .analytics-card-header span {
-        display: block;
-        margin-bottom: 4px;
-        color: #a98516;
-        font-size: 9px;
-        font-weight: 950;
-    }
-
-    .analytics-card-header h2 {
-        margin: 0;
-        color: #111;
-        font-size: 17px;
-        font-weight: 950;
-    }
-
-
-    /* =====================================================
-       PERIOD
-    ===================================================== */
-
-    .analytics-period {
-        height: 38px;
-        min-width: 125px;
-        padding: 0 10px;
-        border: 1px solid #deded9;
-        border-radius: 9px;
-        background: #fafaf8;
-        color: #222;
-        font-family: inherit;
-        font-size: 10px;
-        font-weight: 800;
-        outline: none;
-        cursor: pointer;
-    }
-
-    .analytics-period:focus {
-        border-color: #d4af37;
-        box-shadow:
-            0 0 0 3px rgba(212,175,55,.1);
-    }
-
-
-    /* =====================================================
-       CHART
-    ===================================================== */
 
     .analytics-chart-wrap {
-        padding: 20px;
+        padding: 15px;
     }
 
     .analytics-chart {
-        position: relative;
-        height: 280px;
-        display: flex;
-        gap: 12px;
-    }
-
-    .chart-y-axis {
-        width: 35px;
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 2px 0 25px;
-    }
-
-    .chart-y-axis span {
-        color: #aaa;
-        font-size: 8px;
-        direction: ltr;
-        text-align: left;
-    }
-
-    .chart-area {
-        position: relative;
-        flex: 1;
-        min-width: 0;
-        overflow: hidden;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .chart-lines {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding-bottom: 25px;
-        pointer-events: none;
-    }
-
-    .chart-line {
-        width: 100%;
-        height: 1px;
-        background: #eeeeeb;
+        height: 220px;
     }
 
     .chart-bars {
-        position: absolute;
-        inset: 0;
-        display: grid;
-        grid-template-columns:
-            repeat(7, minmax(0, 1fr));
-        align-items: end;
-        gap: 8px;
-        padding: 0 5px 25px;
-    }
-
-    .chart-group {
-        height: 100%;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        gap: 3px;
-        position: relative;
+        gap: 4px;
     }
 
     .chart-bar {
-        width: min(16px, 35%);
-        min-height: 2px;
-        border-radius: 5px 5px 2px 2px;
-        transition:
-            height .5s ease,
-            opacity .2s ease;
+        width: 10px;
     }
 
-    .chart-bar:hover {
-        opacity: .75;
-    }
-
-    .chart-bar.sales {
-        background: #d4af37;
-    }
-
-    .chart-bar.orders {
-        background: #222;
-    }
-
-    .chart-day {
-        position: absolute;
-        bottom: 0;
-        color: #999;
-        font-size: 8px;
-        white-space: nowrap;
-    }
-
-
-    /* =====================================================
-       LEGEND
-    ===================================================== */
-
-    .chart-legend {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        padding: 0 20px 18px;
-    }
-
-    .chart-legend span {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        color: #777;
-        font-size: 9px;
-        font-weight: 800;
-    }
-
-    .chart-legend i {
-        width: 8px;
-        height: 8px;
-        display: inline-block;
-        border-radius: 3px;
-    }
-
-    .legend-sales {
-        background: #d4af37;
-    }
-
-    .legend-orders {
-        background: #222;
-    }
-
-
-    /* =====================================================
-       PRODUCTS
-    ===================================================== */
-
-    .top-products-list {
-        padding: 7px 20px 12px;
-    }
-
-    .top-product {
-        display: grid;
-        grid-template-columns:
-            27px 45px minmax(0,1fr) auto;
-        align-items: center;
-        gap: 10px;
-        padding: 13px 0;
-        border-bottom: 1px solid #eeeeeb;
-    }
-
-    .top-product:last-child {
-        border-bottom: 0;
-    }
-
-    .top-product-rank {
-        width: 27px;
-        height: 27px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        background: #f5f5f2;
-        color: #777;
-        font-size: 9px;
-        font-weight: 950;
-    }
-
-    .top-product:first-child
-    .top-product-rank {
-        background: #f8f1d8;
-        color: #98700b;
-    }
-
-    .top-product-image {
-        width: 45px;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border-radius: 11px;
-        background: #f8f1d8;
-        font-size: 18px;
-    }
-
-    .top-product-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .top-product-info {
-        min-width: 0;
-    }
-
-    .top-product-info strong {
-        display: block;
-        overflow: hidden;
-        margin-bottom: 3px;
-        color: #111;
-        font-size: 10px;
-        font-weight: 900;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
-    .top-product-info span {
-        color: #999;
-        font-size: 8px;
-    }
-
-    .top-product-sales {
-        color: #111;
-        font-size: 10px;
-        font-weight: 950;
-        white-space: nowrap;
-    }
-
-
-    /* =====================================================
-       EMPTY
-    ===================================================== */
-
-    .analytics-empty {
-        padding: 55px 20px;
-        text-align: center;
-    }
-
-    .analytics-empty-icon {
-        width: 62px;
-        height: 62px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 14px;
-        border-radius: 18px;
-        background: #f8f1d8;
-        font-size: 25px;
-    }
-
-    .analytics-empty h3 {
-        margin: 0 0 6px;
-        color: #111;
-        font-size: 15px;
-        font-weight: 950;
-    }
-
-    .analytics-empty p {
-        max-width: 300px;
-        margin: 0 auto;
-        color: #999;
-        font-size: 9px;
-        line-height: 1.8;
-    }
-
-
-    /* =====================================================
-       BOTTOM GRID
-    ===================================================== */
-
-    .analytics-bottom-grid {
-        display: grid;
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 1fr);
-        gap: 18px;
-    }
-
-
-    /* =====================================================
-       DISTRIBUTION
-    ===================================================== */
-
-    .distribution-list {
-        padding: 12px 20px 20px;
-    }
-
-    .distribution-item {
-        padding: 11px 0;
-    }
-
-    .distribution-info {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 15px;
-        margin-bottom: 7px;
-    }
-
-    .distribution-info span {
-        color: #777;
-        font-size: 10px;
-        font-weight: 800;
-    }
-
-    .distribution-info strong {
-        color: #111;
-        font-size: 11px;
-        font-weight: 950;
-    }
-
-    .distribution-track {
-        height: 7px;
-        overflow: hidden;
-        border-radius: 20px;
-        background: #f0f0ec;
-    }
-
-    .distribution-fill {
-        height: 100%;
-        min-width: 0;
-        border-radius: inherit;
-        background: #d4af37;
-        transition: width .5s ease;
-    }
-
-    .distribution-item:nth-child(2)
-    .distribution-fill {
-        background: #e49b45;
-    }
-
-    .distribution-item:nth-child(3)
-    .distribution-fill {
-        background: #547cb9;
-    }
-
-    .distribution-item:nth-child(4)
-    .distribution-fill {
-        background: #c75a5a;
-    }
-
-
-    /* =====================================================
-       INSIGHTS
-    ===================================================== */
-
+    .top-products-list,
+    .distribution-list,
     .analytics-insights {
-        padding: 10px 20px 20px;
+        padding-left: 15px;
+        padding-right: 15px;
     }
 
-    .analytics-insight {
-        display: grid;
-        grid-template-columns: 37px minmax(0,1fr);
-        align-items: start;
-        gap: 10px;
-        padding: 12px 0;
-        border-bottom: 1px solid #eeeeeb;
+}
+
+@media (max-width: 360px) {
+
+    .analytics-stat-value {
+        font-size: 17px;
     }
 
-    .analytics-insight:last-child {
-        border-bottom: 0;
+    .analytics-period {
+        min-width: 105px;
     }
 
-    .analytics-insight-icon {
-        width: 37px;
-        height: 37px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 10px;
-        background: #f8f1d8;
-        font-size: 15px;
+}
+
+.analytics-page :focus-visible {
+    outline: 3px solid rgba(212,175,55,.3);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .analytics-page *,
+    .analytics-page *::before,
+    .analytics-page *::after {
+        transition: none !important;
+        animation: none !important;
     }
 
-    .analytics-insight strong {
-        display: block;
-        margin-bottom: 4px;
-        color: #111;
-        font-size: 10px;
-        font-weight: 950;
-    }
+}
 
-    .analytics-insight p {
-        margin: 0;
-        color: #888;
-        font-size: 9px;
-        line-height: 1.8;
-    }
-
-
-    /* =====================================================
-       MOBILE
-    ===================================================== */
-
-    @media (max-width: 950px) {
-
-        .analytics-stats-grid {
-            grid-template-columns:
-                repeat(2, minmax(0,1fr));
-        }
-
-        .analytics-main-grid {
-            grid-template-columns: 1fr;
-        }
-
-    }
-
-
-    @media (max-width: 700px) {
-
-        .analytics-page-header {
-            align-items: stretch;
-            flex-direction: column;
-            gap: 13px;
-        }
-
-        .analytics-page-header
-        .dashboard-secondary-btn {
-            width: 100%;
-        }
-
-        .analytics-bottom-grid {
-            grid-template-columns: 1fr;
-        }
-
-    }
-
-
-    @media (max-width: 500px) {
-
-        .analytics-stats-grid {
-            gap: 8px;
-        }
-
-        .analytics-stat {
-            padding: 13px;
-            border-radius: 15px;
-        }
-
-        .analytics-stat-top {
-            margin-bottom: 12px;
-        }
-
-        .analytics-stat-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 11px;
-            font-size: 16px;
-        }
-
-        .analytics-stat-label {
-            font-size: 8px;
-        }
-
-        .analytics-stat-value {
-            font-size: 19px;
-        }
-
-        .analytics-stat-note {
-            font-size: 8px;
-        }
-
-        .analytics-card {
-            border-radius: 16px;
-        }
-
-        .analytics-card-header {
-            padding: 16px;
-        }
-
-        .analytics-card-header h2 {
-            font-size: 15px;
-        }
-
-        .analytics-chart-wrap {
-            padding: 15px;
-        }
-
-        .analytics-chart {
-            height: 220px;
-        }
-
-        .chart-bars {
-            gap: 4px;
-        }
-
-        .chart-bar {
-            width: 10px;
-        }
-
-        .top-products-list {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-
-        .distribution-list,
-        .analytics-insights {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-
-    }
-
-
-    @media (max-width: 360px) {
-
-        .analytics-stats-grid {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .analytics-stat-value {
-            font-size: 17px;
-        }
-
-        .analytics-period {
-            min-width: 105px;
-        }
-
-    }
-
-
-    /* =====================================================
-       ACCESSIBILITY
-    ===================================================== */
-
-    .analytics-page :focus-visible {
-        outline: 3px solid rgba(212,175,55,.3);
-        outline-offset: 3px;
-    }
-
-
-    /* =====================================================
-       REDUCED MOTION
-    ===================================================== */
-
-    @media (prefers-reduced-motion: reduce) {
-
-        .analytics-page *,
-        .analytics-page *::before,
-        .analytics-page *::after {
-            transition: none !important;
-            animation: none !important;
-        }
-
-    }
-
-</style>
-
-</head><body class="dashboard-page analytics-page"><header class="main-header"><div class="header-container">
+</style></head><body class="dashboard-page analytics-page"><header class="main-header"><div class="header-container">
 
     <a
         href="{{ url_for('home') }}"
         class="brand"
     >
 
-        <span class="brand-icon">
-            M
-        </span>
+        <span class="brand-icon">M</span>
 
         <span class="brand-name">
             Menu Smart
@@ -879,860 +974,804 @@
 
 </div>
 
-</header><main class="dashboard-main"><div class="dashboard-container">
+</header><main class="dashboard-main"><div class="dashboard-container"><!-- =====================================================
+     PAGE HEADER
+===================================================== --><section class="analytics-page-header"><div class="analytics-page-title">
+
+    <span>
+        التقارير والإحصائيات
+    </span>
+
+    <h1>
+        التحليلات
+    </h1>
+
+    <p>
+        تابع أداء نشاطك، راقب المبيعات،
+        واعرف المنتجات والعملاء الأكثر نشاطًا.
+    </p>
+
+</div>
 
 
-    <!-- PAGE HEADER -->
+<a
+    href="{{ url_for('dashboard') }}"
+    class="dashboard-secondary-btn"
+>
+    ← لوحة التحكم
+</a>
 
-    <section class="analytics-page-header">
+</section>
 
-        <div class="analytics-page-title">
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
 
-            <span>
-                التقارير والإحصائيات
+<section class="analytics-stats-grid">
+
+
+    <!-- TOTAL SALES -->
+
+    <div class="analytics-stat">
+
+        <div class="analytics-stat-top">
+
+            <div class="analytics-stat-icon">
+
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v18"/>
+                    <path d="M16.5 7.5c0-1.7-1.8-3-4.5-3s-4.5 1.3-4.5 3 1.8 3 4.5 3 4.5 1.3 4.5 3-1.8 3-4.5 3-4.5-1.3-4.5-3"/>
+                </svg>
+
+            </div>
+
+        </div>
+
+
+        <span class="analytics-stat-label">
+            إجمالي المبيعات
+        </span>
+
+
+        <strong class="analytics-stat-value">
+
+            {{ total_sales|default(0) }}
+
+            <span style="font-size:.55em;">
+                جنيه
             </span>
 
-            <h1>
-                التحليلات
-            </h1>
+        </strong>
+
+
+        <small class="analytics-stat-note positive">
+            إجمالي المبيعات المكتملة
+        </small>
+
+    </div>
+
+
+    <!-- TOTAL ORDERS -->
+
+    <div class="analytics-stat">
+
+        <div class="analytics-stat-top">
+
+            <div class="analytics-stat-icon">
+
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 7h12l1 13H5L6 7Z"/>
+                    <path d="M9 7a3 3 0 0 1 6 0"/>
+                </svg>
+
+            </div>
+
+        </div>
+
+
+        <span class="analytics-stat-label">
+            عدد الطلبات
+        </span>
+
+
+        <strong class="analytics-stat-value">
+            {{ total_orders|default(0) }}
+        </strong>
+
+
+        <small class="analytics-stat-note">
+            إجمالي الطلبات
+        </small>
+
+    </div>
+
+
+    <!-- CUSTOMERS -->
+
+    <div class="analytics-stat">
+
+        <div class="analytics-stat-top">
+
+            <div class="analytics-stat-icon">
+
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="8" r="3"/>
+                    <path d="M5 20c.7-3.2 3.2-5 7-5s6.3 1.8 7 5"/>
+                </svg>
+
+            </div>
+
+        </div>
+
+
+        <span class="analytics-stat-label">
+            العملاء
+        </span>
+
+
+        <strong class="analytics-stat-value">
+            {{ total_customers|default(0) }}
+        </strong>
+
+
+        <small class="analytics-stat-note">
+            عملاء لديهم طلبات
+        </small>
+
+    </div>
+
+
+    <!-- AVERAGE ORDER -->
+
+    <div class="analytics-stat">
+
+        <div class="analytics-stat-top">
+
+            <div class="analytics-stat-icon">
+
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 19V5"/>
+                    <path d="M4 19h16"/>
+                    <path d="m7 15 3-4 3 2 5-6"/>
+                    <path d="M15 7h3v3"/>
+                </svg>
+
+            </div>
+
+        </div>
+
+
+        <span class="analytics-stat-label">
+            متوسط الطلب
+        </span>
+
+
+        <strong class="analytics-stat-value">
+
+            {{ average_order|default(0) }}
+
+            <span style="font-size:.55em;">
+                جنيه
+            </span>
+
+        </strong>
+
+
+        <small class="analytics-stat-note">
+            متوسط قيمة الطلب المكتمل
+        </small>
+
+    </div>
+
+
+</section>
+<!-- =====================================================
+     MAIN ANALYTICS
+===================================================== --><section class="analytics-main-grid"><!-- CHART --><div class="analytics-card"><div class="analytics-card-header">
+
+    <div>
+
+        <span>
+            الأداء
+        </span>
+
+        <h2>
+            المبيعات والطلبات
+        </h2>
+
+    </div>
+
+
+    <select
+        id="analyticsPeriod"
+        class="analytics-period"
+    >
+
+        <option value="7">
+            آخر 7 أيام
+        </option>
+
+        <option value="30" selected>
+            آخر 30 يوم
+        </option>
+
+        <option value="90">
+            آخر 90 يوم
+        </option>
+
+    </select>
+
+</div>
+
+
+<div class="analytics-chart-wrap">
+
+    <div class="analytics-chart">
+
+
+        <div class="chart-y-axis">
+
+            <span>100%</span>
+            <span>75%</span>
+            <span>50%</span>
+            <span>25%</span>
+            <span>0%</span>
+
+        </div>
+
+
+        <div class="chart-area">
+
+
+            <div class="chart-lines">
+
+                <div class="chart-line"></div>
+                <div class="chart-line"></div>
+                <div class="chart-line"></div>
+                <div class="chart-line"></div>
+                <div class="chart-line"></div>
+
+            </div>
+
+<!-- الرسم الديناميكي فقط -->
+
+<div class="chart-bars">
+
+    {% set max_sales = daily_sales|max|default(1) %}
+    {% set max_orders = daily_orders|max|default(1) %}
+
+    {% for i in range(daily_labels|length) %}
+
+        {% set sales_value = daily_sales[i]|default(0) %}
+        {% set orders_value = daily_orders[i]|default(0) %}
+
+        {% if max_sales > 0 %}
+            {% set sales_height = (sales_value / max_sales * 100)|round(1) %}
+        {% else %}
+            {% set sales_height = 0 %}
+        {% endif %}
+
+        {% if max_orders > 0 %}
+            {% set orders_height = (orders_value / max_orders * 100)|round(1) %}
+        {% else %}
+            {% set orders_height = 0 %}
+        {% endif %}
+
+        <div class="chart-group">
+
+            <div
+                class="chart-bar sales"
+                style="height: {{ sales_height }}%;"
+                title="المبيعات: {{ sales_value }} جنيه"
+            ></div>
+
+            <div
+                class="chart-bar orders"
+                style="height: {{ orders_height }}%;"
+                title="الطلبات: {{ orders_value }}"
+            ></div>
+
+            <span class="chart-day">
+                {{ daily_labels[i] }}
+            </span>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+
+<div class="chart-legend">
+
+    <span>
+        <i class="legend-sales"></i>
+        المبيعات
+    </span>
+
+    <span>
+        <i class="legend-orders"></i>
+        الطلبات
+    </span>
+
+</div>
+
+
+<!-- TOP PRODUCTS -->
+
+<div class="analytics-card">
+
+    <div class="analytics-card-header">
+
+        <div>
+
+            <span>
+                المنتجات
+            </span>
+
+            <h2>
+                الأكثر طلبًا
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    {% if top_products %}
+
+        <div class="top-products-list">
+
+            {% for product in top_products %}
+
+                <div class="top-product">
+
+                    <div class="top-product-rank">
+                        {{ loop.index }}
+                    </div>
+
+
+                    <div class="top-product-image">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{% if product.image.startswith('http') %}{{ product.image }}{% else %}{{ url_for('static', filename='images/uploads/' ~ product.image) }}{% endif %}"
+                                alt="{{ product.name }}"
+                            >
+
+                        {% else %}
+
+                            🍽️
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="top-product-info">
+
+                        <strong>
+                            {{ product.name }}
+                        </strong>
+
+                        <span>
+                            {{ product.orders_count|default(0) }}
+                            طلب
+                        </span>
+
+                    </div>
+
+
+                    <div class="top-product-sales">
+
+                        {{ product.total_sales|default(0) }}
+                        جنيه
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="analytics-empty">
+
+            <div class="analytics-empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+        aria-hidden="true">
+        <path d="M4 19V5"></path>
+        <path d="M4 19h16"></path>
+        <rect x="7" y="13" width="2.5" height="4" rx=".5"></rect>
+        <rect x="11" y="10" width="2.5" height="7" rx=".5"></rect>
+        <rect x="15" y="7" width="2.5" height="10" rx=".5"></rect>
+    </svg>
+            </div>
+
+            <h3>
+                لا توجد بيانات بعد
+            </h3>
 
             <p>
-                تابع أداء مطعمك، راقب المبيعات،
-                واعرف المنتجات والعملاء الأكثر نشاطًا.
+                ستظهر المنتجات الأكثر طلبًا
+                تلقائيًا بعد وصول الطلبات.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+  <!-- =====================================================
+     BOTTOM
+===================================================== -->
+
+<section class="analytics-bottom-grid">
+
+    <!-- ORDER STATUS -->
+
+    <div class="analytics-card">
+
+        <div class="analytics-card-header">
+
+            <div>
+
+                <span>
+                    حالات الطلبات
+                </span>
+
+                <h2>
+                    توزيع الطلبات
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="distribution-list">
+
+            <div class="distribution-item">
+
+                <div class="distribution-info">
+
+                    <span>
+                        مكتملة
+                    </span>
+
+                    <strong>
+                        {{ completed_orders|default(0) }}
+                    </strong>
+
+                </div>
+
+                <div class="distribution-track">
+
+                    <div
+                        class="distribution-fill"
+                        style="width: {{ completed_percentage|default(0) }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="distribution-item">
+
+                <div class="distribution-info">
+
+                    <span>
+                        قيد التجهيز
+                    </span>
+
+                    <strong>
+                        {{ preparing_orders|default(0) }}
+                    </strong>
+
+                </div>
+
+                <div class="distribution-track">
+
+                    <div
+                        class="distribution-fill"
+                        style="width: {{ preparing_percentage|default(0) }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="distribution-item">
+
+                <div class="distribution-info">
+
+                    <span>
+                        قيد الانتظار
+                    </span>
+
+                    <strong>
+                        {{ pending_orders|default(0) }}
+                    </strong>
+
+                </div>
+
+                <div class="distribution-track">
+
+                    <div
+                        class="distribution-fill"
+                        style="width: {{ pending_percentage|default(0) }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="distribution-item">
+
+                <div class="distribution-info">
+
+                    <span>
+                        ملغاة
+                    </span>
+
+                    <strong>
+                        {{ cancelled_orders|default(0) }}
+                    </strong>
+
+                </div>
+
+                <div class="distribution-track">
+
+                    <div
+                        class="distribution-fill"
+                        style="width: {{ cancelled_percentage|default(0) }}%;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INSIGHTS -->
+
+    <div class="analytics-card">
+
+        <div class="analytics-card-header">
+
+            <div>
+
+                <span>
+                    رؤى الأداء
+                </span>
+
+                <h2>
+                    تحسين أداء المنيو
+                </h2>
+
+            </div>
+
+            <div class="analytics-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+        aria-hidden="true">
+        <path d="M9 18h6"></path>
+        <path d="M10 22h4"></path>
+        <path d="M8.5 14.5A6 6 0 1 1 15.5 14.5"></path>
+        <path d="M9 14c1 .8 1.5 1.7 1.5 3h3c0-1.3.5-2.2 1.5-3"></path>
+    </svg>
+            </div>
+
+        </div>
+
+
+        <div class="analytics-insights">
+
+            <div class="analytics-insight">
+
+                <div class="analytics-insight-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+        aria-hidden="true">
+        <path d="M12 22c4 0 7-2.8 7-7 0-3.2-2-5.7-4.2-8.5.1 2.1-.7 3.4-2 4.2.1-3.7-1.7-6.8-4.1-8.7.3 3.8-3.7 5.7-3.7 10.1C5 18.8 8 22 12 22Z"></path>
+        <path d="M12 18c1.3 0 2.3-.9 2.3-2.3 0-1-.5-1.8-1.2-2.7-.1 1-.5 1.6-1.1 2-.1-1.2-.7-2.1-1.4-2.7-.1 1.4-1 2.2-1 3.4C9.6 17 10.7 18 12 18Z"></path>
+    </svg>
+                </div>
+
+                <div>
+
+                    <strong>
+                        ركّز على المنتجات الناجحة
+                    </strong>
+
+                    <p>
+                        اجعل المنتجات الأكثر طلبًا
+                        في أماكن واضحة داخل المنيو.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-insight">
+
+                <div class="analytics-insight-icon">
+                    📸
+                </div>
+
+                <div>
+
+                    <strong>
+                        حسّن صور المنتجات
+                    </strong>
+
+                    <p>
+                        الصور الواضحة تساعد العميل
+                        على اتخاذ قرار الشراء بسرعة.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-insight">
+
+                <div class="analytics-insight-icon">
+                    💰
+                </div>
+
+                <div>
+
+                    <strong>
+                        راقب متوسط الطلب
+                    </strong>
+
+                    <p>
+                        حاول زيادة قيمة السلة بإضافة
+                        منتجات مكملة أو عروض مناسبة.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</div>
+
+</main>
+
+
+<footer class="main-footer">
+
+    <div class="footer-container">
+
+        <div class="footer-brand">
+
+            <strong>
+                Menu Smart
+            </strong>
+
+            <p>
+                منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
             </p>
 
         </div>
 
 
-        <a
-            href="{{ url_for('dashboard') }}"
-            class="dashboard-secondary-btn"
-        >
-            ← لوحة التحكم
-        </a>
+        <div class="footer-links">
 
-    </section>
+            <a href="{{ url_for('dashboard') }}">
+                لوحة التحكم
+            </a>
 
+            <a href="{{ url_for('products') }}">
+                المنتجات
+            </a>
 
-    <!-- STATISTICS -->
+            <a href="{{ url_for('orders') }}">
+                الطلبات
+            </a>
 
-    <section class="analytics-stats-grid">
-
-
-        <div class="analytics-stat">
-
-            <div class="analytics-stat-top">
-
-                <div class="analytics-stat-icon">
-                    💰
-                </div>
-
-            </div>
-
-            <span class="analytics-stat-label">
-                إجمالي المبيعات
-            </span>
-
-            <strong class="analytics-stat-value">
-                {{ total_sales|default(0) }}
-                <span style="font-size:.55em;">
-                    جنيه
-                </span>
-            </strong>
-
-            <small class="analytics-stat-note positive">
-                إجمالي الفترة الحالية
-            </small>
-
-        </div>
-
-
-        <div class="analytics-stat">
-
-            <div class="analytics-stat-top">
-
-                <div class="analytics-stat-icon">
-                    🛒
-                </div>
-
-            </div>
-
-            <span class="analytics-stat-label">
-                عدد الطلبات
-            </span>
-
-            <strong class="analytics-stat-value">
-                {{ total_orders|default(0) }}
-            </strong>
-
-            <small class="analytics-stat-note">
-                إجمالي الطلبات
-            </small>
-
-        </div>
-
-
-        <div class="analytics-stat">
-
-            <div class="analytics-stat-top">
-
-                <div class="analytics-stat-icon">
-                    👥
-                </div>
-
-            </div>
-
-            <span class="analytics-stat-label">
+            <a href="{{ url_for('customers') }}">
                 العملاء
-            </span>
-
-            <strong class="analytics-stat-value">
-                {{ total_customers|default(0) }}
-            </strong>
-
-            <small class="analytics-stat-note">
-                عملاء لديهم طلبات
-            </small>
+            </a>
 
         </div>
 
 
-        <div class="analytics-stat">
+        <div class="footer-copy">
 
-            <div class="analytics-stat-top">
-
-                <div class="analytics-stat-icon">
-                    📈
-                </div>
-
-            </div>
-
-            <span class="analytics-stat-label">
-                متوسط الطلب
-            </span>
-
-            <strong class="analytics-stat-value">
-                {{ average_order|default(0) }}
-                <span style="font-size:.55em;">
-                    جنيه
-                </span>
-            </strong>
-
-            <small class="analytics-stat-note">
-                متوسط قيمة الطلب الواحد
-            </small>
-
-        </div>
-
-
-    </section>
-
-
-    <!-- MAIN ANALYTICS -->
-
-    <section class="analytics-main-grid">
-
-
-        <!-- CHART -->
-
-        <div class="analytics-card">
-
-            <div class="analytics-card-header">
-
-                <div>
-
-                    <span>
-                        الأداء
-                    </span>
-
-                    <h2>
-                        المبيعات والطلبات
-                    </h2>
-
-                </div>
-
-
-                <select
-                    id="analyticsPeriod"
-                    class="analytics-period"
-                >
-
-                    <option value="7">
-                        آخر 7 أيام
-                    </option>
-
-                    <option value="30" selected>
-                        آخر 30 يوم
-                    </option>
-
-                    <option value="90">
-                        آخر 90 يوم
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="analytics-chart-wrap">
-
-                <div class="analytics-chart">
-
-                    <div class="chart-y-axis">
-
-                        <span>100%</span>
-                        <span>75%</span>
-                        <span>50%</span>
-                        <span>25%</span>
-                        <span>0%</span>
-
-                    </div>
-
-
-                    <div class="chart-area">
-
-                        <div class="chart-lines">
-
-                            <div class="chart-line"></div>
-                            <div class="chart-line"></div>
-                            <div class="chart-line"></div>
-                            <div class="chart-line"></div>
-                            <div class="chart-line"></div>
-
-                        </div>
-
-
-                        <div class="chart-bars">
-
-
-                            <div class="chart-group">
-
-                                <div
-                                    class="chart-bar sales"
-                                    style="height:72%;"
-                                ></div>
-
-                                <div
-                                    class="chart-bar orders"
-                                    style="height:42%;"
-                                ></div>
-
-                                <span class="chart-day">
-                                    س
-                                </span>
-
-                            </div>
-
-
-                            <div class="chart-group">
-
-                                <div
-                                    class="chart-bar sales"
-                                    style="height:58%;"
-                                ></div>
-
-                                <div
-                                    class="chart-bar orders"
-                                    style="height:35%;"
-                                ></div>
-
-                                <span class="chart-day">
-                                    ح
-                                </span>
-
-                            </div>
-
-
-                            <div class="chart-group">
-
-                                <div
-                                    class="chart-bar sales"
-                                    style="height:84%;"
-                                ></div>
-
-                                <div
-                                    class="chart-bar orders"
-                                    style="height:60%;"
-                                ></div>
-
-                                <span class="chart-day">
-                                    ن
-                                </span>
-
-                            </div>
-
-
-                            <div class="chart-group">
-
-                                <div
-                                    class="chart-bar sales"
-                                    style="height:65%;"
-                                ></div>
-
-                                <div
-                                    class="chart-bar orders"
-                                    style="height:48%;"
-                                ></div>
-
-                                <span class="chart-day">
-                                    ث
-                                </span>
-
-                            </div>
-
-
-                            <div class="chart-group">
-
-                                <div
-                                    class="chart-bar sales"
-                                    style="height:91%;"
-                                ></div>
-
-                                <div
-                                    class="chart-bar orders"
-                                    style="height:68%;"
-                                ></div>
-
-                                <span class="chart-day">
-                                    ر
-                                </span>
-
-                            </div>
-
-
-                            <div class="chart-group">
-
-                                <div
-                                    class="chart-bar sales"
-                                    style="height:76%;"
-                                ></div>
-
-                                <div
-                                    class="chart-bar orders"
-                                    style="height:55%;"
-                                ></div>
-
-                                <span class="chart-day">
-                                    ج
-                                </span>
-
-                            </div>
-
-
-                            <div class="chart-group">
-
-                                <div
-                                    class="chart-bar sales"
-                                    style="height:96%;"
-                                ></div>
-
-                                <div
-                                    class="chart-bar orders"
-                                    style="height:74%;"
-                                ></div>
-
-                                <span class="chart-day">
-                                    ع
-                                </span>
-
-                            </div>
-
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="chart-legend">
-
-                <span>
-                    <i class="legend-sales"></i>
-                    المبيعات
-                </span>
-
-                <span>
-                    <i class="legend-orders"></i>
-                    الطلبات
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- TOP PRODUCTS -->
-
-        <div class="analytics-card">
-
-            <div class="analytics-card-header">
-
-                <div>
-
-                    <span>
-                        المنتجات
-                    </span>
-
-                    <h2>
-                        الأكثر طلبًا
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            {% if top_products %}
-
-                <div class="top-products-list">
-
-                    {% for product in top_products %}
-
-                        <div class="top-product">
-
-                            <div class="top-product-rank">
-                                {{ loop.index }}
-                            </div>
-
-
-                            <div class="top-product-image">
-
-                                {% if product.image %}
-
-                                    <img
-                                        src="{% if product.image.startswith('http') %}{{ product.image }}{% else %}{{ url_for('static', filename='images/uploads/' ~ product.image) }}{% endif %}"
-                                        alt="{{ product.name }}"
-                                    >
-
-                                {% else %}
-
-                                    🍽️
-
-                                {% endif %}
-
-                            </div>
-
-
-                            <div class="top-product-info">
-
-                                <strong>
-                                    {{ product.name }}
-                                </strong>
-
-                                <span>
-                                    {{ product.orders_count|default(0) }}
-                                    طلب
-                                </span>
-
-                            </div>
-
-
-                            <div class="top-product-sales">
-
-                                {{ product.total_sales|default(0) }}
-                                جنيه
-
-                            </div>
-
-                        </div>
-
-                    {% endfor %}
-
-                </div>
-
-            {% else %}
-
-                <div class="analytics-empty">
-
-                    <div class="analytics-empty-icon">
-                        📊
-                    </div>
-
-                    <h3>
-                        لا توجد بيانات بعد
-                    </h3>
-
-                    <p>
-                        ستظهر المنتجات الأكثر طلبًا
-                        تلقائيًا بعد وصول الطلبات.
-                    </p>
-
-                </div>
-
-            {% endif %}
-
-        </div>
-
-
-    </section>
-
-
-    <!-- BOTTOM -->
-
-    <section class="analytics-bottom-grid">
-
-
-        <!-- ORDER STATUS -->
-
-        <div class="analytics-card">
-
-            <div class="analytics-card-header">
-
-                <div>
-
-                    <span>
-                        حالات الطلبات
-                    </span>
-
-                    <h2>
-                        توزيع الطلبات
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            <div class="distribution-list">
-
-
-                <div class="distribution-item">
-
-                    <div class="distribution-info">
-
-                        <span>
-                            مكتملة
-                        </span>
-
-                        <strong>
-                            {{ completed_orders|default(0) }}
-                        </strong>
-
-                    </div>
-
-                    <div class="distribution-track">
-
-                        <div
-                            class="distribution-fill"
-                            style="
-                                width:
-                                {{ completed_percentage|default(0) }}%;
-                            "
-                        ></div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="distribution-item">
-
-                    <div class="distribution-info">
-
-                        <span>
-                            قيد التجهيز
-                        </span>
-
-                        <strong>
-                            {{ preparing_orders|default(0) }}
-                        </strong>
-
-                    </div>
-
-                    <div class="distribution-track">
-
-                        <div
-                            class="distribution-fill"
-                            style="
-                                width:
-                                {{ preparing_percentage|default(0) }}%;
-                            "
-                        ></div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="distribution-item">
-
-                    <div class="distribution-info">
-
-                        <span>
-                            قيد الانتظار
-                        </span>
-
-                        <strong>
-                            {{ pending_orders|default(0) }}
-                        </strong>
-
-                    </div>
-
-                    <div class="distribution-track">
-
-                        <div
-                            class="distribution-fill"
-                            style="
-                                width:
-                                {{ pending_percentage|default(0) }}%;
-                            "
-                        ></div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="distribution-item">
-
-                    <div class="distribution-info">
-
-                        <span>
-                            ملغاة
-                        </span>
-
-                        <strong>
-                            {{ cancelled_orders|default(0) }}
-                        </strong>
-
-                    </div>
-
-                    <div class="distribution-track">
-
-                        <div
-                            class="distribution-fill"
-                            style="
-                                width:
-                                {{ cancelled_percentage|default(0) }}%;
-                            "
-                        ></div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-        </div>
-
-
-        <!-- INSIGHTS -->
-
-        <div class="analytics-card">
-
-            <div class="analytics-card-header">
-
-                <div>
-
-                    <span>
-                        رؤى الأداء
-                    </span>
-
-                    <h2>
-                        تحسين أداء المنيو
-                    </h2>
-
-                </div>
-
-                <div class="analytics-stat-icon">
-                    💡
-                </div>
-
-            </div>
-
-
-            <div class="analytics-insights">
-
-
-                <div class="analytics-insight">
-
-                    <div class="analytics-insight-icon">
-                        🔥
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            ركّز على المنتجات الناجحة
-                        </strong>
-
-                        <p>
-                            اجعل المنتجات الأكثر طلبًا
-                            في أماكن واضحة داخل المنيو.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="analytics-insight">
-
-                    <div class="analytics-insight-icon">
-                        📸
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            حسّن صور المنتجات
-                        </strong>
-
-                        <p>
-                            الصور الواضحة تساعد العميل
-                            على اتخاذ قرار الشراء بسرعة.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="analytics-insight">
-
-                    <div class="analytics-insight-icon">
-                        💰
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            راقب متوسط الطلب
-                        </strong>
-
-                        <p>
-                            حاول زيادة قيمة السلة بإضافة
-                            منتجات مكملة أو عروض مناسبة.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-        </div>
-
-
-    </section>
-
-
-</div>
-
-</main><footer class="main-footer"><div class="footer-container">
-
-
-    <div class="footer-brand">
-
-        <strong>
+            © {{ current_year|default(2026) }}
             Menu Smart
-        </strong>
 
-        <p>
-            منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
-        </p>
+        </div>
 
     </div>
 
-
-    <div class="footer-links">
-
-        <a href="{{ url_for('dashboard') }}">
-            لوحة التحكم
-        </a>
-
-        <a href="{{ url_for('products') }}">
-            المنتجات
-        </a>
-
-        <a href="{{ url_for('orders') }}">
-            الطلبات
-        </a>
-
-        <a href="{{ url_for('customers') }}">
-            العملاء
-        </a>
-
-    </div>
+</footer>
 
 
-    <div class="footer-copy">
+<script>
 
-        © {{ current_year|default(2026) }} Menu Smart
+/* =========================================================
+   PERIOD SELECTOR
+========================================================= */
 
-    </div>
+const analyticsPeriod =
+    document.getElementById("analyticsPeriod");
+
+if (analyticsPeriod) {
+
+    analyticsPeriod.addEventListener(
+        "change",
+        function () {
+
+            console.log(
+                "Analytics period:",
+                this.value
+            );
+
+        }
+    );
+
+}
 
 
-</div>
+/* =========================================================
+   ENGLISH NUMBERS
+========================================================= */
 
-</footer><script>
+function toEnglishNumbers(value) {
 
-    /* =====================================================
-       PERIOD SELECTOR
-    ===================================================== */
+    return String(value).replace(
+        /[٠-٩]/g,
+        function(digit) {
 
-    const analyticsPeriod =
-        document.getElementById("analyticsPeriod");
+            return "٠١٢٣٤٥٦٧٨٩"
+                .indexOf(digit);
+
+        }
+    );
+
+}
 
 
-    if (analyticsPeriod) {
+document
+    .querySelectorAll(".analytics-page *")
+    .forEach(function(element) {
 
-        analyticsPeriod.addEventListener(
-            "change",
-            function () {
+        if (
+            element.children.length === 0 &&
+            element.textContent.trim()
+        ) {
 
-                console.log(
-                    "Analytics period:",
-                    this.value
+            element.textContent =
+                toEnglishNumbers(
+                    element.textContent
                 );
 
-            }
-        );
+        }
 
-    }
-
-
-    /* =====================================================
-       ENGLISH NUMBERS
-    ===================================================== */
-
-    function toEnglishNumbers(value) {
-
-        return String(value).replace(
-            /[٠-٩]/g,
-            function (digit) {
-
-                return "٠١٢٣٤٥٦٧٨٩"
-                    .indexOf(digit);
-
-            }
-        );
-
-    }
-
-
-    document
-        .querySelectorAll(".analytics-page *")
-        .forEach(function(element) {
-
-            if (
-                element.children.length === 0 &&
-                element.textContent.trim()
-            ) {
-
-                element.textContent =
-                    toEnglishNumbers(
-                        element.textContent
-                    );
-
-            }
-
-        });
+    });
 
 </script></body>
 </html>

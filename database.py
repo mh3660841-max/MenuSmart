@@ -522,10 +522,16 @@ def init_db():
         add_column_if_missing(
             cursor,
             "restaurant_settings",
+            "language",
+            "TEXT DEFAULT 'ar'"
+        )
+
+        add_column_if_missing(
+            cursor,
+            "restaurant_settings",
             "updated_at",
             "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
         )
-
 
         # =====================================================
         # المنيو

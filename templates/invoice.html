@@ -445,7 +445,7 @@
             <div>
 
                 <h1 class="restaurant-name">
-                    {{ restaurant.name|default('المطعم') }}
+                    {{ restaurant.name|default('النشاط') }}
                 </h1>
 
                 {% if restaurant.description %}
@@ -717,7 +717,7 @@
     <footer class="invoice-footer">
 
         <strong>
-            شكرًا لطلبك من {{ restaurant.name|default('المطعم') }}
+            شكرًا لطلبك من {{ restaurant.name|default('النشاط') }}
         </strong>
 
         <span>

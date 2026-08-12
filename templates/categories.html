@@ -22,75 +22,71 @@
 
     <style>
 
-        * {
+        /* =====================================================
+           CATEGORIES PAGE
+        ===================================================== */
+
+        .categories-page {
+            --cat-black: #111111;
+            --cat-black-2: #1a1a1a;
+            --cat-gold: #d4af37;
+            --cat-gold-dark: #a9851e;
+            --cat-bg: #f5f6f8;
+            --cat-card: #ffffff;
+            --cat-border: #e7e7e7;
+            --cat-text: #171717;
+            --cat-muted: #777;
+            --cat-success: #198754;
+            --cat-danger: #c62828;
+
+            min-height: 100vh;
+            margin: 0;
+
+            background: var(--cat-bg);
+            color: var(--cat-text);
+
+            font-family: inherit;
+        }
+
+        .categories-page *,
+        .categories-page *::before,
+        .categories-page *::after {
             box-sizing: border-box;
         }
 
-        :root {
-            --black: #111111;
-            --black-soft: #181818;
-            --gold: #d4af37;
-            --gold-dark: #a9851e;
-            --bg: #f5f6f8;
-            --card: #ffffff;
-            --border: #e8e8e8;
-            --text: #171717;
-            --muted: #858585;
-            --danger: #c62828;
-            --success: #198754;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
+        .categories-page button,
+        .categories-page input {
             font-family: inherit;
         }
 
-        button,
-        input {
-            font-family: inherit;
-        }
-
-        a {
+        .categories-page a {
             -webkit-tap-highlight-color: transparent;
         }
 
 
-        /* =========================================
-           PAGE
-        ========================================= */
-
-        .categories-page {
-            min-height: 100vh;
-        }
-
-
-        /* =========================================
+        /* =====================================================
            TOPBAR
-        ========================================= */
+        ===================================================== */
 
         .categories-topbar {
             position: sticky;
             top: 0;
             z-index: 100;
 
-            background: rgba(17,17,17,.97);
+            background: rgba(17, 17, 17, .97);
 
             border-bottom: 1px solid rgba(255,255,255,.08);
 
             backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
         }
 
         .categories-topbar-inner {
+            width: 100%;
             max-width: 1200px;
             min-height: 70px;
 
-            margin: auto;
+            margin: 0 auto;
             padding: 0 20px;
 
             display: flex;
@@ -101,7 +97,7 @@
         }
 
         .categories-brand {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 11px;
 
@@ -122,14 +118,14 @@
 
             border-radius: 12px;
 
-            background: var(--gold);
-            color: var(--black);
+            background: var(--cat-gold);
+            color: var(--cat-black);
 
             font-size: 18px;
             font-weight: 1000;
 
             box-shadow:
-                0 6px 18px rgba(212,175,55,.15);
+                0 6px 18px rgba(212,175,55,.18);
         }
 
         .categories-nav {
@@ -163,14 +159,15 @@
         }
 
 
-        /* =========================================
+        /* =====================================================
            MAIN
-        ========================================= */
+        ===================================================== */
 
         .categories-wrapper {
+            width: 100%;
             max-width: 1200px;
 
-            margin: auto;
+            margin: 0 auto;
 
             padding:
                 38px 20px
@@ -178,9 +175,9 @@
         }
 
 
-        /* =========================================
+        /* =====================================================
            PAGE HEADER
-        ========================================= */
+        ===================================================== */
 
         .categories-heading {
             display: flex;
@@ -199,7 +196,7 @@
 
             margin-bottom: 8px;
 
-            color: var(--gold-dark);
+            color: var(--cat-gold-dark);
 
             font-size: 11px;
             font-weight: 1000;
@@ -214,11 +211,13 @@
 
             border-radius: 50%;
 
-            background: var(--gold);
+            background: var(--cat-gold);
         }
 
         .categories-heading h1 {
             margin: 0;
+
+            color: var(--cat-black);
 
             font-size: 34px;
             line-height: 1.2;
@@ -231,7 +230,7 @@
         .categories-heading p {
             margin: 9px 0 0;
 
-            color: var(--muted);
+            color: var(--cat-muted);
 
             font-size: 13px;
             line-height: 1.8;
@@ -250,7 +249,7 @@
 
             background: #fff;
 
-            border: 1px solid var(--border);
+            border: 1px solid var(--cat-border);
             border-radius: 12px;
 
             color: #222;
@@ -269,22 +268,22 @@
         .back-dashboard:hover {
             transform: translateY(-2px);
 
-            border-color: var(--gold);
+            border-color: var(--cat-gold);
 
             box-shadow:
                 0 10px 22px rgba(0,0,0,.06);
         }
 
 
-        /* =========================================
+        /* =====================================================
            FLASH MESSAGES
-        ========================================= */
+        ===================================================== */
 
-        .dashboard-messages {
+        .categories-page .dashboard-messages {
             margin-bottom: 20px;
         }
 
-        .dashboard-message {
+        .categories-page .dashboard-message {
             padding: 13px 15px;
 
             border-radius: 12px;
@@ -293,38 +292,36 @@
             font-weight: 800;
         }
 
-        .dashboard-message.success {
+        .categories-page .dashboard-message.success {
             background: #eaf8ef;
             color: #18794e;
         }
 
-        .dashboard-message.danger {
+        .categories-page .dashboard-message.danger {
             background: #fff0f0;
             color: #b42323;
         }
 
 
-        /* =========================================
+        /* =====================================================
            ADD CATEGORY
-        ========================================= */
+        ===================================================== */
 
         .category-add-box {
             position: relative;
-
             overflow: hidden;
+
+            margin-bottom: 38px;
+            padding: 27px;
 
             background:
                 linear-gradient(
                     135deg,
                     #111111,
-                    #191919
+                    #1c1c1c
                 );
 
             border-radius: 22px;
-
-            padding: 27px;
-
-            margin-bottom: 38px;
 
             box-shadow:
                 0 18px 40px rgba(0,0,0,.11);
@@ -349,6 +346,9 @@
         }
 
         .category-add-top {
+            position: relative;
+            z-index: 1;
+
             display: flex;
             align-items: center;
 
@@ -371,7 +371,7 @@
 
             background: rgba(212,175,55,.13);
 
-            color: var(--gold);
+            color: var(--cat-gold);
 
             font-size: 22px;
             font-weight: 900;
@@ -417,7 +417,6 @@
             outline: none;
 
             border: 1px solid #333;
-
             border-radius: 11px;
 
             background: #1d1d1d;
@@ -426,7 +425,7 @@
 
             font-size: 12px;
 
-            transition: .2s;
+            transition: .2s ease;
         }
 
         .category-form input::placeholder {
@@ -434,7 +433,7 @@
         }
 
         .category-form input:focus {
-            border-color: var(--gold);
+            border-color: var(--cat-gold);
 
             box-shadow:
                 0 0 0 3px rgba(212,175,55,.08);
@@ -448,8 +447,7 @@
             border: 0;
             border-radius: 11px;
 
-            background: var(--gold);
-
+            background: var(--cat-gold);
             color: #111;
 
             font-size: 12px;
@@ -472,9 +470,9 @@
         }
 
 
-        /* =========================================
+        /* =====================================================
            SECTION HEADER
-        ========================================= */
+        ===================================================== */
 
         .categories-list-head {
             display: flex;
@@ -494,28 +492,30 @@
         .categories-list-title h2 {
             margin: 0;
 
+            color: var(--cat-black);
+
             font-size: 21px;
             font-weight: 1000;
         }
 
-        .categories-list-title span {
+        .categories-list-title > span {
             width: 7px;
             height: 7px;
 
             border-radius: 50%;
 
-            background: var(--gold);
+            background: var(--cat-gold);
         }
 
         .categories-counter {
             padding: 7px 12px;
 
-            border: 1px solid var(--border);
+            border: 1px solid var(--cat-border);
             border-radius: 50px;
 
             background: #fff;
 
-            color: var(--muted);
+            color: var(--cat-muted);
 
             font-size: 11px;
             font-weight: 800;
@@ -526,28 +526,26 @@
         }
 
 
-        /* =========================================
-           CATEGORY CARDS
-        ========================================= */
+        /* =====================================================
+           CATEGORY GRID
+        ===================================================== */
 
         .categories-grid {
             display: grid;
 
             grid-template-columns:
-                repeat(3, 1fr);
+                repeat(3, minmax(0, 1fr));
 
             gap: 16px;
         }
 
         .category-item {
             position: relative;
-
             overflow: hidden;
 
             background: #fff;
 
-            border: 1px solid var(--border);
-
+            border: 1px solid var(--cat-border);
             border-radius: 18px;
 
             transition:
@@ -567,13 +565,11 @@
 
             height: 3px;
 
-            background: var(--gold);
+            background: var(--cat-gold);
 
             transform: scaleX(0);
 
-            transform-origin: center;
-
-            transition: .22s;
+            transition: .22s ease;
         }
 
         .category-item:hover {
@@ -615,7 +611,7 @@
 
             font-size: 23px;
 
-            transition: .2s;
+            transition: .2s ease;
         }
 
         .category-item:hover .category-number {
@@ -630,7 +626,7 @@
 
             background: #eaf8ef;
 
-            color: var(--success);
+            color: var(--cat-success);
 
             font-size: 9px;
             font-weight: 1000;
@@ -638,6 +634,8 @@
 
         .category-item h3 {
             margin: 0 0 7px;
+
+            color: #111;
 
             font-size: 19px;
             font-weight: 1000;
@@ -708,7 +706,7 @@
 
             cursor: pointer;
 
-            transition: .2s;
+            transition: .2s ease;
         }
 
         .category-edit {
@@ -723,7 +721,7 @@
         }
 
         .category-delete {
-            color: var(--danger);
+            color: var(--cat-danger);
 
             background: #fffafa !important;
         }
@@ -733,9 +731,9 @@
         }
 
 
-        /* =========================================
+        /* =====================================================
            EMPTY STATE
-        ========================================= */
+        ===================================================== */
 
         .categories-empty {
             padding: 65px 20px;
@@ -785,9 +783,9 @@
         }
 
 
-        /* =========================================
+        /* =====================================================
            POPULAR CATEGORIES
-        ========================================= */
+        ===================================================== */
 
         .category-suggestions {
             margin-top: 45px;
@@ -814,13 +812,15 @@
 
             background: #111;
 
-            color: var(--gold);
+            color: var(--cat-gold);
 
             font-size: 18px;
         }
 
         .category-suggestions h2 {
             margin: 0;
+
+            color: #111;
 
             font-size: 20px;
             font-weight: 1000;
@@ -838,27 +838,28 @@
             display: grid;
 
             grid-template-columns:
-                repeat(6, 1fr);
+                repeat(6, minmax(0, 1fr));
 
             gap: 12px;
         }
 
         .suggestion {
             position: relative;
+            overflow: hidden;
 
-            min-height: 116px;
+            min-height: 190px;
 
             display: flex;
             flex-direction: column;
 
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
 
             gap: 10px;
 
-            overflow: hidden;
+            padding-bottom: 14px;
 
-            border: 1px solid var(--border);
+            border: 1px solid var(--cat-border);
             border-radius: 18px;
 
             background: #fff;
@@ -884,11 +885,11 @@
 
             height: 3px;
 
-            background: var(--gold);
+            background: var(--cat-gold);
 
             transform: scaleX(0);
 
-            transition: .22s;
+            transition: .22s ease;
         }
 
         .suggestion:hover {
@@ -904,70 +905,81 @@
             transform: scaleX(1);
         }
 
-     .suggestion-icon {
-    width: 100%;
-    height: 150px;
+        .suggestion-icon {
+            width: 100%;
+            height: 145px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-    overflow: hidden;
+            overflow: hidden;
 
-    border-radius: 16px;
+            background: #f8f5e9;
+        }
 
-    background: #f8f5e9;
+        .suggestion-icon img {
+            width: 100%;
+            height: 100%;
 
-    transition: .22s ease;
-}
+            display: block;
 
+            object-fit: cover;
 
-.suggestion-icon img {
-    width: 100%;
-    height: 100%;
+            transition: transform .35s ease;
+        }
 
-    display: block;
+        .suggestion:hover .suggestion-icon img {
+            transform: scale(1.06);
+        }
 
-    object-fit: cover;
+        .suggestion-name {
+            padding: 0 8px;
 
-    transition: transform .3s ease;
-}
+            color: #171717;
 
+            font-size: 14px;
+            font-weight: 900;
 
-..suggestion:hover .suggestion-icon img {
-    transform: scale(1.05);
-}
-
-
-.suggestion:hover .suggestion-icon {
-    transform: scale(1.02);
-
-    background: #111;
-}
+            line-height: 1.4;
+        }
 
 
-.suggestion-name {
-    font-size: 14px;
-    font-weight: 900;
+        /* =====================================================
+           FOOTER
+        ===================================================== */
 
-    line-height: 1.4;
-}
+        .categories-footer {
+            width: 100%;
+
+            padding: 25px 20px;
+
+            border-top: 1px solid #e5e5e5;
+
+            background: #fff;
+
+            text-align: center;
+
+            color: #888;
+
+            font-size: 11px;
+        }
 
 
-        /* =========================================
+        /* =====================================================
            MOBILE
-        ========================================= */
+        ===================================================== */
 
         @media (max-width: 1000px) {
 
             .categories-grid {
                 grid-template-columns:
-                    repeat(2, 1fr);
+                    repeat(2, minmax(0, 1fr));
             }
 
             .suggestions-grid {
                 grid-template-columns:
-                    repeat(3, 1fr);
+                    repeat(3, minmax(0, 1fr));
             }
 
         }
@@ -977,6 +989,7 @@
 
             .categories-topbar-inner {
                 min-height: 64px;
+                padding: 0 14px;
             }
 
             .categories-nav a:not(.logout) {
@@ -1021,7 +1034,7 @@
 
             .suggestions-grid {
                 grid-template-columns:
-                    repeat(2, 1fr);
+                    repeat(2, minmax(0, 1fr));
             }
 
         }
@@ -1047,7 +1060,11 @@
             }
 
             .suggestion {
-                min-height: 105px;
+                min-height: 170px;
+            }
+
+            .suggestion-icon {
+                height: 125px;
             }
 
         }
@@ -1060,9 +1077,9 @@
 <body class="categories-page">
 
 
-<!-- =========================================
+<!-- =====================================================
      TOPBAR
-========================================= -->
+===================================================== -->
 
 <header class="categories-topbar">
 
@@ -1106,9 +1123,9 @@
 </header>
 
 
-<!-- =========================================
+<!-- =====================================================
      MAIN
-========================================= -->
+===================================================== -->
 
 <main>
 
@@ -1130,7 +1147,7 @@
                 </h1>
 
                 <p>
-                    نظّم منيو مطعمك في أقسام واضحة وسهلة التصفح.
+                    نظّم منيو نشاطك في أقسام واضحة وسهلة التصفح.
                 </p>
 
             </div>
@@ -1171,7 +1188,9 @@
         {% endwith %}
 
 
-        <!-- ADD CATEGORY -->
+        <!-- =================================================
+             ADD CATEGORY
+        ================================================= -->
 
         <section class="category-add-box">
 
@@ -1226,7 +1245,9 @@
         </section>
 
 
-        <!-- CURRENT CATEGORIES -->
+        <!-- =================================================
+             CURRENT CATEGORIES
+        ================================================= -->
 
         <section>
 
@@ -1237,7 +1258,7 @@
                     <span></span>
 
                     <h2>
-                        أقسام المطعم
+                        أقسام المنتجات
                     </h2>
 
                 </div>
@@ -1287,7 +1308,7 @@
                                 <p class="category-item-description">
 
                                     {{ category.description|default(
-                                        'قسم من أقسام منيو المطعم',
+                                        'قسم من أقسام المنيو',
                                         true
                                     ) }}
 
@@ -1361,7 +1382,7 @@
                     </h2>
 
                     <p>
-                        ابدأ بإضافة أول قسم لتنظيم منتجات مطعمك
+                        ابدأ بإضافة أول قسم لتنظيم منتجات نشاطك
                         وعرضها بطريقة احترافية.
                     </p>
 
@@ -1372,7 +1393,9 @@
         </section>
 
 
-        <!-- POPULAR CATEGORIES -->
+        <!-- =================================================
+             POPULAR CATEGORIES
+        ================================================= -->
 
         <section class="category-suggestions">
 
@@ -1384,135 +1407,193 @@
 
                 <div>
 
-          <h2<h2>
-    أقسام شائعة للمطاعم
-</h2>
+                    <h2>
+                        أقسام شائعة
+                    </h2>
 
-<p class="category-suggestions-subtitle">
-    أشهر الأقسام المناسبة لقوائم المطاعم
-</p>
+                    <p class="category-suggestions-subtitle">
+                        أشهر الأقسام المناسبة لقوائم الأنشطة
+                    </p>
 
-</div>
+                </div>
 
-</div>
-
-
-<div class="suggestions-grid">
+            </div>
 
 
-    <div class="suggestion">
-
-        <div class="suggestion-icon">
-            <img
-                src="{{ url_for('static', filename='images/burger.png') }}"
-                alt="برجر"
-            >
-        </div>
-
-        <span class="suggestion-name">
-            برجر
-        </span>
-
-    </div>
+            <div class="suggestions-grid">
 
 
-    <div class="suggestion">
+                <div class="suggestion"
+                     data-category="برجر">
 
-        <div class="suggestion-icon">
-            <img
-                src="{{ url_for('static', filename='images/pizza.png') }}"
-                alt="بيتزا"
-            >
-        </div>
+                    <div class="suggestion-icon">
 
-        <span class="suggestion-name">
-            بيتزا
-        </span>
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/burger.png'
+                            ) }}"
+                            alt="برجر"
+                            loading="lazy"
+                        >
 
-    </div>
+                    </div>
 
+                    <span class="suggestion-name">
+                        برجر
+                    </span>
 
-    <div class="suggestion">
-
-        <div class="suggestion-icon">
-            <img
-                src="{{ url_for('static', filename='images/meals.png') }}"
-                alt="وجبات"
-            >
-        </div>
-
-        <span class="suggestion-name">
-            وجبات
-        </span>
-
-    </div>
+                </div>
 
 
-    <div class="suggestion">
+                <div class="suggestion"
+                     data-category="بيتزا">
 
-        <div class="suggestion-icon">
-            <img
-                src="{{ url_for('static', filename='images/drinks.png') }}"
-                alt="مشروبات"
-            >
-        </div>
+                    <div class="suggestion-icon">
 
-        <span class="suggestion-name">
-            مشروبات
-        </span>
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/pizza.png'
+                            ) }}"
+                            alt="بيتزا"
+                            loading="lazy"
+                        >
 
-    </div>
+                    </div>
 
+                    <span class="suggestion-name">
+                        بيتزا
+                    </span>
 
-    <div class="suggestion">
-
-        <div class="suggestion-icon">
-            <img
-                src="{{ url_for('static', filename='images/desserts.jpg') }}"
-                alt="حلويات"
-            >
-        </div>
-
-        <span class="suggestion-name">
-            حلويات
-        </span>
-
-    </div>
+                </div>
 
 
-    <div class="suggestion">
+                <div class="suggestion"
+                     data-category="وجبات">
 
-        <div class="suggestion-icon">
-            <img
-                src="{{ url_for('static', filename='images/hot.png') }}"
-                alt="ساخنة"
-            >
-        </div>
+                    <div class="suggestion-icon">
 
-        <span class="suggestion-name">
-            ساخنة
-        </span>
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/meals.png'
+                            ) }}"
+                            alt="وجبات"
+                            loading="lazy"
+                        >
 
-    </div>
+                    </div>
+
+                    <span class="suggestion-name">
+                        وجبات
+                    </span>
+
+                </div>
 
 
-</div>
+                <div class="suggestion"
+                     data-category="مشروبات">
 
-</section>
+                    <div class="suggestion-icon">
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/drinks.png'
+                            ) }}"
+                            alt="مشروبات"
+                            loading="lazy"
+                        >
+
+                    </div>
+
+                    <span class="suggestion-name">
+                        مشروبات
+                    </span>
+
+                </div>
+
+
+                <div class="suggestion"
+                     data-category="حلويات">
+
+                    <div class="suggestion-icon">
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/desserts.jpg'
+                            ) }}"
+                            alt="حلويات"
+                            loading="lazy"
+                        >
+
+                    </div>
+
+                    <span class="suggestion-name">
+                        حلويات
+                    </span>
+
+                </div>
+
+
+                <div class="suggestion"
+                     data-category="ساخنة">
+
+                    <div class="suggestion-icon">
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/hot.png'
+                            ) }}"
+                            alt="ساخنة"
+                            loading="lazy"
+                        >
+
+                    </div>
+
+                    <span class="suggestion-name">
+                        ساخنة
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
 
     </div>
 
 </main>
 
 
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="categories-footer">
+
+    © {{ current_year|default(2026) }}
+
+    Menu Smart
+
+</footer>
+
+
 <script>
 
-    /* =========================================
+    /* =====================================================
        QUICK CATEGORY SELECTION
-    ========================================= */
+    ===================================================== */
 
     const suggestions =
-        document.querySelectorAll(".suggestion");
+        document.querySelectorAll(
+            ".categories-page .suggestion"
+        );
 
     const categoryName =
         document.getElementById("categoryName");
@@ -1522,11 +1603,15 @@
 
         item.addEventListener("click", function () {
 
+            if (!categoryName) {
+                return;
+            }
+
             const category =
                 this.dataset.category;
 
             categoryName.value =
-                category;
+                category || "";
 
             categoryName.focus();
 
@@ -1543,4 +1628,5 @@
 
 
 </body>
+
 </html>

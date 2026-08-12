@@ -545,6 +545,305 @@ def current_restaurant():
 
 
 # =========================================================
+# لغة النشاط الحالية
+# =========================================================
+
+def current_language():
+    restaurant = current_restaurant()
+
+    if not restaurant:
+        return "ar"
+
+    settings_data = query_db(
+        """
+        SELECT language
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+
+    if not settings_data:
+        return "ar"
+
+    language = settings_data.get("language") or "ar"
+
+    if language not in ("ar", "en", "fr"):
+        return "ar"
+
+    return language
+
+
+# =========================================================
+# نظام اللغات
+# =========================================================
+
+TRANSLATIONS = {
+    "ar": {
+        "home": "الرئيسية",
+        "share_with_business": "شارك Menu Smart مع نشاط تجاري آخر",
+        "invite_business": "دعوة نشاط تجاري",
+        "no_orders_yet": "لا توجد طلبات حتى الآن",
+        "shown_to_customers": "وسيتم عرضها تلقائيًا للعملاء.",
+        "add_menu_items": "أضف الأقسام والمنتجات والأسعار،",
+        "professional_menu": "منيو إلكتروني احترافي لنشاطك التجاري",
+        "open_menu": "فتح المنيو ←",
+        "digital_menu": "المنيو الإلكتروني",
+        "customize_menu": "تخصيص إعدادات المنيو",
+        "share_qr": "مشاركة المنيو عبر QR Code",
+        "analytics_description": "متابعة أداء النشاط والمبيعات",
+        "organize_categories": "إنشاء وتنظيم أقسام المنيو",
+        "all_tools": "جميع الأدوات في مكان واحد",
+        "menu_products": "منتجات المنيو",
+        "menu_categories": "أقسام المنيو",
+        "account": "حسابي",
+        "no_notifications": "لا توجد إشعارات جديدة",
+        "read_all": "قراءة الكل",
+        "back": "رجوع",
+        "categories": "الأقسام",
+        "dashboard": "لوحة التحكم",
+        "business_tools": "كل أدوات نشاطك في مكان واحد، بإدارة أبسط وأذكى.",
+        "view_menu": "مشاهدة المنيو",
+        "business_settings": "إعدادات النشاط",
+        "ready_management": "جاهز للإدارة",
+        "create_business": "إنشاء النشاط",
+        "business": "النشاط",
+        "products": "المنتجات",
+        "orders": "الطلبات",
+        "customers": "العملاء",
+        "total_orders": "إجمالي الطلبات",
+        "business_customers": "عملاء النشاط",
+        "quick_management": "الإدارة السريعة",
+        "manage_business": "إدارة النشاط",
+        "add_products": "إضافة المنتجات والأسعار والصور",
+        "manage_orders": "متابعة وإدارة طلبات العملاء",
+        "manage_customers": "إدارة بيانات العملاء",
+        "settings": "الإعدادات",
+        "management_data": "بيانات الإدارة",
+        "manage_business_data": "إدارة بيانات النشاط الأساسية",
+        "last_orders": "آخر الطلبات",
+        "all_orders": "كل الطلبات ←",
+        "no_orders": "ستظهر طلبات العملاء هنا بمجرد بدء استقبال الطلبات.",
+        "smart_platform": "منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.",
+        "logout_confirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+        "logout": "تسجيل الخروج",
+        "orders": "الطلبات",
+        "customers": "العملاء",
+        "products": "المنتجات",
+        "settings": "الإعدادات",
+        "profile": "الملف الشخصي",
+        "menu": "المنيو",
+        "view_menu": "مشاهدة المنيو",
+        "save": "حفظ",
+        "activity": "النشاط",
+        "language": "لغة المنصة",
+        "notifications": "الإشعارات",
+        "profile_title": "الملف الشخصي",
+        "profile_description": "إدارة بيانات النشاط في Menu Smart.",
+        "profile_account": "الحساب",
+        "business_data": "بيانات النشاط",
+        "business_data_description": "تحكم في بيانات نشاطك الأساسية وظهورها داخل المنيو الإلكتروني.",
+        "back_dashboard": "← العودة للوحة التحكم",
+        "customer_visible_data": "هذه البيانات ستظهر للعملاء داخل المنيو.",
+        "business_name": "اسم النشاط",
+        "business_name_placeholder": "مثال: نشاط الذوق",
+        "business_phone": "رقم هاتف النشاط",
+        "business_address": "عنوان النشاط",
+        "business_address_placeholder": "مثال: الجيزة - شارع...",
+        "business_description": "وصف النشاط",
+        "business_description_placeholder": "اكتب وصفًا مختصرًا عن النشاط...",
+        "business_description_example": "مثال: نشاط متخصص في البرجر والمشروبات والحلويات.",
+        "platform_language": "لغة المنصة",
+        "choose_platform_language": "اختر اللغة الأساسية التي تريد استخدامها في المنصة.",
+        "business_logo": "شعار النشاط",
+        "logo_formats": "PNG أو JPG أو WEBP — اختياري.",
+        "current_logo": "الشعار الحالي",
+        "save_business_data": "حفظ بيانات النشاط",
+        "business_preview": "معاينة النشاط",
+        "default_business_preview": "أنشئ بيانات نشاطك وابدأ في بناء منيو إلكتروني احترافي.",
+        "menu_status": "حالة المنيو",
+        "ready_for_work": "جاهز للعمل"
+    },
+
+    "en": {
+        "dashboard": "Dashboard",
+        "business_tools": "All your business tools in one place, with simpler and smarter management.",
+        "view_menu": "View Menu",
+        "business_settings": "Business Settings",
+        "ready_management": "Ready to manage",
+        "create_business": "Create Business",
+        "business": "Business",
+        "products": "Products",
+        "orders": "Orders",
+        "customers": "Customers",
+        "total_orders": "Total Orders",
+        "business_customers": "Business Customers",
+        "quick_management": "Quick Management",
+        "manage_business": "Manage Business",
+        "add_products": "Add products, prices and images",
+        "manage_orders": "Track and manage customer orders",
+        "manage_customers": "Manage customer data",
+        "settings": "Settings",
+        "management_data": "Management Data",
+        "manage_business_data": "Manage basic business information",
+        "last_orders": "Latest Orders",
+        "all_orders": "All Orders →",
+        "no_orders": "Customer orders will appear here once you start receiving orders.",
+        "smart_platform": "Your smart platform for creating and managing your digital menu.",
+        "logout_confirm": "Are you sure you want to log out?",
+        "logout": "Logout",
+        "orders": "Orders",
+        "customers": "Customers",
+        "products": "Products",
+        "settings": "Settings",
+        "profile": "Profile",
+        "menu": "Menu",
+        "view_menu": "View Menu",
+        "save": "Save",
+        "activity": "Business",
+        "language": "Platform Language",
+        "notifications": "Notifications",
+        "account": "My Account",
+        "all_tools": "All tools in one place",
+        "analytics_description": "Track business performance and sales",
+        "back": "Back",
+        "categories": "Categories",
+        "home": "Home",
+        "invite_business": "Invite a Business",
+        "no_notifications": "No new notifications",
+        "no_orders_yet": "No orders yet",
+        "professional_menu": "Professional digital menu for your business",
+        "read_all": "Mark all as read",
+        "share_with_business": "Share Menu Smart with another business",
+        "shown_to_customers": "and it will be displayed automatically to customers.",
+        "profile_title": "Profile",
+        "profile_description": "Manage your business information in Menu Smart.",
+        "profile_account": "Account",
+        "business_data": "Business Information",
+        "business_data_description": "Manage your basic business information and how it appears in your digital menu.",
+        "back_dashboard": "← Back to Dashboard",
+        "customer_visible_data": "This information will be shown to customers in the menu.",
+        "business_name": "Business Name",
+        "business_name_placeholder": "Example: Taste Business",
+        "business_phone": "Business Phone",
+        "business_address": "Business Address",
+        "business_address_placeholder": "Example: Giza - Street...",
+        "business_description": "Business Description",
+        "business_description_placeholder": "Write a short description about your business...",
+        "business_description_example": "Example: A business specializing in burgers, drinks and desserts.",
+        "platform_language": "Platform Language",
+        "choose_platform_language": "Choose the primary language you want to use on the platform.",
+        "business_logo": "Business Logo",
+        "logo_formats": "PNG, JPG or WEBP — optional.",
+        "current_logo": "Current Logo",
+        "save_business_data": "Save Business Information",
+        "business_preview": "Business Preview",
+        "default_business_preview": "Add your business information and start building a professional digital menu.",
+        "menu_status": "Menu Status",
+        "ready_for_work": "Ready to use"
+    },
+
+    "fr": {
+        "dashboard": "Tableau de bord",
+        "business_tools": "Tous vos outils professionnels au même endroit, avec une gestion plus simple et plus intelligente.",
+        "view_menu": "Voir le menu",
+        "business_settings": "Paramètres de l'activité",
+        "ready_management": "Prêt à gérer",
+        "create_business": "Créer l'activité",
+        "business": "Activité",
+        "products": "Produits",
+        "orders": "Commandes",
+        "customers": "Clients",
+        "total_orders": "Total des commandes",
+        "business_customers": "Clients de l'activité",
+        "quick_management": "Gestion rapide",
+        "manage_business": "Gérer l'activité",
+        "add_products": "Ajouter les produits, prix et images",
+        "manage_orders": "Suivre et gérer les commandes clients",
+        "manage_customers": "Gérer les données des clients",
+        "settings": "Paramètres",
+        "management_data": "Données de gestion",
+        "manage_business_data": "Gérer les informations principales de l'activité",
+        "last_orders": "Dernières commandes",
+        "all_orders": "Toutes les commandes →",
+        "no_orders": "Les commandes des clients apparaîtront ici dès que vous commencerez à les recevoir.",
+        "smart_platform": "Votre plateforme intelligente pour créer et gérer votre menu numérique.",
+        "logout_confirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
+        "logout": "Déconnexion",
+        "orders": "Commandes",
+        "customers": "Clients",
+        "products": "Produits",
+        "settings": "Paramètres",
+        "profile": "Profil",
+        "menu": "Menu",
+        "view_menu": "Voir le menu",
+        "save": "Enregistrer",
+        "activity": "Activité",
+        "language": "Langue de la plateforme",
+        "notifications": "Notifications",
+        "account": "Mon compte",
+        "all_tools": "Tous les outils au même endroit",
+        "analytics_description": "Suivre les performances et les ventes de l'activité",
+        "back": "Retour",
+        "categories": "Catégories",
+        "home": "Accueil",
+        "invite_business": "Inviter une activité",
+        "no_notifications": "Aucune nouvelle notification",
+        "no_orders_yet": "Aucune commande pour le moment",
+        "professional_menu": "Menu numérique professionnel pour votre activité",
+        "read_all": "Tout marquer comme lu",
+        "share_with_business": "Partager Menu Smart avec une autre activité",
+        "shown_to_customers": "et il sera automatiquement affiché aux clients.",
+        "profile_title": "Profil",
+        "profile_description": "Gérer les informations de votre activité dans Menu Smart.",
+        "profile_account": "Compte",
+        "business_data": "Informations de l'activité",
+        "business_data_description": "Gérez les informations principales de votre activité et leur affichage dans le menu numérique.",
+        "back_dashboard": "← Retour au tableau de bord",
+        "customer_visible_data": "Ces informations seront affichées aux clients dans le menu.",
+        "business_name": "Nom de l'activité",
+        "business_name_placeholder": "Exemple : Activité Saveur",
+        "business_phone": "Téléphone de l'activité",
+        "business_address": "Adresse de l'activité",
+        "business_address_placeholder": "Exemple : Gizeh - Rue...",
+        "business_description": "Description de l'activité",
+        "business_description_placeholder": "Écrivez une courte description de votre activité...",
+        "business_description_example": "Exemple : Une activité spécialisée dans les burgers, boissons et desserts.",
+        "platform_language": "Langue de la plateforme",
+        "choose_platform_language": "Choisissez la langue principale que vous souhaitez utiliser sur la plateforme.",
+        "business_logo": "Logo de l'activité",
+        "logo_formats": "PNG, JPG ou WEBP — facultatif.",
+        "current_logo": "Logo actuel",
+        "save_business_data": "Enregistrer les informations",
+        "business_preview": "Aperçu de l'activité",
+        "default_business_preview": "Ajoutez les informations de votre activité et commencez à créer un menu numérique professionnel.",
+        "menu_status": "État du menu",
+        "ready_for_work": "Prêt à l'emploi",
+    },
+}
+
+
+def translate(key):
+    language = current_language()
+
+    return (
+        TRANSLATIONS
+        .get(language, TRANSLATIONS["ar"])
+        .get(key, key)
+    )
+
+
+@app.context_processor
+def inject_language():
+    return {
+        "current_language": current_language(),
+        "t": translate,
+    }
+
+
+# =========================================================
 # لوحة الإدارة
 # =========================================================
 
@@ -1141,6 +1440,16 @@ def save_uploaded_image(image):
 
 
 # =========================================================
+# تسجيل الخروج
+# =========================================================
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("تم تسجيل الخروج بنجاح.", "success")
+    return redirect(url_for("home"))
+
+
+# =========================================================
 # الصفحة الرئيسية
 # =========================================================
 
@@ -1199,6 +1508,14 @@ def register():
             "phone",
             ""
         ).strip()
+
+        language = request.form.get(
+            "language",
+            "ar"
+        ).strip()
+
+        if language not in ("ar", "en", "fr"):
+            language = "ar"
 
         password = request.form.get(
             "password",
@@ -1527,22 +1844,16 @@ def login():
         # =================================================
 
         return redirect(
-            url_for("dashboard")
-        )
-
-    # =====================================================
-    # عرض صفحة تسجيل الدخول
-    # =====================================================
-
-    return render_template(
-        "login.html"
+        url_for("home")
     )
 
-#=========================================================
+    return render_template("login.html")
 
-#لوحة الموظف
 
-#=========================================================
+
+# =========================================================
+# نظام الموظفين
+# =========================================================
 
 @app.route("/employee")
 @login_required
@@ -1602,15 +1913,7 @@ def employee_dashboard():
         staff=staff
     )
 
-
-# =========================================================
-# تسجيل دخول الموظف
-# =========================================================
-
-@app.route(
-    "/employee/login",
-    methods=["GET", "POST"]
-)
+@app.route("/employee/login", methods=["GET", "POST"])
 def employee_login():
 
     if request.method == "POST":
@@ -1736,144 +2039,8 @@ def employee_login():
     return render_template(
         "employee_login.html"
     ) #=========================================================
-# تسجيل الخروج
-# =========================================================
 
-@app.route("/logout")
-def logout():
-
-    # =====================================================
-    # إنهاء الجلسة بالكامل
-    # =====================================================
-
-    session.clear()
-
-    # =====================================================
-    # رسالة تسجيل الخروج
-    # =====================================================
-
-    flash(
-        "تم تسجيل الخروج بنجاح.",
-        "success"
-    )
-    # =====================================================
-    # العودة للصفحة الرئيسية
-    # =====================================================
-
-    response = redirect(
-        url_for("home")
-    )
-
-    # =====================================================
-    # منع المتصفح من حفظ الصفحات الحساسة
-    # =====================================================
-
-    response.headers["Cache-Control"] = (
-        "no-store, no-cache, must-revalidate, "
-        "max-age=0, private"
-    )
-
-    response.headers["Pragma"] = "no-cache"
-
-    response.headers["Expires"] = "0"
-
-    return response
-
-# =========================================================
-# لوحة التحكم
-# =========================================================
-
-@app.route("/dashboard")
-@login_required
-def dashboard():
-
-    restaurant = current_restaurant()
-
-    if restaurant is None:
-
-        return redirect(
-            url_for("profile")
-        )
-
-    categories_count = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM categories
-        WHERE restaurant_id = %s
-        """,
-        [
-            restaurant["id"]
-        ],
-        one=True
-    )
-
-    products_count = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM products
-        WHERE restaurant_id = %s
-        """,
-        [
-            restaurant["id"]
-        ],
-        one=True
-    )
-
-    orders_count = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM orders
-        WHERE restaurant_id = %s
-        """,
-        [
-            restaurant["id"]
-        ],
-        one=True
-    )
-
-    customers_count = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM customers
-        WHERE restaurant_id = %s
-        """,
-        [
-            restaurant["id"]
-        ],
-        one=True
-    )
-
-    recent_orders = query_db(
-        """
-        SELECT *
-        FROM orders
-        WHERE restaurant_id = %s
-        ORDER BY id DESC
-        LIMIT 10
-        """,
-        [
-            restaurant["id"]
-        ]
-    )
-
-    return render_template(
-        "dashboard.html",
-        user=current_user(),
-        restaurant=restaurant,
-        categories_count=categories_count["count"],
-        products_count=products_count["count"],
-        orders_count=orders_count["count"],
-        customers_count=customers_count["count"],
-        recent_orders=recent_orders
-    )
-    # =========================================================
-# إضافة موظف بواسطة صاحب المطعم
-# =========================================================
-
-@app.route(
-    "/staff/add",
-    methods=["POST"]
-)
+@app.route("/staff/add", methods=["POST"])
 @restaurant_required
 def add_staff():
 
@@ -3210,6 +3377,81 @@ def product_delete(product_id):
 
 
 # =========================================================
+# لوحة التحكم
+# =========================================================
+@app.route("/dashboard")
+@restaurant_required
+def dashboard():
+    restaurant = current_restaurant()
+
+    categories_count = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM categories
+        WHERE restaurant_id = %s
+        """,
+        [restaurant["id"]],
+        one=True
+    )["count"]
+
+    products_count = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM products
+        WHERE restaurant_id = %s
+        """,
+        [restaurant["id"]],
+        one=True
+    )["count"]
+
+    orders_count = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM orders
+        WHERE restaurant_id = %s
+        """,
+        [restaurant["id"]],
+        one=True
+    )["count"]
+
+    customers_count = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM customers
+        WHERE restaurant_id = %s
+        """,
+        [restaurant["id"]],
+        one=True
+    )["count"]
+
+    recent_orders = query_db(
+        """
+        SELECT
+            id,
+            customer_name,
+            total,
+            status,
+            created_at
+        FROM orders
+        WHERE restaurant_id = %s
+        ORDER BY id DESC
+        LIMIT 5
+        """,
+        [restaurant["id"]]
+    )
+
+    return render_template(
+        "dashboard.html",
+        restaurant=restaurant,
+        categories_count=categories_count,
+        products_count=products_count,
+        orders_count=orders_count,
+        customers_count=customers_count,
+        recent_orders=recent_orders
+    )
+
+
+# =========================================================
 # إدارة المنيو
 # =========================================================
 
@@ -4396,6 +4638,11 @@ def customers():
 def analytics():
 
     restaurant = current_restaurant()
+    restaurant_id = restaurant["id"]
+
+    # =====================================================
+    # الإحصائيات الأساسية
+    # =====================================================
 
     total_orders = query_db(
         """
@@ -4403,11 +4650,46 @@ def analytics():
         FROM orders
         WHERE restaurant_id = %s
         """,
-        [
-            restaurant["id"]
-        ],
+        [restaurant_id],
         one=True
     )["count"]
+
+    total_sales = query_db(
+        """
+        SELECT COALESCE(SUM(total), 0) AS total
+        FROM orders
+        WHERE restaurant_id = %s
+        AND status = 'completed'
+        """,
+        [restaurant_id],
+        one=True
+    )["total"]
+
+    total_customers = query_db(
+        """
+        SELECT COUNT(DISTINCT customer_id) AS count
+        FROM orders
+        WHERE restaurant_id = %s
+        AND customer_id IS NOT NULL
+        """,
+        [restaurant_id],
+        one=True
+    )["count"]
+
+    average_order = query_db(
+        """
+        SELECT COALESCE(AVG(total), 0) AS average
+        FROM orders
+        WHERE restaurant_id = %s
+        AND status = 'completed'
+        """,
+        [restaurant_id],
+        one=True
+    )["average"]
+
+    # =====================================================
+    # حالات الطلبات
+    # =====================================================
 
     completed_orders = query_db(
         """
@@ -4416,24 +4698,170 @@ def analytics():
         WHERE restaurant_id = %s
         AND status = 'completed'
         """,
-        [
-            restaurant["id"]
-        ],
+        [restaurant_id],
         one=True
     )["count"]
 
-    total_revenue = query_db(
+    confirmed_orders = query_db(
         """
-        SELECT COALESCE(SUM(total), 0) AS total
+        SELECT COUNT(*) AS count
         FROM orders
         WHERE restaurant_id = %s
-        AND status = 'completed'
+        AND status = 'confirmed'
         """,
-        [
-            restaurant["id"]
-        ],
+        [restaurant_id],
         one=True
-    )["total"]
+    )["count"]
+
+    pending_orders = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM orders
+        WHERE restaurant_id = %s
+        AND status = 'pending'
+        """,
+        [restaurant_id],
+        one=True
+    )["count"]
+
+    cancelled_orders = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM orders
+        WHERE restaurant_id = %s
+        AND status = 'cancelled'
+        """,
+        [restaurant_id],
+        one=True
+    )["count"]
+
+    # =====================================================
+    # نسب حالات الطلبات
+    # =====================================================
+
+    if total_orders > 0:
+
+        completed_percentage = round(
+            (completed_orders / total_orders) * 100,
+            1
+        )
+
+        confirmed_percentage = round(
+            (confirmed_orders / total_orders) * 100,
+            1
+        )
+
+        pending_percentage = round(
+            (pending_orders / total_orders) * 100,
+            1
+        )
+
+        cancelled_percentage = round(
+            (cancelled_orders / total_orders) * 100,
+            1
+        )
+
+    else:
+
+        completed_percentage = 0
+        confirmed_percentage = 0
+        pending_percentage = 0
+        cancelled_percentage = 0
+
+    # =====================================================
+    # الرسم البياني - آخر 7 أيام
+    # =====================================================
+
+    daily_analytics = query_db(
+        """
+        SELECT
+            d::date AS day,
+            COUNT(o.id) AS orders_count,
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN o.status = 'completed'
+                        THEN o.total
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS sales
+        FROM generate_series(
+            CURRENT_DATE - INTERVAL '6 days',
+            CURRENT_DATE,
+            INTERVAL '1 day'
+        ) AS d
+        LEFT JOIN orders o
+            ON o.restaurant_id = %s
+            AND o.created_at::date = d::date
+        GROUP BY d
+        ORDER BY d
+        """,
+        [restaurant_id]
+    )
+
+    # =====================================================
+    # تجهيز بيانات الرسم للـ HTML
+    # =====================================================
+
+    daily_labels = []
+    daily_orders = []
+    daily_sales = []
+
+    arabic_days = {
+        0: "الإثنين",
+        1: "الثلاثاء",
+        2: "الأربعاء",
+        3: "الخميس",
+        4: "الجمعة",
+        5: "السبت",
+        6: "الأحد"
+    }
+
+    for row in daily_analytics:
+
+        day = row["day"]
+
+        daily_labels.append(
+            arabic_days.get(day.weekday(), "")
+        )
+
+        daily_orders.append(
+            int(row["orders_count"] or 0)
+        )
+
+        daily_sales.append(
+            float(row["sales"] or 0)
+        )
+
+    # =====================================================
+    # أكثر المنتجات طلبًا
+    # =====================================================
+
+    top_products = query_db(
+        """
+        SELECT
+            product_name AS name,
+            SUM(quantity) AS orders_count,
+            COALESCE(SUM(total), 0) AS total_sales
+        FROM order_items
+        WHERE order_id IN (
+            SELECT id
+            FROM orders
+            WHERE restaurant_id = %s
+            AND status = 'completed'
+        )
+        GROUP BY product_name
+        ORDER BY orders_count DESC
+        LIMIT 5
+        """,
+        [restaurant_id]
+    )
+
+    # =====================================================
+    # عدد المنتجات
+    # =====================================================
 
     total_products = query_db(
         """
@@ -4441,21 +4869,74 @@ def analytics():
         FROM products
         WHERE restaurant_id = %s
         """,
-        [
-            restaurant["id"]
-        ],
+        [restaurant_id],
         one=True
     )["count"]
 
+    # =====================================================
+    # مشاهدات المنيو
+    # =====================================================
+
+    menu_views = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM menu_views
+        WHERE restaurant_id = %s
+        """,
+        [restaurant_id],
+        one=True
+    )["count"]
+
+    # =====================================================
+    # معدل التحويل
+    # الطلبات ÷ مشاهدات المنيو
+    # =====================================================
+
+    if menu_views > 0:
+
+        conversion_rate = round(
+            (total_orders / menu_views) * 100,
+            1
+        )
+
+    else:
+
+        conversion_rate = 0
+
+    # =====================================================
+    # إرسال البيانات للصفحة
+    # =====================================================
+
     return render_template(
         "analytics.html",
-        restaurant=restaurant,
-        total_orders=total_orders,
-        completed_orders=completed_orders,
-        total_revenue=total_revenue,
-        total_products=total_products
-    )
 
+        restaurant=restaurant,
+
+        total_sales=float(total_sales or 0),
+        total_orders=total_orders,
+        total_customers=total_customers,
+        average_order=float(average_order or 0),
+        total_products=total_products,
+
+        completed_orders=completed_orders,
+        confirmed_orders=confirmed_orders,
+        pending_orders=pending_orders,
+        cancelled_orders=cancelled_orders,
+
+        completed_percentage=completed_percentage,
+        confirmed_percentage=confirmed_percentage,
+        pending_percentage=pending_percentage,
+        cancelled_percentage=cancelled_percentage,
+
+        top_products=top_products,
+
+        menu_views=menu_views,
+        conversion_rate=conversion_rate,
+
+        daily_labels=daily_labels,
+        daily_orders=daily_orders,
+        daily_sales=daily_sales
+    )
 # =========================================================
 # QR Code
 # =========================================================

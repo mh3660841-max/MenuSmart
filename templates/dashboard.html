@@ -15,11 +15,11 @@
         content="#0f172a"
     >
 
-    <title>لوحة التحكم | Menu Smart</title>
+    <title>{{ t('dashboard') }} | Menu Smart</title>
 
     <meta
         name="description"
-        content="لوحة تحكم Menu Smart لإدارة المطعم والمنيو والمنتجات والطلبات."
+        content="لوحة تحكم Menu Smart لإدارة {{ t('business') }} و{{ t('menu') }} و{{ t('products') }} و{{ t('orders') }}."
     >
 
     <link
@@ -32,199 +32,234 @@
         href="{{ url_for('static', filename='css/dashboard.css') }}"
     >
 
-    <style>
+  <style>
 
-        /* =====================================================
-           أزرار التحكم في التنقل
-        ===================================================== */
+    /* =====================================================
+       أزرار التحكم في التنقل
+    ===================================================== */
+
+    .navigation-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+
+    .history-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 40px;
+        padding: 0 14px;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        border-radius: 10px;
+        background: #ffffff;
+        color: #0f172a;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+
+    .history-button:hover {
+        transform: translateY(-1px);
+        background: #f8fafc;
+    }
+
+
+    .history-button:active {
+        transform: translateY(0);
+    }
+
+
+    .logout-button {
+        border: 0;
+        cursor: pointer;
+        font: inherit;
+    }
+
+
+    /* =====================================================
+       زر {{ t('invite_business') }}
+    ===================================================== */
+
+    .invite-restaurant-button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        min-height: 64px;
+        padding: 10px 14px;
+        border: 1px solid rgba(15, 23, 42, 0.10);
+        border-radius: 16px;
+        background: #ffffff;
+        color: #0f172a;
+        cursor: pointer;
+        text-align: right;
+        font-family: inherit;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+
+    .invite-restaurant-button:hover {
+        transform: translateY(-2px);
+        border-color: rgba(15, 23, 42, 0.18);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.10);
+    }
+
+
+    .invite-restaurant-button:active {
+        transform: translateY(0);
+    }
+
+
+    .invite-icon {
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        background: #f8fafc;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .invite-icon svg {
+        width: 21px;
+        height: 21px;
+        display: block;
+    }
+
+
+    .invite-content {
+        min-width: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+
+    .invite-content strong {
+        color: #0f172a;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+
+    .invite-content small {
+        color: #64748b;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+
+    .invite-arrow {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: #f8fafc;
+        color: #475569;
+        font-size: 16px;
+        transition: transform 0.2s ease;
+    }
+
+
+    .invite-restaurant-button:hover .invite-arrow {
+        transform: translateX(-3px);
+    }
+
+
+    @media (max-width: 768px) {
 
         .navigation-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            gap: 5px;
         }
 
 
         .history-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            min-height: 40px;
-            padding: 0 14px;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            border-radius: 10px;
-            background: #ffffff;
-            color: #0f172a;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s ease;
+            min-width: 40px;
+            width: 40px;
+            padding: 0;
         }
 
 
-        .history-button:hover {
-            transform: translateY(-1px);
-            background: #f8fafc;
+        .history-button .history-text {
+            display: none;
         }
 
-
-        .history-button:active {
-            transform: translateY(0);
-        }
+    }
 
 
-        .logout-button {
-            border: 0;
-            cursor: pointer;
-            font: inherit;
-        }
-
-
-        /* =====================================================
-           زر دعوة مطعم
-        ===================================================== */
+    @media (max-width: 600px) {
 
         .invite-restaurant-button {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            min-height: 64px;
-            padding: 10px 14px;
-            border: 1px solid rgba(15, 23, 42, 0.10);
-            border-radius: 16px;
-            background: #ffffff;
-            color: #0f172a;
-            cursor: pointer;
-            text-align: right;
-            font-family: inherit;
-            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease,
-                border-color 0.2s ease;
-        }
-
-
-        .invite-restaurant-button:hover {
-            transform: translateY(-2px);
-            border-color: rgba(15, 23, 42, 0.18);
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.10);
-        }
-
-
-        .invite-restaurant-button:active {
-            transform: translateY(0);
+            min-height: 60px;
+            padding: 9px 12px;
         }
 
 
         .invite-icon {
-            width: 42px;
-            height: 42px;
-            flex: 0 0 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            background: #f1f5f9;
-            font-size: 20px;
-        }
-
-
-        .invite-content {
-            min-width: 0;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
+            width: 40px;
+            height: 40px;
+            flex-basis: 40px;
         }
 
 
         .invite-content strong {
-            color: #0f172a;
-            font-size: 14px;
-            font-weight: 800;
+            font-size: 13px;
         }
 
 
         .invite-content small {
-            color: #64748b;
-            font-size: 11px;
-            line-height: 1.5;
+            font-size: 10px;
         }
 
-
-        .invite-arrow {
-            width: 32px;
-            height: 32px;
-            flex: 0 0 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 9px;
-            background: #f8fafc;
-            color: #475569;
-            font-size: 16px;
-            transition: transform 0.2s ease;
-        }
+    }
 
 
-        .invite-restaurant-button:hover .invite-arrow {
-            transform: translateX(-3px);
-        }
+    /* =====================================================
+       ANALYTICS SVG ICONS — GOLD
+    ===================================================== */
+
+    .analytics-page .analytics-stat-icon {
+        color: #a98516;
+    }
 
 
-        @media (max-width: 768px) {
-
-            .navigation-actions {
-                gap: 5px;
-            }
-
-
-            .history-button {
-                min-width: 40px;
-                width: 40px;
-                padding: 0;
-            }
+    .analytics-page .analytics-stat-icon svg {
+        width: 21px;
+        height: 21px;
+        display: block;
+        fill: none !important;
+        stroke: #a98516 !important;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
 
 
-            .history-button .history-text {
-                display: none;
-            }
-
-        }
-
-
-        @media (max-width: 600px) {
-
-            .invite-restaurant-button {
-                min-height: 60px;
-                padding: 9px 12px;
-            }
+    .analytics-page .analytics-stat-icon svg path,
+    .analytics-page .analytics-stat-icon svg circle {
+        fill: none !important;
+        stroke: #a98516 !important;
+    }
 
 
-            .invite-icon {
-                width: 40px;
-                height: 40px;
-                flex-basis: 40px;
-            }
-
-
-            .invite-content strong {
-                font-size: 13px;
-            }
-
-
-            .invite-content small {
-                font-size: 10px;
-            }
-
-        }
-
-    </style>
+</style>
 
 </head>
 
@@ -269,7 +304,7 @@
                 href="{{ url_for('dashboard') }}"
                 class="nav-item active"
             >
-                لوحة التحكم
+                {{ t('dashboard') }}
             </a>
 
 
@@ -277,7 +312,7 @@
                 href="{{ url_for('categories') }}"
                 class="nav-item"
             >
-                الأقسام
+                {{ t('categories') }}
             </a>
 
 
@@ -285,7 +320,7 @@
                 href="{{ url_for('products') }}"
                 class="nav-item"
             >
-                المنتجات
+                {{ t('products') }}
             </a>
 
 
@@ -297,7 +332,7 @@
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    المنيو
+                    {{ t('menu') }}
                 </a>
 
             {% endif %}
@@ -310,7 +345,7 @@
         <div class="dashboard-header-actions navigation-actions">
 
 
-            <!-- زر الرجوع -->
+            <!-- زر ال{{ t('back') }} -->
 
             <button
                 type="button"
@@ -325,11 +360,11 @@
                 </span>
 
                 <span class="history-text">
-                    رجوع
+                    {{ t('back') }}
                 </span>
 
             </button>
-<!-- الإشعارات -->
+<!-- {{ t('notifications') }} -->
 
 <div class="notification-wrapper">
 
@@ -337,8 +372,8 @@
         type="button"
         class="notification-button"
         id="notificationButton"
-        aria-label="الإشعارات"
-        title="الإشعارات"
+        aria-label="{{ t('notifications') }}"
+        title="{{ t('notifications') }}"
     >
 
         <span class="notification-icon">
@@ -365,7 +400,7 @@
         <div class="notification-panel-header">
 
     <strong>
-        الإشعارات
+        {{ t('notifications') }}
     </strong>
 
     <div class="notification-header-actions">
@@ -379,7 +414,7 @@
             class="notification-read-all"
             id="notificationReadAll"
         >
-            قراءة الكل
+            {{ t('read_all') }}
         </button>
 
     </div>
@@ -393,7 +428,7 @@
         >
 
             <div class="notification-empty">
-                لا توجد إشعارات جديدة
+                {{ t('no_notifications') }}
             </div>
 
         </div>
@@ -414,20 +449,20 @@
                 </span>
 
                 <span>
-                    حسابي
+                    {{ t('account') }}
                 </span>
 
             </a>
 
 
-            <!-- تسجيل الخروج -->
+            <!-- {{ t('logout') }} -->
 
             <a
                 href="{{ url_for('logout') }}"
                 class="dashboard-logout logout-button"
                 onclick="return confirmLogout();"
             >
-                تسجيل الخروج
+                {{ t('logout') }}
             </a>
 
 
@@ -457,7 +492,7 @@
             <div class="welcome-content">
 
                 <span class="dashboard-label">
-                    لوحة التحكم
+                    {{ t('dashboard') }}
                 </span>
 
 
@@ -471,7 +506,7 @@
 
 
                 <p>
-من هنا يمكنك إدارة نشاطك التجاري ومنتجاتك ومنيوك وطلبات عملائك بسهولة من مكان واحد.
+{{ t('business_tools') }}
                 </p>
 
             </div>
@@ -490,7 +525,7 @@
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        مشاهدة المنيو
+                        {{ t('view_menu') }}
                         <span>↗</span>
                     </a>
 
@@ -500,7 +535,7 @@
                         href="{{ url_for('profile') }}"
                         class="dashboard-primary-btn"
                     >
-                        إعداد المطعم
+                        {{ t('business_settings') }}
                         <span>+</span>
                     </a>
 
@@ -550,7 +585,7 @@
 
             <img
                 src="{{ restaurant.logo }}"
-                alt="شعار المطعم"
+                alt="شعار {{ t('business') }}"
             >
 
         {% else %}
@@ -579,7 +614,7 @@
 
         <div class="stat-icon">
 
-            <!-- الأقسام -->
+            <!-- {{ t('categories') }} -->
             <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -601,7 +636,7 @@
         <div class="stat-content">
 
             <span>
-                الأقسام
+                {{ t('categories') }}
             </span>
 
             <strong>
@@ -609,7 +644,7 @@
             </strong>
 
             <small>
-                أقسام المنيو
+                أقسام {{ t('menu') }}
             </small>
 
         </div>
@@ -629,7 +664,7 @@
 
         <div class="stat-icon">
 
-            <!-- المنتجات -->
+            <!-- {{ t('products') }} -->
             <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -652,7 +687,7 @@
         <div class="stat-content">
 
             <span>
-                المنتجات
+                {{ t('products') }}
             </span>
 
             <strong>
@@ -660,7 +695,7 @@
             </strong>
 
             <small>
-                منتجات المنيو
+                منتجات {{ t('menu') }}
             </small>
 
         </div>
@@ -680,7 +715,7 @@
 
         <div class="stat-icon">
 
-            <!-- الطلبات -->
+            <!-- {{ t('orders') }} -->
             <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -710,7 +745,7 @@
         <div class="stat-content">
 
             <span>
-                الطلبات
+                {{ t('orders') }}
             </span>
 
             <strong>
@@ -718,7 +753,7 @@
             </strong>
 
             <small>
-                إجمالي الطلبات
+                إجمالي {{ t('orders') }}
             </small>
 
         </div>
@@ -738,7 +773,7 @@
 
         <div class="stat-icon">
 
-            <!-- العملاء -->
+            <!-- {{ t('customers') }} -->
             <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -768,7 +803,7 @@
         <div class="stat-content">
 
             <span>
-                العملاء
+                {{ t('customers') }}
             </span>
 
             <strong>
@@ -776,7 +811,7 @@
             </strong>
 
             <small>
-                عملاء المطعم
+                {{ t('business_customers') }}
             </small>
 
         </div>
@@ -802,19 +837,19 @@
                 <div>
 
                     <span>
-                        الإدارة السريعة
+                        {{ t('quick_management') }}
                     </span>
 
 
                     <h2>
-                        إدارة مطعمك
+                        {{ t('manage_business') }}
                     </h2>
 
                 </div>
 
 
                 <span class="section-description">
-                    جميع الأدوات في مكان واحد
+                    {{ t('all_tools') }}
                 </span>
 
             </div>
@@ -829,22 +864,19 @@
                 >
 
                    <div class="quick-action-icon">
-    <img
-        src="{{ url_for('static', filename='icons/categories.png') }}"
-        alt="أقسام المنيو"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
 </div>
 
 
                     <div class="quick-action-content">
 
                         <strong>
-                            أقسام المنيو
+                            أقسام {{ t('menu') }}
                         </strong>
 
 
                         <p>
-                            إنشاء وتنظيم أقسام المنيو
+                            إنشاء وتنظيم أقسام {{ t('menu') }}
                         </p>
 
                     </div>
@@ -863,22 +895,19 @@
                 >
 
                  <div class="quick-action-icon">
-    <img
-        src="{{ url_for('static', filename='icons/products.png') }}"
-        alt="المنتجات"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-5 9 5-9 5-9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
 </div>
 
 
                     <div class="quick-action-content">
 
                         <strong>
-                            المنتجات
+                            {{ t('products') }}
                         </strong>
 
 
                         <p>
-                            إضافة المنتجات والأسعار والصور
+                            {{ t('add_products') }}
                         </p>
 
                     </div>
@@ -897,22 +926,19 @@
                 >
 
                   <div class="quick-action-icon">
-    <img
-        src="{{ url_for('static', filename='icons/orders.png') }}"
-        alt="الطلبات"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
 </div>
 
 
                     <div class="quick-action-content">
 
                         <strong>
-                            الطلبات
+                            {{ t('orders') }}
                         </strong>
 
 
                         <p>
-                            متابعة وإدارة طلبات العملاء
+                            {{ t('manage_orders') }}
                         </p>
 
                     </div>
@@ -931,21 +957,18 @@
                 >
 
                   <div class="quick-action-icon">
-    <img
-        src="{{ url_for('static', filename='icons/customers.png') }}"
-        alt="العملاء"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14a5 5 0 0 1 5 5"/></svg>
 </div>
 
                     <div class="quick-action-content">
 
                         <strong>
-                            العملاء
+                            {{ t('customers') }}
                         </strong>
 
 
                         <p>
-                            إدارة بيانات العملاء
+                            {{ t('manage_customers') }}
                         </p>
 
                     </div>
@@ -964,10 +987,7 @@
                 >
 
                  <div class="quick-action-icon">
-    <img
-        src="{{ url_for('static', filename='icons/analytics.png') }}"
-        alt="التحليلات"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h17"/><path d="M7 15l4-4 3 2 5-6"/></svg>
 </div>
 
 
@@ -979,7 +999,7 @@
 
 
                         <p>
-                            متابعة أداء المطعم والمبيعات
+                            {{ t('analytics_description') }}
                         </p>
 
                     </div>
@@ -998,10 +1018,7 @@
                 >
 
                  <div class="quick-action-icon">
-    <img
-        src="{{ url_for('static', filename='icons/qr.png') }}"
-        alt="QR Code"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h3v3h-3zM18 18h2v2h-2zM17 14h3M14 20h3"/></svg>
 </div>
 
 
@@ -1013,7 +1030,7 @@
 
 
                         <p>
-                            مشاركة المنيو عبر QR Code
+                            مشاركة {{ t('menu') }} عبر QR Code
                         </p>
 
                     </div>
@@ -1032,22 +1049,19 @@
                 >
 
                   <div class="quick-action-icon">
-    <img
-        src="{{ url_for('static', filename='icons/settings.png') }}"
-        alt="الإعدادات"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2 2-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-3v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-2-2 .1-.1A1.7 1.7 0 0 0 7.2 15a1.7 1.7 0 0 0-1.5-1H5.5v-3h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 2-2 .1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h3v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9.3l.1-.1 2 2-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2v3h-.2a1.7 1.7 0 0 0-1.5 1Z"/></svg>
 </div>
 
 
                     <div class="quick-action-content">
 
                         <strong>
-                            الإعدادات
+                            {{ t('settings') }}
                         </strong>
 
 
                         <p>
-                            تخصيص إعدادات المنيو
+                            تخصيص إعدادات {{ t('menu') }}
                         </p>
 
                     </div>
@@ -1066,22 +1080,19 @@
                 >
 
                     <div class="quick-action-icon">
-    <img
-        src="{{ url_for('static', filename='icons/restaurant.png') }}"
-        alt="بيانات المطعم"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M5 21V9h14v12M8 9V5h8v4M9 13h6M9 17h6"/></svg>
 </div>
 
 
                     <div class="quick-action-content">
 
                         <strong>
-                            بيانات المطعم
+                            {{ t('management_data') }}
                         </strong>
 
 
                         <p>
-                            تعديل اسم المطعم والبيانات
+                            {{ t('manage_business_data') }}
                         </p>
 
                     </div>
@@ -1111,7 +1122,7 @@
                 <div>
 
                     <span>
-                        المنيو الإلكتروني
+                        {{ t('menu') }} الإلكتروني
                     </span>
 
 
@@ -1133,7 +1144,7 @@
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        فتح المنيو ←
+                        فتح {{ t('menu') }} ←
                     </a>
 
                 {% endif %}
@@ -1156,18 +1167,18 @@
                 <div class="menu-preview-content">
 
                     <span class="preview-badge">
-                        جاهز للإدارة
+                        {{ t('ready_management') }}
                     </span>
 
 
                     <h3>
-               منيو إلكتروني احترافي لنشاطك التجاري
+               {{ t('professional_menu') }}
                     </h3>
 
 
                     <p>
-                        أضف الأقسام والمنتجات والأسعار،
-                        وسيتم عرضها تلقائيًا للعملاء.
+                        أضف {{ t('categories') }} و{{ t('products') }} والأسعار،
+                        {{ t('shown_to_customers') }}
                     </p>
 
 
@@ -1195,7 +1206,7 @@
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            مشاهدة المنيو
+                            {{ t('view_menu') }}
                         </a>
 
 
@@ -1212,7 +1223,7 @@
                             href="{{ url_for('profile') }}"
                             class="dashboard-primary-btn"
                         >
-                            إنشاء المطعم
+                            {{ t('create_business') }}
                         </a>
 
                     {% endif %}
@@ -1235,12 +1246,12 @@
                 <div>
 
                     <span>
-                        النشاط
+                        {{ t('business') }}
                     </span>
 
 
                     <h2>
-                        آخر الطلبات
+                        {{ t('last_orders') }}
                     </h2>
 
                 </div>
@@ -1250,7 +1261,7 @@
                     href="{{ url_for('orders') }}"
                     class="section-link"
                 >
-                    كل الطلبات ←
+                    {{ t('all_orders') }}
                 </a>
 
             </div>
@@ -1378,12 +1389,12 @@
 
 
                         <h3>
-                            لا توجد طلبات حتى الآن
+                            {{ t('no_orders_yet') }}
                         </h3>
 
 
                         <p>
-                            ستظهر طلبات العملاء هنا بمجرد بدء استقبال الطلبات.
+                            {{ t('no_orders') }}
                         </p>
 
                     </div>
@@ -1401,111 +1412,33 @@
              GETTING STARTED
         ================================================== -->
 
-        <section class="getting-started">
+        <section class="invite-business-card">
+    <button
+        type="button"
+        class="invite-restaurant-button"
+        onclick="shareMenuSmart()"
+        aria-label="{{ t('invite_business') }} لاستخدام Menu Smart"
+    >
+        <span class="invite-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <path d="M8.6 13.5l6.8 3.9"></path>
+                <path d="M15.4 6.6L8.6 10.5"></path>
+            </svg>
+        </span>
 
+        <span class="invite-content">
+            <strong>{{ t('invite_business') }}</strong>
+            <small>{{ t('share_with_business') }}</small>
+        </span>
 
-            <div class="getting-started-content">
-
-                <span>
-                    🚀 ابدأ الآن
-                </span>
-
-
-                <h2>
-                    جهّز منيو مطعمك في دقائق
-                </h2>
-
-
-                <p>
-                    أنشئ الأقسام، أضف المنتجات والأسعار،
-                    ثم شارك رابط المنيو مع عملائك.
-                </p>
-
-
-                <div class="getting-started-actions">
-
-
-                    <a
-                        href="{{ url_for('categories') }}"
-                        class="dashboard-primary-btn"
-                    >
-                        إضافة الأقسام
-                    </a>
-
-
-                    <a
-                        href="{{ url_for('products') }}"
-                        class="dashboard-secondary-btn"
-                    >
-                        إضافة المنتجات
-                    </a>
-
-
-                    <!-- دعوة مطعم لاستخدام Menu Smart -->
-
-                    <button
-                        type="button"
-                        class="invite-restaurant-button"
-                        onclick="shareMenuSmart()"
-                        aria-label="دعوة مطعم لاستخدام Menu Smart"
-                    >
-
-                        <span class="invite-icon">
-                            📣
-                        </span>
-
-
-                        <span class="invite-content">
-
-                            <strong>
-                                دعوة مطعم
-                            </strong>
-
-
-                            <small>
-                                شارك Menu Smart مع مطعم آخر
-                            </small>
-
-                        </span>
-
-
-                        <span class="invite-arrow">
-                            ←
-                        </span>
-
-                    </button>
-
-
-                </div>
-
-            </div>
-
-
-            <div class="getting-started-visual">
-
-                <div class="visual-circle">
-                    M
-                </div>
-
-
-                <div class="visual-card visual-card-one">
-                    🍔
-                </div>
-
-
-                <div class="visual-card visual-card-two">
-                    🥤
-                </div>
-
-
-                <div class="visual-card visual-card-three">
-                    🍕
-                </div>
-
-            </div>
-
-
-        </section>
+        <span class="invite-arrow">←</span>
+    </button>
+</section>
 
 
     </div>
@@ -1530,7 +1463,7 @@
 
 
             <p>
-                منصتك الذكية لإنشاء وإدارة المنيو الإلكتروني.
+                {{ t('smart_platform') }}
             </p>
 
         </div>
@@ -1539,17 +1472,17 @@
         <div class="footer-links">
 
             <a href="{{ url_for('home') }}">
-                الرئيسية
+                {{ t('home') }}
             </a>
 
 
             <a href="{{ url_for('profile') }}">
-                حسابي
+                {{ t('account') }}
             </a>
 
 
             <a href="{{ url_for('settings') }}">
-                الإعدادات
+                {{ t('settings') }}
             </a>
 
         </div>
@@ -1576,7 +1509,7 @@
 <script>
 
     /*
-     * الرجوع للصفحة السابقة
+     * ال{{ t('back') }} للصفحة السابقة
      */
 
     function goBack() {
@@ -1596,13 +1529,13 @@
 
 
     /*
-     * تأكيد تسجيل الخروج
+     * تأكيد {{ t('logout') }}
      */
 
     function confirmLogout() {
 
         return window.confirm(
-            "هل أنت متأكد أنك تريد تسجيل الخروج؟"
+            "{{ t('logout_confirm') }}"
         );
 
     }
@@ -1624,7 +1557,7 @@
                 "Menu Smart",
 
             text:
-                "🍽️ جرّب Menu Smart وأنشئ منيو إلكتروني احترافي لمطعمك بسهولة.",
+                "🍽️ جرّب Menu Smart وأنشئ منيو إلكتروني احترافي لنشاطك بسهولة.",
 
             url:
                 window.location.origin
@@ -1679,7 +1612,7 @@
 
 
             alert(
-                "تم نسخ رابط Menu Smart. يمكنك الآن مشاركته مع المطعم."
+                "تم نسخ رابط Menu Smart. يمكنك الآن مشاركته مع نشاط تجاري آخر."
             );
 
 

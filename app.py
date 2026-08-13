@@ -213,6 +213,7 @@ def restaurant_required(function):
             SELECT *
             FROM restaurants
             WHERE owner_id = %s
+            AND is_active = 1
             LIMIT 1
             """,
             [
@@ -274,8 +275,11 @@ def employee_products_required(function):
                 restaurant_staff.role,
                 restaurant_staff.is_active
             FROM restaurant_staff
+            INNER JOIN restaurants
+                ON restaurants.id = restaurant_staff.restaurant_id
             WHERE restaurant_staff.user_id = %s
             AND restaurant_staff.is_active = 1
+            AND restaurants.is_active = 1
             LIMIT 1
             """,
             [
@@ -535,6 +539,7 @@ def current_restaurant():
         SELECT *
         FROM restaurants
         WHERE owner_id = %s
+        AND is_active = 1
         LIMIT 1
         """,
         (
@@ -954,9 +959,36 @@ def admin():
 
     restaurants = query_db(
         """
-        SELECT *
-        FROM restaurants
-        ORDER BY id DESC
+        SELECT
+            r.*,
+            owner.name AS owner_name,
+            owner.email AS owner_email,
+
+            (
+                SELECT COUNT(*)
+                FROM restaurant_staff rs
+                WHERE rs.restaurant_id = r.id
+                AND rs.is_active = 1
+            ) AS employee_count,
+
+            (
+                SELECT COUNT(*)
+                FROM products p
+                WHERE p.restaurant_id = r.id
+            ) AS product_count,
+
+            (
+                SELECT COUNT(*)
+                FROM orders o
+                WHERE o.restaurant_id = r.id
+            ) AS order_count
+
+        FROM restaurants r
+
+        LEFT JOIN users owner
+            ON owner.id = r.owner_id
+
+        ORDER BY r.id DESC
         """
     )
 
@@ -988,6 +1020,7 @@ def accessible_restaurant():
         SELECT *
         FROM restaurants
         WHERE owner_id = %s
+        AND is_active = 1
         LIMIT 1
         """,
         [
@@ -1013,6 +1046,7 @@ def accessible_restaurant():
                 ON restaurant_staff.restaurant_id = restaurants.id
             WHERE restaurant_staff.user_id = %s
             AND restaurant_staff.is_active = 1
+            AND restaurants.is_active = 1
             LIMIT 1
             """,
             [
@@ -1890,6 +1924,34 @@ def login():
             )
 
         # =================================================
+        # التحقق من حالة النشاط لصاحب النشاط
+        # =================================================
+        if user["role"] != "admin":
+
+            restaurant = query_db(
+                """
+                SELECT id, is_active
+                FROM restaurants
+                WHERE owner_id = %s
+                LIMIT 1
+                """,
+                [user["id"]],
+                one=True
+            )
+
+            if restaurant is not None and restaurant["is_active"] != 1:
+                session.clear()
+
+                flash(
+                    "تم إيقاف النشاط من الإدارة.",
+                    "danger"
+                )
+
+                return render_template(
+                    "login.html"
+                )
+
+        # =================================================
         # مسح أي جلسة قديمة
         # =================================================
 
@@ -2011,31 +2073,17 @@ def employee_login():
 
     if request.method == "POST":
 
-        name = request.form.get(
-            "name",
-            ""
-        ).strip()
-
-        password = request.form.get(
-            "password",
-            ""
-        )
+        name = request.form.get("name", "").strip()
+        password = request.form.get("password", "")
 
         if not name or not password:
-
             flash(
                 "يرجى إدخال اسم الموظف وكلمة المرور.",
                 "danger"
             )
+            return render_template("employee_login.html")
 
-            return render_template(
-                "employee_login.html"
-            )
-
-        # =================================================
         # البحث عن الموظف
-        # =================================================
-
         staff = query_db(
             """
             SELECT
@@ -2047,7 +2095,8 @@ def employee_login():
                 restaurant_staff.restaurant_id,
                 restaurant_staff.role,
                 restaurant_staff.is_active AS staff_active,
-                restaurants.name AS restaurant_name
+                restaurants.name AS restaurant_name,
+                restaurants.is_active AS restaurant_active
             FROM users
             INNER JOIN restaurant_staff
                 ON restaurant_staff.user_id = users.id
@@ -2055,83 +2104,92 @@ def employee_login():
                 ON restaurants.id = restaurant_staff.restaurant_id
             WHERE LOWER(users.name) = %s
             AND users.role = 'employee'
-            AND users.is_active = 1
-            AND restaurant_staff.is_active = 1
             LIMIT 1
             """,
-            [
-                name.lower()
-            ],
+            [name.lower()],
             one=True
         )
 
-        # =================================================
         # الموظف غير موجود
-        # =================================================
-
         if staff is None:
-
             flash(
                 "اسم الموظف أو كلمة المرور غير صحيحة.",
                 "danger"
             )
+            return render_template("employee_login.html")
 
-            return render_template(
-                "employee_login.html"
+        # حساب الموظف موقوف
+        if staff["is_active"] != 1:
+            flash(
+                "حساب الموظف غير نشط.",
+                "danger"
             )
+            return render_template("employee_login.html")
 
-        # =================================================
+        # النشاط موقوف
+        if staff["restaurant_active"] != 1:
+            flash(
+                "هذا النشاط موقوف حاليًا من الإدارة.",
+                "danger"
+            )
+            return render_template("employee_login.html")
+
+        # الموظف نفسه موقوف داخل النشاط
+        if staff["staff_active"] != 1:
+            flash(
+                "تم إيقاف حساب الموظف داخل هذا النشاط.",
+                "danger"
+            )
+            return render_template("employee_login.html")
+
         # التحقق من كلمة المرور
-        # =================================================
-
         if not check_password_hash(
             staff["password"],
             password
         ):
-
             flash(
                 "اسم الموظف أو كلمة المرور غير صحيحة.",
                 "danger"
             )
+            return render_template("employee_login.html")
 
-            return render_template(
-                "employee_login.html"
-            )
-
-        # =================================================
         # إنهاء أي جلسة قديمة
-        # =================================================
-
         session.clear()
 
-        # =================================================
         # إنشاء جلسة الموظف
-        # =================================================
-
         session["user_id"] = staff["id"]
-
         session["user_name"] = staff["name"]
-
         session["employee"] = True
-
         session["restaurant_id"] = staff["restaurant_id"]
-
-        # =================================================
-        # دخول لوحة الموظف
-        # =================================================
 
         flash(
             "تم تسجيل الدخول بنجاح.",
             "success"
         )
 
-        return redirect(
-            url_for("employee_dashboard")
-        )
+        # التوجيه حسب الصلاحية
+        if staff["role"] == "products":
+            return redirect(url_for("products"))
 
-    return render_template(
-        "employee_login.html"
-    ) #=========================================================
+        elif staff["role"] == "orders":
+            return redirect(url_for("orders"))
+
+        elif staff["role"] == "customers":
+            return redirect(url_for("customers"))
+
+        elif staff["role"] == "manager":
+            return redirect(url_for("employee_dashboard"))
+
+        else:
+            session.clear()
+            flash(
+                "ليس لديك صلاحية للوصول إلى أي منصة.",
+                "danger"
+            )
+            return redirect(url_for("employee_login"))
+
+    return render_template("employee_login.html")
+
 
 @app.route("/staff/add", methods=["POST"])
 @restaurant_required
@@ -2994,7 +3052,7 @@ def category_delete(category_id):
 # =========================================================
 
 @app.route("/products")
-@restaurant_or_products_required
+@employee_products_required
 def products():
 
     restaurant = accessible_restaurant()
@@ -3045,7 +3103,7 @@ def products():
     "/products/add",
     methods=["GET", "POST"]
 )
-@restaurant_or_products_required
+@employee_products_required
 def product_add():
 
     restaurant = accessible_restaurant()
@@ -3199,7 +3257,7 @@ def product_add():
     "/products/<int:product_id>/edit",
     methods=["GET", "POST"]
 )
-@restaurant_or_products_required
+@employee_products_required
 def product_edit(product_id):
 
     restaurant = accessible_restaurant()
@@ -3429,7 +3487,7 @@ def product_edit(product_id):
     "/products/<int:product_id>/delete",
     methods=["POST"]
 )
-@restaurant_or_products_required
+@employee_products_required
 def product_delete(product_id):
 
     restaurant = accessible_restaurant()
@@ -5333,6 +5391,736 @@ def internal_error(error):
 # =========================================================
 # تشغيل التطبيق
 # =========================================================
+
+
+
+# =========================================================
+# ملف نشاط مستقل للأدمن
+# =========================================================
+
+@app.route("/admin/restaurant/<int:restaurant_id>")
+@admin_required
+def admin_restaurant(restaurant_id):
+
+    restaurant = query_db(
+        """
+        SELECT
+            r.*,
+            owner.name AS owner_name,
+            owner.email AS owner_email
+        FROM restaurants r
+        LEFT JOIN users owner
+            ON owner.id = r.owner_id
+        WHERE r.id = %s
+        LIMIT 1
+        """,
+        [restaurant_id],
+        one=True
+    )
+
+    if restaurant is None:
+        flash("النشاط غير موجود.", "danger")
+        return redirect(url_for("admin"))
+
+    employees = query_db(
+        """
+        SELECT
+            rs.id AS staff_id,
+            rs.restaurant_id,
+            rs.user_id,
+            rs.role AS staff_role,
+            rs.is_active AS staff_active,
+            rs.created_at AS staff_created_at,
+            u.name,
+            u.email,
+            u.is_active AS user_active
+        FROM restaurant_staff rs
+        LEFT JOIN users u
+            ON u.id = rs.user_id
+        WHERE rs.restaurant_id = %s
+        ORDER BY rs.id DESC
+        """,
+        [restaurant_id]
+    )
+
+    return render_template(
+        "admin_restaurant.html",
+        restaurant=restaurant,
+        employees=employees
+    )
+
+
+# =========================================================
+# تعديل بيانات النشاط من لوحة الأدمن
+# =========================================================
+
+@app.route(
+    "/admin/restaurant/<int:restaurant_id>/edit",
+    methods=["GET", "POST"]
+)
+@admin_required
+def admin_edit_restaurant(restaurant_id):
+
+    restaurant = query_db(
+        """
+        SELECT
+            r.*,
+            owner.name AS owner_name,
+            owner.email AS owner_email
+        FROM restaurants r
+        LEFT JOIN users owner
+            ON owner.id = r.owner_id
+        WHERE r.id = %s
+        LIMIT 1
+        """,
+        [restaurant_id],
+        one=True
+    )
+
+    if restaurant is None:
+        flash("النشاط غير موجود.", "danger")
+        return redirect(url_for("admin"))
+
+    if request.method == "POST":
+
+        restaurant_name = request.form.get(
+            "restaurant_name",
+            ""
+        ).strip()
+
+        description = request.form.get(
+            "description",
+            ""
+        ).strip()
+
+        address = request.form.get(
+            "address",
+            ""
+        ).strip()
+
+        phone = request.form.get(
+            "phone",
+            ""
+        ).strip()
+
+        if not restaurant_name:
+            flash("اسم النشاط مطلوب.", "danger")
+
+            return render_template(
+                "admin_restaurant_edit.html",
+                restaurant=restaurant
+            )
+
+        execute_db(
+            """
+            UPDATE restaurants
+            SET
+                name = %s,
+                description = %s,
+                address = %s,
+                phone = %s
+            WHERE id = %s
+            """,
+            [
+                restaurant_name,
+                description,
+                address,
+                phone,
+                restaurant_id
+            ]
+        )
+
+        flash(
+            "تم تحديث بيانات النشاط بنجاح.",
+            "success"
+        )
+
+        return redirect(
+            url_for(
+                "admin_restaurant",
+                restaurant_id=restaurant_id
+            )
+        )
+
+    return render_template(
+        "admin_restaurant_edit.html",
+        restaurant=restaurant
+    )
+
+
+
+# =========================================================
+# إدارة النشاط من داخل ملف النشاط بواسطة الأدمن
+# =========================================================
+
+@app.route(
+    "/admin/restaurant/<int:restaurant_id>/toggle",
+    methods=["POST"]
+)
+@admin_required
+def admin_toggle_restaurant(restaurant_id):
+
+    restaurant = query_db(
+        """
+        SELECT id, is_active, name
+        FROM restaurants
+        WHERE id = %s
+        LIMIT 1
+        """,
+        [restaurant_id],
+        one=True
+    )
+
+    if restaurant is None:
+        flash("النشاط غير موجود.", "danger")
+        return redirect(url_for("admin"))
+
+    new_status = 0 if restaurant["is_active"] else 1
+
+    execute_db(
+        """
+        UPDATE restaurants
+        SET is_active = %s
+        WHERE id = %s
+        """,
+        [new_status, restaurant_id]
+    )
+
+    if new_status:
+        flash("تم تفعيل النشاط بنجاح.", "success")
+    else:
+        flash("تم إيقاف النشاط بنجاح.", "warning")
+
+    return redirect(
+        url_for(
+            "admin_restaurant",
+            restaurant_id=restaurant_id
+        )
+    )
+
+
+@app.route(
+    "/admin/restaurant/<int:restaurant_id>/owner/toggle",
+    methods=["POST"]
+)
+@admin_required
+def admin_toggle_restaurant_owner(restaurant_id):
+
+    restaurant = query_db(
+        """
+        SELECT
+            r.id,
+            r.owner_id,
+            u.name
+        FROM restaurants r
+        LEFT JOIN users u
+            ON u.id = r.owner_id
+        WHERE r.id = %s
+        LIMIT 1
+        """,
+        [restaurant_id],
+        one=True
+    )
+
+    if restaurant is None or restaurant["owner_id"] is None:
+        flash("صاحب النشاط غير موجود.", "danger")
+        return redirect(
+            url_for(
+                "admin_restaurant",
+                restaurant_id=restaurant_id
+            )
+        )
+
+    owner = query_db(
+        """
+        SELECT id, is_active, role
+        FROM users
+        WHERE id = %s
+        AND role != 'admin'
+        LIMIT 1
+        """,
+        [restaurant["owner_id"]],
+        one=True
+    )
+
+    if owner is None:
+        flash("حساب صاحب النشاط غير موجود.", "danger")
+        return redirect(
+            url_for(
+                "admin_restaurant",
+                restaurant_id=restaurant_id
+            )
+        )
+
+    new_status = 0 if owner["is_active"] else 1
+
+    execute_db(
+        """
+        UPDATE users
+        SET
+            is_active = %s,
+            account_status = %s
+        WHERE id = %s
+        AND role != 'admin'
+        """,
+        [
+            new_status,
+            "approved" if new_status else "suspended",
+            owner["id"]
+        ]
+    )
+
+    if new_status:
+        flash("تم تفعيل حساب صاحب النشاط.", "success")
+    else:
+        flash("تم إيقاف حساب صاحب النشاط.", "warning")
+
+    return redirect(
+        url_for(
+            "admin_restaurant",
+            restaurant_id=restaurant_id
+        )
+    )
+
+
+@app.route(
+    "/admin/restaurant/<int:restaurant_id>/owner/reset-password",
+    methods=["POST"]
+)
+@admin_required
+def admin_restaurant_owner_reset_password(restaurant_id):
+
+    new_password = request.form.get(
+        "new_password",
+        ""
+    ).strip()
+
+    if len(new_password) < 6:
+        flash(
+            "كلمة المرور يجب أن تكون 6 أحرف أو أكثر.",
+            "danger"
+        )
+        return redirect(
+            url_for(
+                "admin_restaurant",
+                restaurant_id=restaurant_id
+            )
+        )
+
+    restaurant = query_db(
+        """
+        SELECT owner_id
+        FROM restaurants
+        WHERE id = %s
+        LIMIT 1
+        """,
+        [restaurant_id],
+        one=True
+    )
+
+    if restaurant is None or restaurant["owner_id"] is None:
+        flash("صاحب النشاط غير موجود.", "danger")
+        return redirect(
+            url_for(
+                "admin_restaurant",
+                restaurant_id=restaurant_id
+            )
+        )
+
+    password_hash = generate_password_hash(
+        new_password
+    )
+
+    execute_db(
+        """
+        UPDATE users
+        SET password = %s
+        WHERE id = %s
+        AND role != 'admin'
+        """,
+        [
+            password_hash,
+            restaurant["owner_id"]
+        ]
+    )
+
+    flash(
+        "تم تغيير كلمة مرور صاحب النشاط بنجاح.",
+        "success"
+    )
+
+    return redirect(
+        url_for(
+            "admin_restaurant",
+            restaurant_id=restaurant_id
+        )
+    )
+
+
+@app.route(
+    "/admin/restaurant/<int:restaurant_id>/employee/<int:user_id>/toggle",
+    methods=["POST"]
+)
+@admin_required
+def admin_toggle_restaurant_employee(
+    restaurant_id,
+    user_id
+):
+
+    staff = query_db(
+        """
+        SELECT
+            rs.user_id,
+            rs.is_active
+        FROM restaurant_staff rs
+        WHERE rs.restaurant_id = %s
+        AND rs.user_id = %s
+        LIMIT 1
+        """,
+        [
+            restaurant_id,
+            user_id
+        ],
+        one=True
+    )
+
+    if staff is None:
+        flash("الموظف غير مرتبط بهذا النشاط.", "danger")
+        return redirect(
+            url_for(
+                "admin_restaurant",
+                restaurant_id=restaurant_id
+            )
+        )
+
+    new_status = 0 if staff["is_active"] else 1
+
+    execute_db(
+        """
+        UPDATE restaurant_staff
+        SET is_active = %s
+        WHERE restaurant_id = %s
+        AND user_id = %s
+        """,
+        [
+            new_status,
+            restaurant_id,
+            user_id
+        ]
+    )
+
+    execute_db(
+        """
+        UPDATE users
+        SET is_active = %s
+        WHERE id = %s
+        AND role != 'admin'
+        """,
+        [
+            new_status,
+            user_id
+        ]
+    )
+
+    if new_status:
+        flash("تم تفعيل الموظف.", "success")
+    else:
+        flash("تم إيقاف الموظف.", "warning")
+
+    return redirect(
+        url_for(
+            "admin_restaurant",
+            restaurant_id=restaurant_id
+        )
+    )
+
+
+@app.route(
+    "/admin/restaurant/<int:restaurant_id>/employee/<int:user_id>/reset-password",
+    methods=["POST"]
+)
+@admin_required
+def admin_restaurant_employee_reset_password(
+    restaurant_id,
+    user_id
+):
+
+    new_password = request.form.get(
+        "new_password",
+        ""
+    ).strip()
+
+    if len(new_password) < 6:
+        flash(
+            "كلمة المرور يجب أن تكون 6 أحرف أو أكثر.",
+            "danger"
+        )
+        return redirect(
+            url_for(
+                "admin_restaurant",
+                restaurant_id=restaurant_id
+            )
+        )
+
+    staff = query_db(
+        """
+        SELECT user_id
+        FROM restaurant_staff
+        WHERE restaurant_id = %s
+        AND user_id = %s
+        LIMIT 1
+        """,
+        [
+            restaurant_id,
+            user_id
+        ],
+        one=True
+    )
+
+    if staff is None:
+        flash("الموظف غير مرتبط بهذا النشاط.", "danger")
+        return redirect(
+            url_for(
+                "admin_restaurant",
+                restaurant_id=restaurant_id
+            )
+        )
+
+    password_hash = generate_password_hash(
+        new_password
+    )
+
+    execute_db(
+        """
+        UPDATE users
+        SET password = %s
+        WHERE id = %s
+        AND role != 'admin'
+        """,
+        [
+            password_hash,
+            user_id
+        ]
+    )
+
+    flash(
+        "تم تغيير كلمة مرور الموظف بنجاح.",
+        "success"
+    )
+
+    return redirect(
+        url_for(
+            "admin_restaurant",
+            restaurant_id=restaurant_id
+        )
+    )
+
+
+# =========================================================
+# إعدادات حساب الأدمن الحالي
+# =========================================================
+
+@app.route(
+    "/admin/settings",
+    methods=["GET", "POST"]
+)
+@admin_required
+def admin_settings():
+
+    user = query_db(
+        """
+        SELECT id, name, email, phone
+        FROM users
+        WHERE id = %s
+        AND role = 'admin'
+        LIMIT 1
+        """,
+        [session["user_id"]],
+        one=True
+    )
+
+    if user is None:
+        flash("حساب الأدمن غير موجود.", "danger")
+        return redirect(url_for("admin"))
+
+    if request.method == "POST":
+
+        action = request.form.get(
+            "action",
+            "profile"
+        )
+
+        # -------------------------------------------------
+        # تحديث بيانات الأدمن
+        # -------------------------------------------------
+
+        if action == "profile":
+
+            name = request.form.get(
+                "name",
+                ""
+            ).strip()
+
+            email = request.form.get(
+                "email",
+                ""
+            ).strip()
+
+            phone = request.form.get(
+                "phone",
+                ""
+            ).strip()
+
+            if not name:
+                flash(
+                    "اسم الأدمن مطلوب.",
+                    "danger"
+                )
+                return redirect(
+                    url_for("admin_settings")
+                )
+
+            if not email:
+                flash(
+                    "البريد الإلكتروني مطلوب.",
+                    "danger"
+                )
+                return redirect(
+                    url_for("admin_settings")
+                )
+
+            existing = query_db(
+                """
+                SELECT id
+                FROM users
+                WHERE email = %s
+                AND id != %s
+                LIMIT 1
+                """,
+                [
+                    email,
+                    user["id"]
+                ],
+                one=True
+            )
+
+            if existing:
+                flash(
+                    "البريد الإلكتروني مستخدم بالفعل.",
+                    "danger"
+                )
+                return redirect(
+                    url_for("admin_settings")
+                )
+
+            execute_db(
+                """
+                UPDATE users
+                SET
+                    name = %s,
+                    email = %s,
+                    phone = %s
+                WHERE id = %s
+                AND role = 'admin'
+                """,
+                [
+                    name,
+                    email,
+                    phone,
+                    user["id"]
+                ]
+            )
+
+            flash(
+                "تم تحديث بيانات حساب الأدمن.",
+                "success"
+            )
+
+            return redirect(
+                url_for("admin_settings")
+            )
+
+        # -------------------------------------------------
+        # تغيير كلمة المرور
+        # -------------------------------------------------
+
+        if action == "password":
+
+            current_password = request.form.get(
+                "current_password",
+                ""
+            )
+
+            new_password = request.form.get(
+                "new_password",
+                ""
+            )
+
+            confirm_password = request.form.get(
+                "confirm_password",
+                ""
+            )
+
+            if not check_password_hash(
+                user["password"],
+                current_password
+            ):
+                flash(
+                    "كلمة المرور الحالية غير صحيحة.",
+                    "danger"
+                )
+                return redirect(
+                    url_for("admin_settings")
+                )
+
+            if len(new_password) < 6:
+                flash(
+                    "كلمة المرور الجديدة يجب أن تكون 6 أحرف أو أكثر.",
+                    "danger"
+                )
+                return redirect(
+                    url_for("admin_settings")
+                )
+
+            if new_password != confirm_password:
+                flash(
+                    "تأكيد كلمة المرور غير مطابق.",
+                    "danger"
+                )
+                return redirect(
+                    url_for("admin_settings")
+                )
+
+            password_hash = generate_password_hash(
+                new_password
+            )
+
+            execute_db(
+                """
+                UPDATE users
+                SET password = %s
+                WHERE id = %s
+                AND role = 'admin'
+                """,
+                [
+                    password_hash,
+                    user["id"]
+                ]
+            )
+
+            flash(
+                "تم تغيير كلمة مرور الأدمن بنجاح.",
+                "success"
+            )
+
+            return redirect(
+                url_for("admin_settings")
+            )
+
+    return render_template(
+        "admin_settings.html",
+        user=user
+    )
 
 if __name__ == "__main__":
 

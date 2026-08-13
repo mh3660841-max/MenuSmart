@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>تعديل النشاط | Menu Smart</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+
+<body>
+
+<div class="container admin-restaurant-page">
+
+    <div class="admin-restaurant-header">
+
+        <div class="admin-restaurant-heading">
+
+            <div class="admin-restaurant-heading-icon">
+                ✏️
+            </div>
+
+            <div>
+                <h1>تعديل النشاط</h1>
+                <p>تعديل بيانات النشاط من لوحة الإدارة</p>
+            </div>
+
+        </div>
+
+        <a
+            href="{{ url_for('admin_restaurant', restaurant_id=restaurant['id']) }}"
+            class="action-btn admin-restaurant-back"
+        >
+            ← العودة لملف النشاط
+        </a>
+
+    </div>
+
+
+    <div class="admin-restaurant-section">
+
+        <div class="admin-restaurant-section-title">
+
+            <div class="admin-restaurant-section-title-icon">
+                🏪
+            </div>
+
+            <h2>بيانات النشاط</h2>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="reset-form"
+        >
+
+            <div class="admin-restaurant-info-grid">
+
+                <div class="admin-restaurant-info-item">
+
+                    <span>اسم النشاط</span>
+
+                    <input
+                        type="text"
+                        name="restaurant_name"
+                        value="{{ restaurant['name'] or '' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="admin-restaurant-info-item">
+
+                    <span>رقم الهاتف</span>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        value="{{ restaurant['phone'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="admin-restaurant-info-item">
+
+                    <span>العنوان</span>
+
+                    <input
+                        type="text"
+                        name="address"
+                        value="{{ restaurant['address'] or '' }}"
+                    >
+
+                </div>
+
+
+                <div class="admin-restaurant-info-item">
+
+                    <span>الوصف</span>
+
+                    <textarea
+                        name="description"
+                        rows="4"
+                    >{{ restaurant['description'] or '' }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-restaurant-footer">
+
+                <button
+                    type="submit"
+                    class="action-btn approve-btn"
+                >
+                    💾 حفظ التعديلات
+                </button>
+
+                <a
+                    href="{{ url_for('admin_restaurant', restaurant_id=restaurant['id']) }}"
+                    class="action-btn"
+                >
+                    إلغاء
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

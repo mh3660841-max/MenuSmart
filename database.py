@@ -1083,6 +1083,17 @@ def init_db():
 
         cursor.execute(
             """
+            CREATE TABLE IF NOT EXISTS contact_messages (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(150) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                subject VARCHAR(50) NOT NULL,
+                message TEXT NOT NULL,
+                status VARCHAR(20) NOT NULL DEFAULT 'new',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
             CREATE TABLE IF NOT EXISTS notifications (
 
                 id BIGSERIAL PRIMARY KEY,

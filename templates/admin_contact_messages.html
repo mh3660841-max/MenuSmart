@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>رسائل التواصل | Menu Smart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 35px 20px;
+        }
+
+        .header {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #6b7280;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 18px;
+            background: #111827;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .messages {
+            display: grid;
+            gap: 18px;
+        }
+
+        .message-card {
+            position: relative;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.06);
+            transition: .2s ease;
+            overflow: hidden;
+        }
+
+        .message-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 32px rgba(0,0,0,.09);
+            border-color: rgba(212,175,55,.45);
+        }
+
+        .message-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: #d4af37;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .message-header h2 {
+            font-size: 20px;
+            margin-bottom: 9px;
+            color: #111827;
+        }
+
+        .phone {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 11px;
+            border-radius: 9px;
+            background: #eff6ff;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 700;
+            direction: ltr;
+        }
+
+        .phone:hover {
+            background: #dbeafe;
+        }
+
+        .status {
+            padding: 7px 12px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: bold;
+            background: #f3f4f6;
+        }
+
+        .subject {
+            margin-bottom: 15px;
+            color: #374151;
+        }
+
+        .message {
+            background: #f8fafc;
+            border: 1px solid #eef0f3;
+            border-radius: 14px;
+            padding: 18px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+            color: #374151;
+        }
+
+        .date {
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .actions button {
+            border: 0;
+            padding: 9px 14px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+        }
+
+        .btn-new {
+            background: #fff7df;
+            color: #9a6a00;
+        }
+
+        .btn-read {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .btn-replied {
+            background: #ecfdf5;
+            color: #16a34a;
+        }
+
+        .empty {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .empty h2 {
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #6b7280;
+        }
+
+        @media (max-width: 700px) {
+            .message-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="header">
+
+        <h1>رسائل التواصل 💬</h1>
+
+        <p>
+            متابعة وإدارة الرسائل الواردة من مستخدمي Menu Smart.
+        </p>
+
+        <a href="{{ url_for('admin') }}" class="back">
+            ← العودة إلى لوحة الإدارة
+        </a>
+
+    </div>
+
+
+    {% if messages %}
+
+        <div class="messages">
+
+            {% for item in messages %}
+
+                <div class="message-card">
+
+                    <div class="message-header">
+
+                        <div>
+                            <h2>{{ item["name"] }}</h2>
+
+                            <a
+                                class="phone"
+                                href="tel:{{ item['phone'] }}"
+                            >
+                                📞 {{ item["phone"] }}
+                            </a>
+                        </div>
+
+                        <span class="status">
+
+                            {% if item["status"] == "new" %}
+                                جديدة
+                            {% elif item["status"] == "read" %}
+                                مقروءة
+                            {% elif item["status"] == "replied" %}
+                                تم الرد
+                            {% else %}
+                                {{ item["status"] }}
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="subject">
+
+                        <strong>الموضوع:</strong>
+
+                        {% if item["subject"] == "support" %}
+                            مساعدة في استخدام المنصة
+                        {% elif item["subject"] == "menu" %}
+                            إنشاء أو إدارة المنيو
+                        {% elif item["subject"] == "orders" %}
+                            استفسار عن الطلبات
+                        {% elif item["subject"] == "account" %}
+                            مشكلة في الحساب
+                        {% else %}
+                            موضوع آخر
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="message">
+                        {{ item["message"] }}
+                    </div>
+
+
+                    <div class="date">
+                        {{ item["created_at"] }}
+                    </div>
+
+
+                    <div class="actions">
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'admin_contact_message_status',
+                                message_id=item['id']
+                            ) }}"
+                        >
+
+                            <button
+                                type="submit"
+                                name="status"
+                                value="new"
+                                class="btn-new"
+                            >
+                                جديدة
+                            </button>
+
+                            <button
+                                type="submit"
+                                name="status"
+                                value="read"
+                                class="btn-read"
+                            >
+                                مقروءة
+                            </button>
+
+                            <button
+                                type="submit"
+                                name="status"
+                                value="replied"
+                                class="btn-replied"
+                            >
+                                تم الرد
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty">
+
+            <h2>لا توجد رسائل</h2>
+
+            <p>
+                عندما يرسل أحد المستخدمين رسالة، ستظهر هنا.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

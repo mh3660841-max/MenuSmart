@@ -3101,3 +3101,11 @@ REDUCED MOTION
     opacity: 0.9;
 }
 
+/* Menu Smart Brand */
+.brand-name .brand-menu {
+    color: #111;
+}
+
+.brand-name .brand-smart {
+    color: #d4af37;
+}

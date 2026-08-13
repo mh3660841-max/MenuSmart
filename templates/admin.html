@@ -1224,6 +1224,34 @@
 
             </div>
 
+
+            <a href="{{ url_for('admin_contact_messages') }}"
+               class="stat-card stat-blue">
+
+                <div class="stat-icon">
+                    💬
+                </div>
+
+                <div class="stat-content">
+                    <span>رسائل جديدة</span>
+
+                    <strong>
+                        {{ new_contact_messages }}
+                    </strong>
+
+                    <small>
+                        عرض رسائل التواصل
+                    </small>
+                </div>
+
+                <div class="stat-arrow">
+                    ←
+                </div>
+
+            </a>
+
+
+
         </section>
 
 

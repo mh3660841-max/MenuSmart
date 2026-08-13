@@ -994,11 +994,27 @@ def admin():
 
     user = current_user()
 
+    new_contact_messages = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM contact_messages
+        WHERE status = 'new'
+        """,
+        one=True
+    )
+
+    new_contact_messages = (
+        new_contact_messages["count"]
+        if new_contact_messages
+        else 0
+    )
+
     return render_template(
         "admin.html",
         user=user,
         users=users,
-        restaurants=restaurants
+        restaurants=restaurants,
+        new_contact_messages=new_contact_messages
     )
 
 
@@ -5328,15 +5344,101 @@ def about():
     )
 
 
-@app.route("/contact")
+@app.route("/admin/contact-messages/count")
+@admin_required
+def admin_contact_messages_count():
+    result = query_db(
+        """
+        SELECT COUNT(*) AS count
+        FROM contact_messages
+        WHERE status = 'new'
+        """,
+        one=True
+    )
+
+    return {"count": result["count"] if result else 0}
+
+@app.route("/admin/contact-messages")
+@admin_required
+def admin_contact_messages():
+    messages = query_db(
+        """
+        SELECT
+            id,
+            name,
+            email,
+            subject,
+            message,
+            status,
+            created_at
+        FROM contact_messages
+        ORDER BY created_at DESC
+        """
+    )
+
+    return render_template(
+        "admin_contact_messages.html",
+        messages=messages,
+        user=current_user()
+    )
+
+@app.route("/admin/contact-messages/<int:message_id>/status", methods=["POST"])
+@admin_required
+def admin_contact_message_status(message_id):
+    status = request.form.get("status", "").strip()
+
+    if status not in ("new", "read", "replied"):
+        flash("حالة الرسالة غير صحيحة.", "danger")
+        return redirect(url_for("admin_contact_messages"))
+
+    execute_db(
+        """
+        UPDATE contact_messages
+        SET status = %s,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = %s
+        """,
+        [status, message_id]
+    )
+
+    flash("تم تحديث حالة الرسالة بنجاح.", "success")
+
+    return redirect(url_for("admin_contact_messages"))
+
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        phone = request.form.get("phone", "").strip()
+        subject = request.form.get("subject", "").strip()
+        message = request.form.get("message", "").strip()
+
+        if not name or not phone or not subject or not message:
+            flash("يرجى ملء جميع الحقول المطلوبة.", "danger")
+            return redirect(url_for("contact"))
+
+        execute_db(
+            """
+            INSERT INTO contact_messages
+                (name, phone, subject, message)
+            VALUES
+                (%s, %s, %s, %s)
+            """,
+            [name, phone, subject, message]
+        )
+
+        flash(
+            "تم إرسال رسالتك بنجاح. شكرًا لتواصلك معنا.",
+            "success"
+        )
+
+        return redirect(url_for("contact"))
 
     return render_template(
         "contact.html",
         user=current_user(),
         restaurant=current_restaurant()
     )
-
 
 @app.route("/privacy")
 def privacy():

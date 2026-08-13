@@ -6831,3 +6831,158 @@ color: #ea580c;
         justify-content: center;
     }
 }
+
+/* =========================================================
+   PENDING ACCOUNTS - ADMIN
+   ========================================================= */
+
+.pending-account-card {
+    position: relative;
+    overflow: hidden;
+    padding: 22px;
+    background: #fff;
+    border: 1px solid var(--ms-border);
+    border-radius: 18px;
+    box-shadow: var(--ms-shadow);
+    transition: .2s ease;
+}
+
+.pending-account-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ms-shadow-hover);
+    border-color: rgba(212, 175, 55, .35);
+}
+
+.pending-account-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.pending-account-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 15px;
+    background: var(--ms-gold-soft);
+    color: var(--ms-gold-dark);
+    font-size: 23px;
+}
+
+.pending-account-title {
+    min-width: 0;
+}
+
+.pending-account-title h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--ms-black);
+}
+
+.pending-account-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 9px;
+    border-radius: 8px;
+    background: #fff7df;
+    color: #9a6a00;
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.pending-account-info {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pending-account-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 11px 13px;
+    background: #f8f8f6;
+    border-radius: 11px;
+}
+
+.pending-account-info-row span {
+    color: var(--ms-muted);
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.pending-account-info-row strong {
+    color: var(--ms-black);
+    font-size: 14px;
+    font-weight: 850;
+    text-align: left;
+    direction: ltr;
+}
+
+.pending-account-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.pending-account-actions form {
+    margin: 0;
+}
+
+.pending-account-actions button {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-radius: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 900;
+    transition: .2s ease;
+}
+
+.pending-approve {
+    background: #ecfdf5;
+    color: #15803d;
+}
+
+.pending-approve:hover {
+    background: #16a34a;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.pending-reject {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.pending-reject:hover {
+    background: #dc2626;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+    .pending-account-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .pending-account-info-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .pending-account-info-row strong {
+        text-align: right;
+    }
+}
+

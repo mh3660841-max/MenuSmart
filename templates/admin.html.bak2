@@ -1116,7 +1116,7 @@
              WELCOME
         ========================== -->
 
-
+        
         <div style="
             display:flex;
             justify-content:flex-start;
@@ -1224,124 +1224,92 @@
 
             </div>
 
-
-            <a href="{{ url_for('admin_contact_messages') }}"
-               class="stat-card stat-blue">
-
-                <div class="stat-icon">
-                    💬
-                </div>
-
-                <div class="stat-content">
-                    <span>رسائل جديدة</span>
-
-                    <strong>
-                        {{ new_contact_messages }}
-                    </strong>
-
-                    <small>
-                        عرض رسائل التواصل
-                    </small>
-                </div>
-
-                <div class="stat-arrow">
-                    ←
-                </div>
-
-            </a>
-
-
-
         </section>
 
 
-
         <!-- =========================
-             PENDING ACCOUNTS
-        ========================== -->
-        <section class="section">
-            <div class="section-header">
-                <div class="section-title">
-                    <div class="section-title-icon">👤</div>
-                    <h2>حسابات قيد المراجعة</h2>
+     USERS
+========================== -->
+
+<section class="section dashboard-cards-section">
+
+    <div class="section-header">
+        <div class="section-title">
+            <div class="section-title-icon">👥</div>
+            
+        </div>
+    </div>
+
+    {% if users %}
+
+    <div class="admin-users-grid">
+
+        {% for item in users %}
+
+        <div class="admin-user-card">
+
+            <div class="admin-user-top">
+
+                <div class="admin-user-avatar">
+                    {{ (item["name"] or "م")[0] }}
                 </div>
+
+                <div class="admin-user-main">
+                    <h3>{{ item["name"] or "بدون اسم" }}</h3>
+                    <p>{{ item["email"] }}</p>
+                </div>
+
+                {% if item["is_active"] %}
+                    <span class="user-status active">نشط</span>
+                {% else %}
+                    <span class="user-status inactive">غير نشط</span>
+                {% endif %}
+
             </div>
 
-            {% set pending_users = users
-                |selectattr("account_status", "equalto", "pending")
-                |list
-            %}
+            <div class="admin-user-details">
 
-            {% if pending_users %}
-                <div class="restaurants-grid">
-                    {% for pending_user in pending_users %}
-                        <div class="pending-account-card">
-
-                            <div class="pending-account-header">
-                                <div class="pending-account-icon">👤</div>
-
-                                <div class="pending-account-title">
-                                    <h3>
-                                        {{ pending_user["name"] }}
-                                    </h3>
-
-                                    <span class="pending-account-badge">
-                                        ● قيد المراجعة
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="pending-account-info-row">
-                                <span>رقم الهاتف</span>
-                                <strong>
-                                    📞 {{ pending_user["phone"] }}
-                                </strong>
-                            </div>
-
-                            <div class="pending-account-info-row">
-                                <span>البريد الإلكتروني</span>
-                                <strong>
-                                    ✉️ {{ pending_user["email"] }}
-                                </strong>
-                            </div>
-
-                            <div class="pending-account-actions">
-                                <form
-                                    method="POST"
-                                    action="{{ url_for(
-                                        'approve_user',
-                                        user_id=pending_user['id']
-                                    ) }}"
-                                >
-                                    <button type="submit" class="pending-approve">
-                                        ✅ الموافقة
-                                    </button>
-                                </form>
-
-                                <form
-                                    method="POST"
-                                    action="{{ url_for(
-                                        'reject_user',
-                                        user_id=pending_user['id']
-                                    ) }}"
-                                >
-                                    <button type="submit" class="pending-reject">
-                                        ❌ رفض
-                                    </button>
-                                </form>
-                            </div>
-
-                        </div>
-                    {% endfor %}
+                <div class="admin-user-detail">
+                    <span>الصلاحية</span>
+                    <strong>
+                        {% if item["role"] == "admin" %}
+                            مدير
+                        {% else %}
+                            صاحب نشاط تجاري
+                        {% endif %}
+                    </strong>
                 </div>
-            {% else %}
-                <div class="empty-dashboard">
-                    لا توجد حسابات قيد المراجعة حاليًا.
-                </div>
-            {% endif %}
-        </section>
 
-        <!-- =========================
+                <div class="admin-user-detail">
+                    <span>الهاتف</span>
+                    <strong>{{ item["phone"] or "—" }}</strong>
+                </div>
+
+                <div class="admin-user-detail">
+                    <span>تاريخ التسجيل</span>
+                    <strong>{{ item["created_at"] }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+        <div class="empty-icon">👥</div>
+        لا يوجد مستخدمون حتى الآن.
+    </div>
+
+    {% endif %}
+
+</section>
+
+<!-- =========================
              RESTAURANTS
         ========================== -->
 

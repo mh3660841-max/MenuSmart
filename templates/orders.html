@@ -235,56 +235,7 @@
      HEADER
 ===================================================== -->
 
-<header class="main-header">
-
-    <div class="header-container">
-
-        <a
-            href="{{ url_for('home') }}"
-            class="brand"
-        >
-
-            <span class="brand-icon">
-                M
-            </span>
-
-            <span class="brand-name">
-                Menu Smart
-            </span>
-
-        </a>
-
-
-        <div class="dashboard-header-actions">
-
-            <a
-                href="{{ url_for('dashboard') }}"
-                class="dashboard-home-link"
-            >
-                لوحة التحكم
-            </a>
-
-
-            <a
-                href="{{ url_for('products') }}"
-                class="dashboard-home-link"
-            >
-                المنتجات
-            </a>
-
-
-            <a
-                href="{{ url_for('logout') }}"
-                class="dashboard-logout"
-            >
-                تسجيل الخروج
-            </a>
-
-        </div>
-
-    </div>
-
-</header>
+{% include 'shared_header.html' %}
 
 
 <!-- =====================================================
@@ -784,12 +735,11 @@
     ستظهر هنا جميع التفاصيل.
 </p>
 
-<a
-    href="{{ url_for('dashboard') }}"
-    class="dashboard-primary-btn"
->
-    العودة للوحة التحكم
-</a>
+<div class="back-dashboard-wrap">
+    <a href="{{ url_for('dashboard') }}" class="back-dashboard">
+        العودة للوحة التحكم
+    </a>
+</div>
 
 </div>{% endif %}
 

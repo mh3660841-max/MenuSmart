@@ -1,0 +1,522 @@
+<header class="main-header">
+    <div class="header-container">
+
+        <a href="{{ url_for('home') }}" class="brand">
+            <span class="brand-name">
+                <span class="brand-menu">Menu</span>
+                <span class="brand-smart">Smart</span>
+            </span>
+        </a>
+
+        <div class="dashboard-header-actions navigation-actions">
+
+            <div class="notification-wrapper">
+                <button
+                    type="button"
+                    class="notification-button"
+                    id="notificationButton"
+                    aria-label="{{ t('notifications') }}"
+                    title="{{ t('notifications') }}"
+                >
+                    <span class="notification-icon">🔔</span>
+
+                    <span
+                        class="notification-badge"
+                        id="notificationBadge"
+                        hidden
+                    >0</span>
+                </button>
+
+                <div
+                    class="notification-panel"
+                    id="notificationPanel"
+                    hidden
+                >
+                    <div class="notification-panel-header">
+                        <strong>{{ t('notifications') }}</strong>
+
+                        <div class="notification-header-actions">
+                            <span id="notificationCount">0 جديد</span>
+
+                            <button
+                                type="button"
+                                class="notification-read-all"
+                                id="notificationReadAll"
+                            >
+                                {{ t('read_all') }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        class="notification-list"
+                        id="notificationList"
+                    >
+                        <div class="notification-empty">
+                            {{ t('no_notifications') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if request.endpoint == 'dashboard' %}
+            <a
+                href="{{ url_for('logout') }}"
+                class="dashboard-logout"
+                onclick="return confirmLogout();"
+            >
+                {{ t('logout') }}
+            </a>
+            {% endif %}
+
+        </div>
+    </div>
+</header>
+<script>
+
+    /*
+     * ال{{ t('back') }} للصفحة السابقة
+     */
+
+    function goBack() {
+
+        if (window.history.length > 1) {
+
+            window.history.back();
+
+        } else {
+
+            window.location.href =
+                "{{ url_for('dashboard') }}";
+
+        }
+
+    }
+
+
+    /*
+     * تأكيد {{ t('logout') }}
+     */
+
+    function confirmLogout() {
+
+        return window.confirm(
+            "{{ t('logout_confirm') }}"
+        );
+
+    }
+
+
+    /*
+     * مشاركة Menu Smart
+     *
+     * تفتح نافذة المشاركة الأصلية في الهاتف.
+     * يستطيع المستخدم اختيار واتساب أو فيسبوك
+     * أو Messenger أو Telegram أو أي تطبيق متاح.
+     */
+
+    async function shareMenuSmart() {
+
+        const shareData = {
+
+            title:
+                "Menu Smart",
+
+            text:
+                "🍽️ جرّب Menu Smart وأنشئ منيو إلكتروني احترافي لنشاطك بسهولة.",
+
+            url:
+                window.location.origin
+
+        };
+
+
+        try {
+
+            if (
+                navigator.share
+            ) {
+
+                await navigator.share(
+                    shareData
+                );
+
+                return;
+
+            }
+
+
+            if (
+                navigator.clipboard
+            ) {
+
+                await navigator.clipboard.writeText(
+                    shareData.url
+                );
+
+            } else {
+
+                const temporaryInput =
+                    document.createElement("input");
+
+                temporaryInput.value =
+                    shareData.url;
+
+                document.body.appendChild(
+                    temporaryInput
+                );
+
+                temporaryInput.select();
+
+                document.execCommand(
+                    "copy"
+                );
+
+                temporaryInput.remove();
+
+            }
+
+
+            alert(
+                "تم نسخ رابط Menu Smart. يمكنك الآن مشاركته مع نشاط تجاري آخر."
+            );
+
+
+        } catch (error) {
+
+            if (
+                error &&
+                error.name === "AbortError"
+            ) {
+
+                return;
+
+            }
+
+
+            alert(
+                "تعذر فتح نافذة المشاركة. حاول مرة أخرى."
+            );
+
+        }
+
+    }
+
+</script>
+
+
+<script
+    src="{{ url_for('static', filename='js/dashboard.js') }}"
+></script>
+<script>
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+(function () {
+
+    const button = document.getElementById(
+        "notificationButton"
+    );
+
+    const panel = document.getElementById(
+        "notificationPanel"
+    );
+
+    const badge = document.getElementById(
+        "notificationBadge"
+    );
+
+    const countText = document.getElementById(
+        "notificationCount"
+    );
+
+    const list = document.getElementById(
+        "notificationList"
+    );
+const readAllButton = document.getElementById(
+    "notificationReadAll"
+);
+
+    if (!button || !panel || !badge || !countText || !list) {
+        return;
+    }
+
+
+    let lastUnreadCount = 0;
+
+const notificationSound = new Audio(
+    "{{ url_for('static', filename='sounds/new-order.mp3') }}"
+);
+
+notificationSound.preload = "auto";
+
+    function escapeHtml(value) {
+
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    function updateBadge(count) {
+
+        if (count > 0) {
+
+            badge.hidden = false;
+
+            badge.textContent =
+                count > 99 ? "99+" : count;
+
+            countText.textContent =
+                count + " جديد";
+
+        } else {
+
+            badge.hidden = true;
+
+            badge.textContent = "0";
+
+            countText.textContent =
+                "لا يوجد جديد";
+        }
+    }
+
+
+    function renderNotifications(notifications) {
+
+        if (!notifications || notifications.length === 0) {
+
+            list.innerHTML = `
+                <div class="notification-empty">
+                    {{ t('no_notifications') }}
+                </div>
+            `;
+
+            return;
+        }
+
+
+        list.innerHTML = notifications.map(function (item) {
+
+            const unreadClass =
+                item.is_read ? "" : "unread";
+
+            return `
+                <div
+                    class="notification-item ${unreadClass}"
+                    data-id="${item.id}"
+                >
+
+                    <div class="notification-item-title">
+                        ${escapeHtml(item.title)}
+                    </div>
+
+                    <div class="notification-item-message">
+                        ${escapeHtml(item.message)}
+                    </div>
+
+                    <div class="notification-item-time">
+                        ${escapeHtml(item.created_at)}
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+    }
+
+
+    async function loadNotifications() {
+
+        try {
+
+            const response = await fetch(
+                "{{ url_for('api_notifications') }}",
+                {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    cache: "no-store"
+                }
+            );
+
+
+            if (!response.ok) {
+                return;
+            }
+
+
+            const data =
+                await response.json();
+
+
+            const unreadCount =
+                Number(data.unread_count || 0);
+
+
+            updateBadge(unreadCount);
+
+            renderNotifications(
+                data.notifications || []
+            );
+
+
+         if (unreadCount > lastUnreadCount) {
+
+    notificationSound.currentTime = 0;
+
+    notificationSound.play().catch(function (error) {
+
+        console.log(
+            "Notification sound blocked:",
+            error
+        );
+
+    });
+}
+
+lastUnreadCount = unreadCount;
+
+        } catch (error) {
+
+            console.error(
+                "Notification error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    button.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+            panel.hidden = !panel.hidden;
+
+        }
+    );
+readAllButton.addEventListener(
+    "click",
+    async function (event) {
+
+        event.stopPropagation();
+
+        try {
+
+            const response = await fetch(
+                "/api/notifications/read-all",
+                {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With":
+                            "XMLHttpRequest"
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                return;
+            }
+
+            await loadNotifications();
+
+        } catch (error) {
+
+            console.error(
+                "Read all notifications error:",
+                error
+            );
+
+        }
+
+    }
+);
+
+    panel.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+        }
+    );
+panel.addEventListener(
+    "click",
+    async function (event) {
+
+        const notificationItem =
+            event.target.closest(
+                ".notification-item"
+            );
+
+        if (!notificationItem) {
+            return;
+        }
+
+        const notificationId =
+            notificationItem.dataset.id;
+
+        if (!notificationId) {
+            return;
+        }
+
+        try {
+
+            await fetch(
+                `/api/notifications/${notificationId}/read`,
+                {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With":
+                            "XMLHttpRequest"
+                    }
+                }
+            );
+
+            await loadNotifications();
+
+        } catch (error) {
+
+            console.error(
+                "Mark notification read error:",
+                error
+            );
+
+        }
+
+    }
+);
+
+    document.addEventListener(
+        "click",
+        function () {
+
+            panel.hidden = true;
+
+        }
+    );
+
+
+    loadNotifications();
+
+
+    setInterval(
+        loadNotifications,
+        5000
+    );
+
+})();
+</script>

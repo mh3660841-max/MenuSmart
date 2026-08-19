@@ -453,6 +453,20 @@ def init_db():
         )
 
         # =====================================================
+        # صلاحيات موظفي المطعم
+        # =====================================================
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS restaurant_staff_permissions (
+                id BIGSERIAL PRIMARY KEY,
+                restaurant_staff_id BIGINT NOT NULL,
+                permission TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE (restaurant_staff_id, permission),
+                FOREIGN KEY (restaurant_staff_id) REFERENCES restaurant_staff(id) ON DELETE CASCADE
+            )
+        """)
+
+        # =====================================================
         # إعدادات المطعم
         # =====================================================
 
@@ -594,6 +608,7 @@ def init_db():
                 sort_order INTEGER
                     DEFAULT 0,
 
+                is_featured INTEGER DEFAULT 0,
                 is_active INTEGER
                     DEFAULT 1,
 
@@ -666,6 +681,13 @@ def init_db():
             "categories",
             "created_at",
             "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+        )
+
+        add_column_if_missing(
+            cursor,
+            "categories",
+            "is_featured",
+            "INTEGER DEFAULT 0"
         )
 
         add_column_if_missing(

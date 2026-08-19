@@ -44,55 +44,7 @@
 <body class="dashboard-page">
 
 
-<header class="main-header">
-
-<div class="header-container">
-
-    <a
-        href="{{ url_for('home') }}"
-        class="brand"
-    >
-
-        <span class="brand-icon">
-            M
-        </span>
-
-        <span class="brand-name">
-            <span class="brand-menu">Menu</span>
-            <span class="brand-smart">Smart</span>
-        </span>
-
-    </a>
-
-
-    <div class="dashboard-header-actions">
-
-        <a
-            href="{{ url_for('dashboard') }}"
-            class="dashboard-home-link"
-        >
-            لوحة التحكم
-        </a>
-
-        <a
-            href="{{ url_for('profile') }}"
-            class="dashboard-home-link"
-        >
-            الملف الشخصي
-        </a>
-
-        <a
-            href="{{ url_for('logout') }}"
-            class="dashboard-logout"
-        >
-            تسجيل الخروج
-        </a>
-
-    </div>
-
-</div>
-
-</header>
+{% include 'shared_header.html' %}
 
 
 <main class="dashboard-main">
@@ -120,12 +72,12 @@
     </div>
 
 
-    <a
+    <div class="back-dashboard-wrap"><a
         href="{{ url_for('dashboard') }}"
-        class="dashboard-secondary-btn"
+        class="back-dashboard"
     >
         العودة للوحة التحكم
-    </a>
+    </a></div>
 
 </section>
 
@@ -606,36 +558,14 @@
 
 
     <div class="form-group">
-
-        <label for="employee_role">
-            صلاحية الموظف
-        </label>
-
-        <select
-            id="employee_role"
-            name="role"
-            required
-        >
-
-            <option value="orders">
-                الطلبات
-            </option>
-
-            <option value="products">
-                المنتجات
-            </option>
-
-            <option value="cashier">
-                الكاشير
-            </option>
-
-            <option value="manager">
-                مدير
-            </option>
-
-        </select>
-
-    </div>
+<label for="employee_permissions">صلاحيات الموظف</label>
+<div class="employee-permissions">
+<label><input type="checkbox" name="permissions" value="orders"> الطلبات</label>
+<label><input type="checkbox" name="permissions" value="products"> المنتجات</label>
+<label><input type="checkbox" name="permissions" value="cashier"> الكاشير</label>
+<label><input type="checkbox" name="permissions" value="manager"> مدير — جميع الصلاحيات</label>
+</div>
+</div>
 
 
     <div class="settings-form-footer">
@@ -653,6 +583,32 @@
 
 </div>
 
+
+<div class="staff-management">
+<h3>الموظفون الحاليون</h3>
+{% if staff_list %}
+<div class="staff-list">
+{% for staff in staff_list %}
+<div class="staff-card">
+<div class="staff-card-info">
+<strong>{{ staff.name }}</strong>
+<div class="staff-permission-badges">
+{% for permission in staff.permissions %}
+<span>{{ {"orders":"الطلبات","products":"المنتجات","cashier":"الكاشير","manager":"مدير"}.get(permission, permission) }}</span>
+{% endfor %}
+</div>
+</div>
+<div class="staff-card-actions">
+<details><summary class="staff-edit-btn">تعديل الصلاحيات</summary><form method="POST" action="{{ url_for("update_staff_permissions", staff_id=staff.staff_id) }}"><div class="employee-permissions">{% for key,label in {"orders":"الطلبات","products":"المنتجات","cashier":"الكاشير","manager":"مدير — جميع الصلاحيات"}.items() %}<label><input type="checkbox" name="permissions" value="{{ key }}" {% if key in staff.permissions %}checked{% endif %}> {{ label }}</label>{% endfor %}</div><button type="submit">حفظ الصلاحيات</button></form></details>
+<form method="POST" action="{{ url_for("delete_staff", staff_id=staff.staff_id) }}"><button type="submit" class="staff-delete-btn">حذف</button></form>
+</div>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<p class="staff-empty">لا يوجد موظفون مضافون حتى الآن.</p>
+{% endif %}
+</div>
 </section>
 
 

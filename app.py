@@ -271,7 +271,8 @@ def employee_products_required(function):
         staff = query_db(
             """
             SELECT
-                restaurant_staff.restaurant_id,
+                restaurant_staff.id,
+                    restaurant_staff.restaurant_id,
                 restaurant_staff.role,
                 restaurant_staff.is_active
             FROM restaurant_staff
@@ -301,10 +302,19 @@ def employee_products_required(function):
                 url_for("employee_login")
             )
 
-        if staff["role"] not in (
-            "products",
-            "manager"
-        ):
+        permission = query_db(
+        """
+        SELECT 1
+        FROM restaurant_staff_permissions
+        WHERE restaurant_staff_id = %s
+        AND permission IN ('products', 'manager')
+        LIMIT 1
+        """,
+        [staff["id"]],
+        one=True
+    )
+
+    if not permission:
 
             flash(
                 "ليس لديك صلاحية لإدارة المنتجات.",
@@ -315,9 +325,9 @@ def employee_products_required(function):
                 url_for("employee_dashboard")
             )
 
-        session["restaurant_id"] = staff["restaurant_id"]
+    session["restaurant_id"] = staff["restaurant_id"]
 
-        return function(*args, **kwargs)
+    return function(*args, **kwargs)
 
     return decorated_function
 # =========================================================
@@ -1081,313 +1091,178 @@ def accessible_restaurant():
 # =========================================================
 
 def restaurant_or_products_required(function):
-
     @wraps(function)
     def decorated_function(*args, **kwargs):
+        if not session.get("employee"):
+            return function(*args, **kwargs)
+            return redirect(url_for("employee_login"))
 
-        if "user_id" not in session:
+        staff = query_db(
+            """
+            SELECT
+                restaurant_staff.id,
+                restaurant_staff.restaurant_id,
+                restaurant_staff.role,
+                restaurant_staff.is_active
+            FROM restaurant_staff
+            INNER JOIN restaurants
+                ON restaurants.id = restaurant_staff.restaurant_id
+            WHERE restaurant_staff.user_id = %s
+                AND restaurant_staff.is_active = 1
+                AND restaurants.is_active = 1
+            LIMIT 1
+            """,
+            [session["user_id"]],
+            one=True
+        )
 
-            flash(
-                "يجب تسجيل الدخول أولاً.",
-                "warning"
-            )
+        if staff is None:
+            session.clear()
+            flash("حساب الموظف غير صالح.", "danger")
+            return redirect(url_for("employee_login"))
 
-            return redirect(
-                url_for("login")
-            )
+        if staff["is_active"] != 1:
+            session.clear()
+            flash("حساب الموظف غير نشط.", "danger")
+            return redirect(url_for("employee_login"))
 
-        restaurant = accessible_restaurant()
+        permission = query_db(
+            """
+            SELECT 1
+            FROM restaurant_staff_permissions
+            WHERE restaurant_staff_id = %s
+                AND permission IN ('products', 'manager')
+            LIMIT 1
+            """,
+            [staff["id"]],
+            one=True
+        )
 
-        if restaurant is None:
+        if not permission:
+            flash("ليس لديك صلاحية لإدارة المنتجات.", "danger")
+            return redirect(url_for("employee_dashboard"))
 
-            flash(
-                "لا يوجد مطعم مرتبط بهذا الحساب.",
-                "danger"
-            )
-
-            if session.get("employee"):
-
-                return redirect(
-                    url_for("employee_login")
-                )
-
-            return redirect(
-                url_for("profile")
-            )
-
-        # =================================================
-        # التحقق من صلاحية الموظف
-        # =================================================
-
-        if session.get("employee"):
-
-            staff = query_db(
-                """
-                SELECT
-                    role,
-                    is_active
-                FROM restaurant_staff
-                WHERE user_id = %s
-                AND restaurant_id = %s
-                LIMIT 1
-                """,
-                [
-                    session["user_id"],
-                    restaurant["id"]
-                ],
-                one=True
-            )
-
-            if staff is None:
-
-                session.clear()
-
-                flash(
-                    "حساب الموظف غير صالح.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_login")
-                )
-
-            if staff["is_active"] != 1:
-
-                session.clear()
-
-                flash(
-                    "حساب الموظف غير نشط.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_login")
-                )
-
-            if staff["role"] not in (
-                "products",
-                "manager"
-            ):
-
-                flash(
-                    "ليس لديك صلاحية لإدارة المنتجات.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_dashboard")
-                )
-
-            # حفظ المطعم الخاص بالموظف في الجلسة
-            session["restaurant_id"] = restaurant["id"]
-
+        session["restaurant_id"] = staff["restaurant_id"]
         return function(*args, **kwargs)
 
     return decorated_function
-# =========================================================
-# صاحب المطعم أو موظف الطلبات
-# =========================================================
 
 def restaurant_or_orders_required(function):
-
     @wraps(function)
     def decorated_function(*args, **kwargs):
-
-        if "user_id" not in session:
-
-            flash(
-                "يجب تسجيل الدخول أولاً.",
-                "warning"
-            )
-
-            return redirect(
-                url_for("login")
-            )
+        if not session.get("employee"):
+            return function(*args, **kwargs)
+            return redirect(url_for("employee_login"))
 
         restaurant = accessible_restaurant()
-
         if restaurant is None:
+            flash("لا يوجد مطعم مرتبط بهذا الحساب.", "danger")
+            return redirect(url_for("employee_login"))
 
-            flash(
-                "لا يوجد مطعم مرتبط بهذا الحساب.",
-                "danger"
-            )
+        staff = query_db(
+            """
+            SELECT restaurant_staff.id,
+                   restaurant_staff.restaurant_id,
+                   restaurant_staff.role,
+                   restaurant_staff.is_active
+            FROM restaurant_staff
+            WHERE user_id = %s
+              AND restaurant_id = %s
+            LIMIT 1
+            """,
+            [session["user_id"], restaurant["id"]],
+            one=True
+        )
 
-            if session.get("employee"):
-                return redirect(
-                    url_for("employee_login")
-                )
+        if staff is None:
+            session.clear()
+            flash("حساب الموظف غير صالح.", "danger")
+            return redirect(url_for("employee_login"))
 
-            return redirect(
-                url_for("profile")
-            )
+        if staff["is_active"] != 1:
+            session.clear()
+            flash("حساب الموظف غير نشط.", "danger")
+            return redirect(url_for("employee_login"))
 
-        if session.get("employee"):
+        permission = query_db(
+            """
+            SELECT 1
+            FROM restaurant_staff_permissions
+            WHERE restaurant_staff_id = %s
+              AND permission IN ('orders', 'manager')
+            LIMIT 1
+            """,
+            [staff["id"]],
+            one=True
+        )
 
-            staff = query_db(
-                """
-                SELECT
-                    role,
-                    is_active
-                FROM restaurant_staff
-                WHERE user_id = %s
-                AND restaurant_id = %s
-                LIMIT 1
-                """,
-                [
-                    session["user_id"],
-                    restaurant["id"]
-                ],
-                one=True
-            )
+        if not permission:
+            flash("ليس لديك صلاحية للوصول إلى الطلبات.", "danger")
+            return redirect(url_for("employee_dashboard"))
 
-            if staff is None:
-
-                session.clear()
-
-                flash(
-                    "حساب الموظف غير صالح.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_login")
-                )
-
-            if staff["is_active"] != 1:
-
-                session.clear()
-
-                flash(
-                    "حساب الموظف غير نشط.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_login")
-                )
-
-            if staff["role"] not in (
-                "orders",
-                "manager"
-            ):
-
-                flash(
-                    "ليس لديك صلاحية للوصول إلى الطلبات.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_dashboard")
-                )
-
-            session["restaurant_id"] = restaurant["id"]
-
+        session["restaurant_id"] = restaurant["id"]
         return function(*args, **kwargs)
 
     return decorated_function
-# =========================================================
-# صاحب المطعم أو موظف العملاء / الكاشير
-# =========================================================
 
 def restaurant_or_customers_required(function):
-
     @wraps(function)
     def decorated_function(*args, **kwargs):
-
-        if "user_id" not in session:
-
-            flash(
-                "يجب تسجيل الدخول أولاً.",
-                "warning"
-            )
-
-            return redirect(
-                url_for("login")
-            )
+        if not session.get("employee"):
+            return function(*args, **kwargs)
+            return redirect(url_for("employee_login"))
 
         restaurant = accessible_restaurant()
-
         if restaurant is None:
+            flash("لا يوجد مطعم مرتبط بهذا الحساب.", "danger")
+            return redirect(url_for("employee_login"))
 
-            flash(
-                "لا يوجد مطعم مرتبط بهذا الحساب.",
-                "danger"
-            )
+        staff = query_db(
+            """
+            SELECT restaurant_staff.id,
+                   restaurant_staff.restaurant_id,
+                   restaurant_staff.role,
+                   restaurant_staff.is_active
+            FROM restaurant_staff
+            WHERE user_id = %s
+              AND restaurant_id = %s
+            LIMIT 1
+            """,
+            [session["user_id"], restaurant["id"]],
+            one=True
+        )
 
-            if session.get("employee"):
-                return redirect(
-                    url_for("employee_login")
-                )
+        if staff is None:
+            session.clear()
+            flash("حساب الموظف غير صالح.", "danger")
+            return redirect(url_for("employee_login"))
 
-            return redirect(
-                url_for("profile")
-            )
+        if staff["is_active"] != 1:
+            session.clear()
+            flash("حساب الموظف غير نشط.", "danger")
+            return redirect(url_for("employee_login"))
 
-        if session.get("employee"):
+        permission = query_db(
+            """
+            SELECT 1
+            FROM restaurant_staff_permissions
+            WHERE restaurant_staff_id = %s
+              AND permission IN ('customers', 'manager')
+            LIMIT 1
+            """,
+            [staff["id"]],
+            one=True
+        )
 
-            staff = query_db(
-                """
-                SELECT
-                    role,
-                    is_active
-                FROM restaurant_staff
-                WHERE user_id = %s
-                AND restaurant_id = %s
-                LIMIT 1
-                """,
-                [
-                    session["user_id"],
-                    restaurant["id"]
-                ],
-                one=True
-            )
+        if not permission:
+            flash("ليس لديك صلاحية للوصول إلى العملاء.", "danger")
+            return redirect(url_for("employee_dashboard"))
 
-            if staff is None:
-
-                session.clear()
-
-                flash(
-                    "حساب الموظف غير صالح.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_login")
-                )
-
-            if staff["is_active"] != 1:
-
-                session.clear()
-
-                flash(
-                    "حساب الموظف غير نشط.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_login")
-                )
-
-            if staff["role"] not in (
-                "customers",
-                "manager"
-            ):
-
-                flash(
-                    "ليس لديك صلاحية للوصول إلى العملاء.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("employee_dashboard")
-                )
-
-            session["restaurant_id"] = restaurant["id"]
-
+        session["restaurant_id"] = restaurant["id"]
         return function(*args, **kwargs)
 
     return decorated_function
+
 # =========================================================
 # الموافقة على حساب صاحب المطعم
 # =========================================================
@@ -1544,43 +1419,37 @@ def add_no_cache_headers(response):
 # =========================================================
 
 def save_uploaded_image(image):
-
-    original_name = secure_filename(
-        image.filename
-    )
-
-    if not original_name:
+    if not image or not image.filename:
         return None
 
-    if "." not in original_name:
-        return None
+    original_name = secure_filename(image.filename)
+    extension = ''
 
-    extension = original_name.rsplit(
-        ".",
-        1
-    )[1].lower()
+    if '.' in image.filename:
+        extension = image.filename.rsplit('.', 1)[1].lower()
+    elif '.' in original_name:
+        extension = original_name.rsplit('.', 1)[1].lower()
 
-    if extension not in ALLOWED_IMAGE_EXTENSIONS:
+    mime = (image.mimetype or '').lower()
+    allowed_mimes = {
+        'image/png',
+        'image/jpeg',
+        'image/webp'
+    }
+
+    print('IMAGE DEBUG:', image.filename, image.mimetype, extension);
+    if extension not in ALLOWED_IMAGE_EXTENSIONS and mime not in allowed_mimes:
         return None
 
     try:
-
         result = cloudinary.uploader.upload(
             image,
-            folder="menusmart"
+            folder='menusmart'
         )
-
-        return result.get("secure_url")
-
+        return result.get('secure_url')
     except Exception as e:
-
-        print(
-            "CLOUDINARY UPLOAD ERROR:",
-            e
-        )
-
+        print('CLOUDINARY UPLOAD ERROR:', e)
         return None
-
 
 # =========================================================
 # تسجيل الخروج
@@ -2029,17 +1898,9 @@ def login():
 @app.route("/employee")
 @login_required
 def employee_dashboard():
-
     if not session.get("employee"):
-
-        flash(
-            "هذه الصفحة مخصصة للموظفين فقط.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("login")
-        )
+        flash("هذه الصفحة مخصصة للموظفين فقط.", "danger")
+        return redirect(url_for("login"))
 
     user_id = session.get("user_id")
 
@@ -2047,6 +1908,7 @@ def employee_dashboard():
         """
         SELECT
             restaurant_staff.id,
+            restaurant_staff.restaurant_id,
             restaurant_staff.role,
             restaurant_staff.is_active,
             restaurants.name AS restaurant_name
@@ -2055,33 +1917,59 @@ def employee_dashboard():
             ON restaurants.id = restaurant_staff.restaurant_id
         WHERE restaurant_staff.user_id = %s
         AND restaurant_staff.is_active = 1
+        AND restaurants.is_active = 1
         LIMIT 1
         """,
-        [
-            user_id
-        ],
+        [user_id],
         one=True
     )
 
     if staff is None:
-
         session.clear()
+        flash("لا يوجد حساب موظف نشط مرتبط بهذا المستخدم.", "danger")
+        return redirect(url_for("login"))
 
-        flash(
-            "لا يوجد حساب موظف نشط مرتبط بهذا المستخدم.",
-            "danger"
-        )
+    restaurant = query_db(
+        "SELECT * FROM restaurants WHERE id = %s",
+        [staff["restaurant_id"]],
+        one=True
+    )
 
-        return redirect(
-            url_for("login")
-        )
+    stats = query_db(
+        """
+        SELECT
+            (SELECT COUNT(*) FROM categories WHERE restaurant_id = %s) AS categories_count,
+            (SELECT COUNT(*) FROM products WHERE restaurant_id = %s) AS products_count,
+            (SELECT COUNT(*) FROM orders WHERE restaurant_id = %s) AS orders_count,
+            (SELECT COUNT(*) FROM customers WHERE restaurant_id = %s) AS customers_count
+        """,
+        [restaurant["id"], restaurant["id"], restaurant["id"], restaurant["id"]],
+        one=True
+    )
 
-    user = current_user()
+    recent_orders = query_db(
+        """
+        SELECT id, customer_name, total, status, created_at
+        FROM orders
+        WHERE restaurant_id = %s
+        AND status NOT IN ('completed', 'cancelled')        ORDER BY id DESC
+        LIMIT 5
+        """,
+        [restaurant["id"]]
+    )
+
+    session["restaurant_id"] = staff["restaurant_id"]
 
     return render_template(
-        "employee.html",
-        user=user,
-        staff=staff
+        "dashboard.html",
+        restaurant=restaurant,
+        categories_count=stats["categories_count"],
+        products_count=stats["products_count"],
+        orders_count=stats["orders_count"],
+        customers_count=stats["customers_count"],
+        recent_orders=recent_orders,
+        employee=True,
+        employee_role=staff["role"]
     )
 
 @app.route("/employee/login", methods=["GET", "POST"])
@@ -2183,26 +2071,8 @@ def employee_login():
             "success"
         )
 
-        # التوجيه حسب الصلاحية
-        if staff["role"] == "products":
-            return redirect(url_for("products"))
-
-        elif staff["role"] == "orders":
-            return redirect(url_for("orders"))
-
-        elif staff["role"] == "customers":
-            return redirect(url_for("customers"))
-
-        elif staff["role"] == "manager":
-            return redirect(url_for("employee_dashboard"))
-
-        else:
-            session.clear()
-            flash(
-                "ليس لديك صلاحية للوصول إلى أي منصة.",
-                "danger"
-            )
-            return redirect(url_for("employee_login"))
+        # جميع الموظفين يدخلون لوحة التحكم
+    return redirect(url_for("employee_dashboard"))
 
     return render_template("employee_login.html")
 
@@ -2210,45 +2080,40 @@ def employee_login():
 @app.route("/staff/add", methods=["POST"])
 @restaurant_required
 def add_staff():
-
     restaurant = current_restaurant()
 
-    name = request.form.get(
-        "name",
-        ""
-    ).strip()
+    name = request.form.get("name", "").strip()
+    password = request.form.get("password", "")
+    permissions = request.form.getlist("permissions")
 
-    password = request.form.get(
-        "password",
-        ""
-    )
-
-    role = request.form.get(
-        "role",
-        "orders"
-    ).strip()
-
-    if not name or not password:
-
-        flash(
-            "اسم الموظف وكلمة المرور مطلوبان.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("dashboard")
-        )
-
-    allowed_roles = {
+    allowed_permissions = {
         "orders",
         "products",
         "cashier",
         "manager"
     }
 
-    if role not in allowed_roles:
+    permissions = [
+        permission
+        for permission in permissions
+        if permission in allowed_permissions
+    ]
 
-        role = "orders"
+    if "manager" in permissions:
+        permissions = [
+            "orders",
+            "products",
+            "cashier",
+            "manager"
+        ]
+
+    if not permissions:
+        flash("اختر صلاحية واحدة على الأقل للموظف.", "danger")
+        return redirect(url_for("dashboard"))
+
+    if not name or not password:
+        flash("اسم الموظف وكلمة المرور مطلوبان.", "danger")
+        return redirect(url_for("dashboard"))
 
     existing_staff = query_db(
         """
@@ -2261,23 +2126,13 @@ def add_staff():
         AND restaurant_staff.is_active = 1
         LIMIT 1
         """,
-        [
-            restaurant["id"],
-            name.lower()
-        ],
+        [restaurant["id"], name.lower()],
         one=True
     )
 
     if existing_staff:
-
-        flash(
-            "يوجد موظف بهذا الاسم بالفعل.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("dashboard")
-        )
+        flash("يوجد موظف بهذا الاسم بالفعل.", "danger")
+        return redirect(url_for("dashboard"))
 
     employee_email = (
         "employee_"
@@ -2285,9 +2140,7 @@ def add_staff():
         + "@menusmart.local"
     )
 
-    hashed_password = generate_password_hash(
-        password
-    )
+    hashed_password = generate_password_hash(password)
 
     execute_db(
         """
@@ -2318,13 +2171,12 @@ def add_staff():
         WHERE email = %s
         LIMIT 1
         """,
-        [
-            employee_email
-        ],
+        [employee_email],
         one=True
     )
 
     user_id = user["id"]
+    primary_role = "manager" if "manager" in permissions else permissions[0]
 
     execute_db(
         """
@@ -2339,19 +2191,128 @@ def add_staff():
         [
             restaurant["id"],
             user_id,
-            role,
+            primary_role,
             1
         ]
     )
 
-    flash(
-        "تم إنشاء حساب الموظف بنجاح.",
-        "success"
+    staff = query_db(
+        """
+        SELECT id
+        FROM restaurant_staff
+        WHERE restaurant_id = %s
+        AND user_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"], user_id],
+        one=True
     )
 
-    return redirect(
-        url_for("dashboard")
+    for permission in permissions:
+        execute_db(
+            """
+            INSERT INTO restaurant_staff_permissions (
+                restaurant_staff_id,
+                permission
+            )
+            VALUES (%s, %s)
+            ON CONFLICT (restaurant_staff_id, permission) DO NOTHING
+            """,
+            [staff["id"], permission]
+        )
+
+    flash("تم إنشاء حساب الموظف بنجاح.", "success")
+    return redirect(url_for("dashboard"))
+
+@app.route("/staff/<int:staff_id>/permissions", methods=["POST"])
+@restaurant_required
+def update_staff_permissions(staff_id):
+    restaurant = current_restaurant()
+    permissions = request.form.getlist("permissions")
+
+    allowed_permissions = {"orders", "products", "cashier", "manager"}
+    permissions = [p for p in permissions if p in allowed_permissions]
+
+    if "manager" in permissions:
+        permissions = ["orders", "products", "cashier", "manager"]
+
+    if not permissions:
+        flash("اختر صلاحية واحدة على الأقل للموظف.", "danger")
+        return redirect(url_for("settings"))
+
+    staff = query_db(
+        """
+        SELECT id
+        FROM restaurant_staff
+        WHERE id = %s AND restaurant_id = %s
+        LIMIT 1
+        """,
+        [staff_id, restaurant["id"]],
+        one=True
     )
+
+    if not staff:
+        flash("الموظف غير موجود.", "danger")
+        return redirect(url_for("settings"))
+
+    execute_db(
+        "DELETE FROM restaurant_staff_permissions WHERE restaurant_staff_id = %s",
+        [staff_id]
+    )
+
+    for permission in permissions:
+        execute_db(
+            """
+            INSERT INTO restaurant_staff_permissions
+                (restaurant_staff_id, permission)
+            VALUES (%s, %s)
+            ON CONFLICT (restaurant_staff_id, permission) DO NOTHING
+            """,
+            [staff_id, permission]
+        )
+
+    primary_role = "manager" if "manager" in permissions else permissions[0]
+    execute_db(
+        "UPDATE restaurant_staff SET role = %s WHERE id = %s",
+        [primary_role, staff_id]
+    )
+
+    flash("تم تحديث صلاحيات الموظف بنجاح.", "success")
+    return redirect(url_for("settings"))
+
+@app.route("/staff/<int:staff_id>/delete", methods=["POST"])
+@restaurant_required
+def delete_staff(staff_id):
+    restaurant = current_restaurant()
+
+    staff = query_db(
+        """
+        SELECT user_id
+        FROM restaurant_staff
+        WHERE id = %s AND restaurant_id = %s
+        LIMIT 1
+        """,
+        [staff_id, restaurant["id"]],
+        one=True
+    )
+
+    if not staff:
+        flash("الموظف غير موجود.", "danger")
+        return redirect(url_for("settings"))
+
+    execute_db(
+        "DELETE FROM restaurant_staff WHERE id = %s AND restaurant_id = %s",
+        [staff_id, restaurant["id"]]
+    )
+
+    execute_db(
+        "DELETE FROM users WHERE id = %s AND role = 'employee'",
+        [staff["user_id"]]
+    )
+
+    flash("تم حذف الموظف بنجاح.", "success")
+    return redirect(url_for("settings"))
+
 
 @app.route("/invite")
 @login_required
@@ -2714,10 +2675,28 @@ def settings():
         one=True
     )
 
+    staff_list = query_db("""
+        SELECT restaurant_staff.id AS staff_id, restaurant_staff.user_id,
+               users.name, restaurant_staff.role, restaurant_staff.is_active
+        FROM restaurant_staff
+        INNER JOIN users ON users.id = restaurant_staff.user_id
+        WHERE restaurant_staff.restaurant_id = %s
+        ORDER BY restaurant_staff.id DESC
+        """, [restaurant["id"]])
+
+    for staff in staff_list:
+        staff["permissions"] = query_db("""
+            SELECT permission
+            FROM restaurant_staff_permissions
+            WHERE restaurant_staff_id = %s
+            ORDER BY permission
+        """, [staff["staff_id"]])
+
     return render_template(
         "settings.html",
         restaurant=restaurant,
-        settings=settings_data
+        settings=settings_data,
+        staff_list=staff_list
     )
 
 
@@ -2743,10 +2722,16 @@ def categories():
         ]
     )
 
+    featured_categories = [
+        c for c in categories_list
+        if c.get("is_featured", 0)
+    ]
+
     return render_template(
         "categories.html",
         restaurant=restaurant,
-        categories=categories_list
+        categories=categories_list,
+        featured_categories=featured_categories
     )
 
 # =========================================================
@@ -2779,6 +2764,8 @@ def category_add():
     image = request.files.get(
         "image"
     )
+
+    is_featured = 1 if request.form.get("is_featured") == "1" else 0
 
     if not name:
 
@@ -2818,16 +2805,18 @@ def category_add():
             name,
             description,
             icon,
-            image
+            image,
+            is_featured
         )
-        VALUES (%s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """,
         [
             restaurant["id"],
             name,
             description,
             icon,
-            image_name
+            image_name,
+            is_featured
         ]
     )
 
@@ -2905,6 +2894,8 @@ def category_edit(category_id):
             "status",
             "active"
         )
+
+        is_featured = 1 if request.form.get("is_featured") == "1" else 0
 
         image = request.files.get(
             "image"
@@ -3068,8 +3059,24 @@ def category_delete(category_id):
 # =========================================================
 
 @app.route("/products")
-@employee_products_required
 def products():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    if session.get("employee"):
+        staff = query_db(
+            "SELECT role, restaurant_id FROM restaurant_staff WHERE user_id = %s AND is_active = 1 LIMIT 1",
+            [session["user_id"]],
+            one=True
+        )
+        if not staff or staff["role"] not in ("products", "manager"):
+            flash("ليس لديك صلاحية لإدارة المنتجات.", "danger")
+            return redirect(url_for("employee_dashboard"))
+        session["restaurant_id"] = staff["restaurant_id"]
+    else:
+        restaurant = current_restaurant()
+        if restaurant is None:
+            return redirect(url_for("login"))
 
     restaurant = accessible_restaurant()
 
@@ -3106,8 +3113,8 @@ def products():
     return render_template(
         "products.html",
         restaurant=restaurant,
-        products=products_list,
-        categories=categories_list
+        categories=categories_list,
+        products_list=products_list,
     )
 
 
@@ -3119,7 +3126,7 @@ def products():
     "/products/add",
     methods=["GET", "POST"]
 )
-@employee_products_required
+@login_required
 def product_add():
 
     restaurant = accessible_restaurant()
@@ -3273,7 +3280,7 @@ def product_add():
     "/products/<int:product_id>/edit",
     methods=["GET", "POST"]
 )
-@employee_products_required
+@login_required
 def product_edit(product_id):
 
     restaurant = accessible_restaurant()
@@ -3503,7 +3510,7 @@ def product_edit(product_id):
     "/products/<int:product_id>/delete",
     methods=["POST"]
 )
-@employee_products_required
+@login_required
 def product_delete(product_id):
 
     restaurant = accessible_restaurant()
@@ -3595,7 +3602,7 @@ def dashboard():
             created_at
         FROM orders
         WHERE restaurant_id = %s
-        ORDER BY id DESC
+        AND status NOT IN ('completed', 'cancelled')        ORDER BY id DESC
         LIMIT 5
         """,
         [restaurant["id"]]
@@ -3604,7 +3611,6 @@ def dashboard():
     return render_template(
         "dashboard.html",
         restaurant=restaurant,
-        categories_count=categories_count,
         products_count=products_count,
         orders_count=orders_count,
         customers_count=customers_count,
@@ -3650,7 +3656,7 @@ def menu():
         "menu.html",
         restaurant=restaurant,
         categories_count=categories_count,
-        products_count=products_count
+        products_count=products_count,
     )
 
 
@@ -3730,7 +3736,6 @@ def public_menu(slug):
         "public_menu.html",
         restaurant=restaurant,
         categories=categories_list,
-        products=products_list,
         settings=settings_data
     )
 
@@ -4283,6 +4288,7 @@ def checkout():
                 total_spent
             )
             VALUES (%s, %s, %s, %s, %s, 1, %s)
+            RETURNING id
             """,
             [
                 restaurant_id,
@@ -4640,6 +4646,18 @@ def order_details(order_id):
 # =========================================================
 # فاتورة الطلب
 # =========================================================
+
+@app.route("/track")
+def track_order():
+    order_id = request.args.get("order_id", type=int)
+    slug = request.args.get("slug")
+    order = None
+    restaurant = None
+    if slug:
+        restaurant = query_db("SELECT id, name, logo FROM restaurants WHERE slug = %s AND is_active = 1", [slug], one=True)
+    if order_id and restaurant:
+        order = query_db("SELECT id, status, created_at FROM orders WHERE id = %s AND restaurant_id = %s", [order_id, restaurant["id"]], one=True)
+    return render_template("track_order.html", order=order, restaurant=restaurant, slug=slug)
 
 @app.route("/orders/<int:order_id>/invoice")
 @restaurant_or_orders_required

@@ -457,7 +457,19 @@
 
     }
 
-</style>
+.password-wrap{position:relative}
+.password-wrap .login-input{padding-left:52px}
+.password-toggle{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:transparent;color:#777;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.password-toggle svg{
+width:20px;
+height:20px;
+fill:none;
+stroke:currentColor;
+stroke-width:1.6;
+stroke-linecap:round;
+stroke-linejoin:round;
+}
+.password-toggle:hover{color:#111}\n</style>
 
 </head><body class="auth-page"><main class="login-page">
 
@@ -602,15 +614,23 @@
                             كلمة المرور
                         </label>
 
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="login-input"
-                            placeholder="أدخل كلمة المرور"
-                            autocomplete="current-password"
-                            required
-                        >
+                        <div class="password-wrap">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="login-input"
+                                placeholder="أدخل كلمة المرور"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button type="button" id="passwordToggle" class="password-toggle" aria-label="إظهار كلمة المرور">
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z"/>
+<circle cx="12" cy="12" r="2.5"/>
+</svg>
+</button>
+                        </div>
 
                     </div>
 
@@ -664,4 +684,14 @@
 
 </main>
 
-</body></html>
+<script>
+const passwordInput=document.getElementById("password");
+const passwordToggle=document.getElementById("passwordToggle");
+if(passwordInput && passwordToggle){
+passwordToggle.addEventListener("click",function(){
+const show=passwordInput.type==="password";
+passwordInput.type=show?"text":"password";
+passwordToggle.innerHTML=show?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.2A10.8 10.8 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-3.1 3.8M6.2 6.3C3.8 8 2.5 12 2.5 12s3.5 7 9.5 7c1.5 0 2.8-.4 4-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.5"/></svg>';
+});
+}
+</script>\n</body></html>

@@ -1968,3 +1968,4 @@ function confirmDashboardAction(
     );
 
 }
+document.addEventListener("click", enableOrderSound, { once: true });

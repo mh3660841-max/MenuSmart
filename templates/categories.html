@@ -1077,50 +1077,7 @@
 <body class="categories-page">
 
 
-<!-- =====================================================
-     TOPBAR
-===================================================== -->
-
-<header class="categories-topbar">
-
-    <div class="categories-topbar-inner">
-
-        <a href="{{ url_for('home') }}"
-           class="categories-brand">
-
-            <span class="categories-brand-icon">
-                M
-            </span>
-
-            <span>
-                Menu Smart
-            </span>
-
-        </a>
-
-
-        <nav class="categories-nav">
-
-            <a href="{{ url_for('dashboard') }}">
-                لوحة التحكم
-            </a>
-
-            <a href="{{ url_for('products') }}">
-                المنتجات
-            </a>
-
-            <a href="{{ url_for('logout') }}"
-               class="logout">
-
-                تسجيل الخروج
-
-            </a>
-
-        </nav>
-
-    </div>
-
-</header>
+{% include 'shared_header.html' %}
 
 
 <!-- =====================================================
@@ -1152,15 +1109,12 @@
 
             </div>
 
-
-            <a href="{{ url_for('dashboard') }}"
-               class="back-dashboard">
-
-                <span>←</span>
-
-                العودة للوحة التحكم
-
-            </a>
+            <div class="back-dashboard-wrap">
+                <a href="{{ url_for('dashboard') }}" class="back-dashboard">
+                    <span>←</span>
+                    العودة للوحة التحكم
+                </a>
+            </div>
 
         </div>
 
@@ -1421,149 +1375,20 @@
 
 
             <div class="suggestions-grid">
-
-
-                <div class="suggestion"
-                     data-category="برجر">
-
-                    <div class="suggestion-icon">
-
-                        <img
-                            src="{{ url_for(
-                                'static',
-                                filename='images/burger.png'
-                            ) }}"
-                            alt="برجر"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-                    <span class="suggestion-name">
-                        برجر
-                    </span>
-
-                </div>
-
-
-                <div class="suggestion"
-                     data-category="بيتزا">
-
-                    <div class="suggestion-icon">
-
-                        <img
-                            src="{{ url_for(
-                                'static',
-                                filename='images/pizza.png'
-                            ) }}"
-                            alt="بيتزا"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-                    <span class="suggestion-name">
-                        بيتزا
-                    </span>
-
-                </div>
-
-
-                <div class="suggestion"
-                     data-category="وجبات">
-
-                    <div class="suggestion-icon">
-
-                        <img
-                            src="{{ url_for(
-                                'static',
-                                filename='images/meals.png'
-                            ) }}"
-                            alt="وجبات"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-                    <span class="suggestion-name">
-                        وجبات
-                    </span>
-
-                </div>
-
-
-                <div class="suggestion"
-                     data-category="مشروبات">
-
-                    <div class="suggestion-icon">
-
-                        <img
-                            src="{{ url_for(
-                                'static',
-                                filename='images/drinks.png'
-                            ) }}"
-                            alt="مشروبات"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-                    <span class="suggestion-name">
-                        مشروبات
-                    </span>
-
-                </div>
-
-
-                <div class="suggestion"
-                     data-category="حلويات">
-
-                    <div class="suggestion-icon">
-
-                        <img
-                            src="{{ url_for(
-                                'static',
-                                filename='images/desserts.jpg'
-                            ) }}"
-                            alt="حلويات"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-                    <span class="suggestion-name">
-                        حلويات
-                    </span>
-
-                </div>
-
-
-                <div class="suggestion"
-                     data-category="ساخنة">
-
-                    <div class="suggestion-icon">
-
-                        <img
-                            src="{{ url_for(
-                                'static',
-                                filename='images/hot.png'
-                            ) }}"
-                            alt="ساخنة"
-                            loading="lazy"
-                        >
-
-                    </div>
-
-                    <span class="suggestion-name">
-                        ساخنة
-                    </span>
-
-                </div>
-
-
-            </div>
-
-        </section>
+{% for category in featured_categories %}
+<div class="suggestion" data-category="{{ category.name }}">
+<div class="suggestion-icon">
+{% if category.image %}
+                <img src="{{ category.image if category.image.startswith('http') else url_for('static', filename='images/uploads/' ~ category.image) }}" alt="{{ category.name }}" loading="lazy">
+{% else %}
+<div class="suggestion-image-placeholder">🖼️</div>
+{% endif %}
+</div>
+<span class="suggestion-name">{{ category.name }}</span>
+</div>
+{% endfor %}
+</div>
+</section>
 
 
     </div>

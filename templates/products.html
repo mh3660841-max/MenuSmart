@@ -856,58 +856,7 @@
      HEADER
 ===================================================== -->
 
-<header class="main-header">
-
-    <div class="header-container">
-
-
-        <a
-            href="{{ url_for('home') }}"
-            class="brand"
-        >
-
-            <span class="brand-icon">
-                M
-            </span>
-
-            <span class="brand-name">
-                Menu Smart
-            </span>
-
-        </a>
-
-
-        <div class="dashboard-header-actions">
-
-            <a
-                href="{{ url_for('dashboard') }}"
-                class="dashboard-home-link"
-            >
-                لوحة التحكم
-            </a>
-
-
-            <a
-                href="{{ url_for('categories') }}"
-                class="dashboard-home-link"
-            >
-                الأقسام
-            </a>
-
-
-            <a
-                href="{{ url_for('logout') }}"
-                class="dashboard-logout"
-            >
-                تسجيل الخروج
-            </a>
-
-        </div>
-
-
-    </div>
-
-</header>
+{% include 'shared_header.html' %}
 
 
 <!-- =====================================================
@@ -942,7 +891,13 @@
             </div>
 
 
-            <div class="products-hero-actions">
+            <div class="back-dashboard-wrap">
+            <a href="{{ url_for('dashboard') }}" class="back-dashboard">
+                العودة للوحة التحكم
+            </a>
+        </div>
+
+        <div class="products-hero-actions">
 
                 <a
                     href="{{ url_for('product_add') }}"
@@ -1098,34 +1053,8 @@
     >
 
 {% else %}
-
-                                <div class="product-image-placeholder">
-
-                                    {% if product.category_name == 'مشروبات' %}
-
-                                        🥤
-
-                                    {% elif product.category_name == 'حلويات' %}
-
-                                        🍰
-
-                                    {% elif product.category_name == 'بيتزا' %}
-
-                                        🍕
-
-                                    {% elif product.category_name == 'برجر' %}
-
-                                        🍔
-
-                                    {% else %}
-
-                                        🍽️
-
-                                    {% endif %}
-
-                                </div>
-
-                            {% endif %}
+<div class=\"product-image-placeholder\"></div>
+{% endif %}
 
 
                             {% if product.available %}

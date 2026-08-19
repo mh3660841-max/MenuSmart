@@ -767,55 +767,7 @@
 
 </head><body class="dashboard-page"><!-- =====================================================
      HEADER
-===================================================== --><header class="main-header"><div class="header-container">
-
-    <a
-        href="{{ url_for('home') }}"
-        class="brand"
-    >
-
-        <span class="brand-icon">
-            M
-        </span>
-
-        <span class="brand-name">
-            <span class="brand-menu">Menu</span>
-            <span class="brand-smart">Smart</span>
-        </span>
-
-    </a>
-
-
-    <div class="dashboard-header-actions">
-
-        <a
-            href="{{ url_for('dashboard') }}"
-            class="dashboard-home-link"
-        >
-            لوحة التحكم
-        </a>
-
-
-        <a
-            href="{{ url_for('orders') }}"
-            class="dashboard-home-link"
-        >
-            الطلبات
-        </a>
-
-
-        <a
-            href="{{ url_for('logout') }}"
-            class="dashboard-logout"
-        >
-            تسجيل الخروج
-        </a>
-
-    </div>
-
-</div>
-
-</header><!-- =====================================================
+===================================================== -->{% include 'shared_header.html' %}<!-- =====================================================
      MAIN
 ===================================================== --><main class="dashboard-main"><div class="dashboard-container">
 

@@ -866,54 +866,7 @@
 <body class="dashboard-page menu-management-page product-add-page">
 
 
-<header class="main-header">
-
-    <div class="header-container">
-
-        <a
-            href="{{ url_for('home') }}"
-            class="brand"
-        >
-
-            <span class="brand-icon">
-                M
-            </span>
-
-            <span class="brand-name">
-                Menu Smart
-            </span>
-
-        </a>
-
-
-        <div class="dashboard-header-actions">
-
-            <a
-                href="{{ url_for('dashboard') }}"
-                class="dashboard-home-link"
-            >
-                لوحة التحكم
-            </a>
-
-            <a
-                href="{{ url_for('products') }}"
-                class="dashboard-home-link"
-            >
-                المنتجات
-            </a>
-
-            <a
-                href="{{ url_for('logout') }}"
-                class="dashboard-logout"
-            >
-                تسجيل الخروج
-            </a>
-
-        </div>
-
-    </div>
-
-</header>
+{% include 'shared_header.html' %}
 
 
 <main class="dashboard-main">

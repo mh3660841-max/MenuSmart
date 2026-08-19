@@ -30,7 +30,7 @@ body.public-menu-page{
    HEADER
 ========================= */
 
-.public-menu-header{
+.public-menu-header{display:none;
     position:sticky;
     top:0;
     z-index:1000;
@@ -83,7 +83,7 @@ body.public-menu-page{
    CART BUTTON
 ========================= */
 
-.menu-cart-button{
+.menu-cart-button{display:none;
     border:0;
 
     background:#111;
@@ -130,7 +130,7 @@ body.public-menu-page{
    HERO
 ========================= */
 
-.restaurant-hero{
+.restaurant-hero{display:none;
     background:#111;
     color:#fff;
 
@@ -217,7 +217,7 @@ body.public-menu-page{
    CONTENT
 ========================= */
 
-.menu-wrapper{
+.menu-wrapper{display:none;
     max-width:1100px;
     margin:auto;
 
@@ -542,7 +542,7 @@ body.public-menu-page{
    CART OVERLAY
 ========================= */
 
-.cart-overlay{
+ .cart-overlay{display:none;
     position:fixed;
 
     inset:0;
@@ -838,7 +838,7 @@ body.public-menu-page{
         padding:9px 12px;
     }
 
-    .restaurant-hero{
+    .restaurant-hero{display:none;
         padding:28px 15px 35px;
     }
 
@@ -853,7 +853,7 @@ body.public-menu-page{
         font-size:29px;
     }
 
-    .menu-wrapper{
+    .menu-wrapper{display:none;
         padding:15px 10px 100px;
     }
 
@@ -902,90 +902,192 @@ body.public-menu-page{
 
 }
 
+</style><style>
+.customer-start-screen{
+min-height:100vh;
+background:#f5f6f8;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:25px 16px;
+box-sizing:border-box;
+}
+
+.customer-start-card{
+width:100%;
+max-width:400px;
+background:#fff;
+border:1px solid #d4af37;
+border-radius:24px;
+padding:30px 20px;
+box-shadow:0 12px 35px rgba(0,0,0,.10);
+box-sizing:border-box;
+text-align:center;
+}
+
+.customer-start-logo{
+width:105px;
+height:105px;
+margin:0 auto 22px;
+border-radius:23px;
+background:#f1f2f4;
+border:1px solid #e1e3e6;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+}
+
+.customer-start-logo img{
+width:100%;
+height:100%;
+object-fit:contain;
+}
+
+.customer-start-logo span{
+font-size:38px;
+font-weight:900;
+color:#777;
+}
+
+.customer-start-buttons{
+width:100%;
+display:flex;
+flex-direction:column;
+gap:11px;
+}
+
+.customer-start-option{
+width:100%;
+min-height:70px;
+display:flex!important;
+flex-direction:row!important;
+align-items:center!important;
+justify-content:flex-start!important;
+gap:14px;
+margin:0!important;
+padding:10px 14px;
+box-sizing:border-box;
+background:#fff;
+border:1px solid #e5e5e5;
+border-radius:16px;
+text-align:right;
+cursor:pointer;
+}
+
+.customer-start-option > span{
+width:50px;
+height:50px;
+flex:0 0 50px;
+border-radius:14px;
+background:#e9eaec;
+display:flex!important;
+align-items:center;
+justify-content:center;
+font-size:22px;
+}
+
+.customer-start-option > div{
+display:block;
+text-align:right;
+}
+
+.customer-start-option strong{
+display:block;
+color:#333;
+font-size:16px;
+}
+
+.customer-start-option small{
+display:block;
+color:#888;
+font-size:11px;
+margin-top:4px;
+}
 </style></head><body class="public-menu-page"><!-- =========================
      CLIENT HEADER
-========================= --><header class="public-menu-header"><div class="public-menu-header-inner">
+========================= --><header class="public-menu-header">
+<div class="public-menu-header-inner">
+<a href="#" class="public-brand">
+<span class="brand-icon">M</span>
+<span>{{ restaurant.name|default('Menu Smart') }}</span>
+</a>
+<button type="button" id="openCartBtn" class="menu-cart-button" aria-label="فتح سلة الطلبات">
+🛒 <b id="cartCount">0</b>
+</button>
+</div>
+</header>
 
-    <a
-        href="#"
-        class="public-brand"
-    >
-
-        <span class="brand-icon">
-            M
-        </span>
-
-        <span>
-            {{ restaurant.name|default('Menu Smart') }}
-        </span>
-
-    </a>
-
-
-    <!-- زر السلة الذي كان ناقصًا -->
-
-    <button
-        type="button"
-        id="openCartBtn"
-        class="menu-cart-button"
-        aria-label="فتح سلة الطلبات"
-    >
-
-        🛒
-
-        <b id="cartCount">
-            0
-        </b>
-
-    </button>
-
+<section id="customerStartScreen" class="customer-start-screen">
+<div class="customer-start-card">
+<div class="customer-start-logo">
+{% if restaurant.logo %}
+<img src="{{ restaurant.logo }}" alt="{{ restaurant.name }}">
+{% else %}
+<span>M</span>
+{% endif %}
 </div>
 
-</header><!-- =========================
-     RESTAURANT
-========================= --><section class="restaurant-hero"><div class="restaurant-hero-overlay">
+<div class="customer-start-buttons">
+<button type="button" id="startMenuBtn" class="customer-start-option">
+<span>☰</span>
+<div><strong>MENU</strong><small>عرض المنيو</small></div>
+</button>
 
-    <div class="restaurant-logo">
+<button type="button" id="startOnlineBtn" class="customer-start-option">
+<span>🛒</span>
+<div><strong>أون لاين</strong><small>تصفح المنيو واطلب الآن</small></div>
+</button>
 
-        {% if restaurant.logo %}
-
-            <img
-                src="{{ restaurant.logo }}"
-                alt="{{ restaurant.name }}"
-            >
-
-        {% else %}
-
-            M
-
-        {% endif %}
-
-    </div>
-
-
-    <div class="restaurant-status">
-        ● المنيو متاحة للطلب
-    </div>
-
-
-    <h1>
-        {{ restaurant.name|default('Menu Smart') }}
-    </h1>
-
-
-    {% if restaurant.description %}
-
-    <p>
-        {{ restaurant.description }}
-    </p>
-
-    {% endif %}
-
+<button type="button" id="startTrackBtn" class="customer-start-option">
+<span>↗</span>
+<div><strong>تتبع</strong><small>تابع حالة طلبك</small></div>
+</button>
 </div>
+</div>
+</section>
 
-</section><!-- =========================
-     MENU
-========================= --><main class="menu-wrapper"><div class="menu-content">
+<section class="restaurant-hero">
+<div class="restaurant-hero-overlay">
+<div class="restaurant-logo">
+{% if restaurant.logo %}
+<img src="{{ restaurant.logo }}" alt="{{ restaurant.name }}">
+{% else %}
+M
+{% endif %}
+</div>
+<div class="restaurant-status">● المنيو متاحة للطلب</div>
+<h1>{{ restaurant.name|default('Menu Smart') }}</h1>
+{% if restaurant.description %}
+<p>{{ restaurant.description }}</p>
+{% endif %}
+</div>
+</section>
+
+<style>
+.customer-back-btn{
+position:fixed;
+top:18px;
+right:18px;
+z-index:9999;
+width:52px;
+height:52px;
+border:1px solid #d4af37;
+border-radius:16px;
+background:#111;
+color:#d4af37;
+font-size:28px;
+font-weight:700;
+display:none;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+box-shadow:0 6px 18px rgba(0,0,0,.18);
+}
+.customer-back-btn:active{transform:scale(.94);}
+</style>
+<button type="button" id="customerBackBtn" class="customer-back-btn" aria-label="رجوع">←</button>
+<main class="menu-wrapper"><div class="menu-content">
 
 
     <!-- البحث الذي كان ناقصًا -->
@@ -1740,5 +1842,51 @@ document
 
 updateCart();
 
-</script></body>
+</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+    const start = document.getElementById("customerStartScreen");
+    const menu = document.querySelector(".menu-wrapper");
+    const hero = document.querySelector(".restaurant-hero");
+    const back = document.getElementById("customerBackBtn");
+    const cart = document.getElementById("openCartBtn");
+    const addButtons = document.querySelectorAll(".add-product-btn");
+
+    function openPage(online) {
+        start.style.display = "none";
+        menu.style.display = "block";
+        hero.style.display = "block";
+        back.style.display = "block";
+        cart.style.display = online ? "" : "none";
+
+        addButtons.forEach(function (btn) {
+            btn.style.display = online ? "" : "none";
+        });
+    }
+
+    document.getElementById("startMenuBtn").onclick = function () {
+        openPage(false);
+    };
+
+    document.getElementById("startOnlineBtn").onclick = function () {
+        openPage(true);
+    };
+
+    document.getElementById("startTrackBtn").onclick = function () {
+        window.location.href = "/track?slug={{ restaurant.slug }}";
+    };
+
+    back.onclick = function () {
+        start.style.display = "flex";
+        menu.style.display = "none";
+        hero.style.display = "none";
+        back.style.display = "none";
+        cart.style.display = "none";
+
+        addButtons.forEach(function (btn) {
+            btn.style.display = "";
+        });
+    };
+});
+</script>
+</body>
 </html>

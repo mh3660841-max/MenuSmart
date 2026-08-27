@@ -3736,6 +3736,7 @@ def public_menu(slug):
         "public_menu.html",
         restaurant=restaurant,
         categories=categories_list,
+        products=products_list,
         settings=settings_data
     )
 

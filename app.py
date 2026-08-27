@@ -3114,7 +3114,7 @@ def products():
         "products.html",
         restaurant=restaurant,
         categories=categories_list,
-        products_list=products_list,
+        products=products_list,
     )
 
 

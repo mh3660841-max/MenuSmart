@@ -6242,7 +6242,52 @@ def admin_settings():
         "admin_settings.html",
         user=user
     )
-    
+@app.route("/sitemap.xml")
+def sitemap():
+
+    urls = [
+        url_for("home", _external=True),
+        url_for("register", _external=True),
+        url_for("login", _external=True),
+        url_for("about", _external=True),
+        url_for("contact", _external=True),
+        url_for("privacy", _external=True),
+        url_for("terms", _external=True),
+    ]
+
+    restaurants = query_db(
+        """
+        SELECT slug
+        FROM restaurants
+        WHERE is_active = 1
+        AND slug IS NOT NULL
+        """
+    )
+
+    for restaurant in restaurants:
+        urls.append(
+            url_for(
+                "public_menu",
+                slug=restaurant["slug"],
+                _external=True
+            )
+        )
+
+    xml = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    ]
+
+    for url in urls:
+        xml.append(
+            f"<url><loc>{url}</loc></url>"
+        )
+
+    xml.append("</urlset>")
+
+    return "\n".join(xml), 200, {
+        "Content-Type": "application/xml; charset=utf-8"
+    }
 @app.route("/google85a631b2fbfde6b6.html")
 def google_verification():
     return "google-site-verification: google85a631b2fbfde6b6.html"

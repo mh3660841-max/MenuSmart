@@ -6242,6 +6242,10 @@ def admin_settings():
         "admin_settings.html",
         user=user
     )
+    
+@app.route("/google85a631b2fbfde6b6.html")
+def google_verification():
+    return "google-site-verification: google85a631b2fbfde6b6.html"
 
 if __name__ == "__main__":
 

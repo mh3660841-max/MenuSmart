@@ -6246,13 +6246,13 @@ def admin_settings():
 def sitemap():
 
     urls = [
-        url_for("home", _external=True),
-        url_for("register", _external=True),
-        url_for("login", _external=True),
-        url_for("about", _external=True),
-        url_for("contact", _external=True),
-        url_for("privacy", _external=True),
-        url_for("terms", _external=True),
+        url_for("home", _external=True, _scheme="https"),
+        url_for("register", _external=True, _scheme="https"),
+        url_for("login", _external=True, _scheme="https"),
+        url_for("about", _external=True, _scheme="https"),
+        url_for("contact", _external=True, _scheme="https"),
+        url_for("privacy", _external=True, _scheme="https"),
+        url_for("terms", _external=True, _scheme="https"),
     ]
 
     restaurants = query_db(
@@ -6269,7 +6269,8 @@ def sitemap():
             url_for(
                 "public_menu",
                 slug=restaurant["slug"],
-                _external=True
+                _external=True,
+                _scheme="https"
             )
         )
 

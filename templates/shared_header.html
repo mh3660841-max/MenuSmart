@@ -63,7 +63,7 @@
             <a
                 href="{{ url_for('logout') }}"
                 class="dashboard-logout"
-                onclick="return confirmLogout();"
+                onclick="return confirmLogout(event);"
             >
                 {{ t('logout') }}
             </a>
@@ -72,6 +72,52 @@
         </div>
     </div>
 </header>
+
+<style>
+#logoutConfirmOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity .18s ease;
+}
+#logoutConfirmOverlay.show { opacity: 1; }
+.logout-confirm-box {
+    width: min(380px,100%);
+    background:#fff;
+    border-radius:20px;
+    padding:26px 22px 20px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.22);
+    transform:translateY(10px) scale(.97);
+    transition:transform .18s ease;
+}
+#logoutConfirmOverlay.show .logout-confirm-box {
+    transform:translateY(0) scale(1);
+}
+.logout-confirm-icon {
+    width:52px;height:52px;margin:0 auto 12px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:#f1f5f9;font-size:25px;
+}
+.logout-confirm-box h3 { margin:0 0 8px;font-size:19px; }
+.logout-confirm-box p { margin:0 0 22px;color:#64748b;font-size:14px; }
+.logout-confirm-actions { display:flex;gap:10px; }
+.logout-confirm-actions button {
+    flex:1;min-height:44px;border:0;border-radius:12px;
+    font-size:14px;font-weight:700;cursor:pointer;
+}
+.logout-cancel { background:#f1f5f9;color:#334155; }
+.logout-ok { background:#111827;color:#fff; }
+</style>
+
 <script>
 
     /*
@@ -98,7 +144,40 @@
      * تأكيد {{ t('logout') }}
      */
 
-    function confirmLogout() {
+    function confirmLogout(event) {
+        if (event) event.preventDefault();
+
+        const overlay = document.createElement("div");
+        overlay.id = "logoutConfirmOverlay";
+        overlay.innerHTML = `
+            <div class="logout-confirm-box" dir="rtl">
+                <div class="logout-confirm-icon">↪</div>
+                <h3>{{ t('logout') }}</h3>
+                <p>{{ t('logout_confirm') }}</p>
+                <div class="logout-confirm-actions">
+                    <button type="button" class="logout-cancel"
+                            onclick="closeLogoutConfirm()">
+                        إلغاء
+                    </button>
+                    <button type="button" class="logout-ok"
+                            onclick="window.location.href='{{ url_for('logout') }}'">
+                        حسناً
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        requestAnimationFrame(() => overlay.classList.add("show"));
+        return false;
+    }
+
+    function closeLogoutConfirm() {
+        const overlay = document.getElementById("logoutConfirmOverlay");
+        if (!overlay) return;
+        overlay.classList.remove("show");
+        setTimeout(() => overlay.remove(), 180);
+    }
 
         return window.confirm(
             "{{ t('logout_confirm') }}"

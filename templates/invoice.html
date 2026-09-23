@@ -380,32 +380,56 @@
 
         @media print {
 
-            body {
-                padding: 0;
-                background: #fff;
-            }
+    @page {
+        size: A4;
+        margin: 5mm;
+    }
 
-            .invoice-wrapper {
-                max-width: none;
-            }
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+    }
 
-            .invoice {
-                padding: 0;
-                border-radius: 0;
-                box-shadow: none;
-            }
+    .invoice-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 
-            .print-actions {
-                display: none;
-            }
+    .invoice {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
 
-            @page {
-                size: A4;
-                margin: 12mm;
-            }
-        }
+    .print-actions {
+        display: none !important;
+    }
 
-    </style>
+    .invoice-header,
+    .info-grid,
+    .items-section,
+    .totals,
+    .notes,
+    .invoice-footer {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    table {
+        page-break-inside: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+}
+</style>
 
 </head>
 

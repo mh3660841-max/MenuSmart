@@ -559,7 +559,7 @@
     <div class="success-order-number">
 
         <span>
-            رقم الطلب
+            رقم التتبع
         </span>
 
         <strong>
@@ -567,6 +567,24 @@
         </strong>
 
     </div>
+
+    <a
+        href="{{ url_for('track_order', order_id=order.id, slug=order.restaurant_slug) }}"
+        style="
+            display:block;
+            width:100%;
+            margin:12px 0 18px;
+            padding:14px 18px;
+            border-radius:14px;
+            background:#111;
+            color:#d4af37;
+            text-decoration:none;
+            font-weight:900;
+            font-size:14px;
+        "
+    >
+        🔎 تتبع طلبك
+    </a>
 
 
     <!-- =================================================

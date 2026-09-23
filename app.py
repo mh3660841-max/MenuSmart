@@ -3611,6 +3611,7 @@ def dashboard():
     return render_template(
         "dashboard.html",
         restaurant=restaurant,
+        categories_count=categories_count,
         products_count=products_count,
         orders_count=orders_count,
         customers_count=customers_count,

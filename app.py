@@ -4409,30 +4409,46 @@ def checkout():
         )
 
     # =====================================================
-    # إشعار صاحب المطعم
+    # إشعار صاحب المطعم وجميع الموظفين النشطين
     # =====================================================
-
-    execute_db(
+    staff_users = query_db(
         """
-        INSERT INTO notifications
-        (
-            user_id,
-            restaurant_id,
-            title,
-            message,
-            notification_type,
-            is_read
-        )
-        VALUES (%s, %s, %s, %s, %s, 0)
+        SELECT user_id
+        FROM restaurant_staff
+        WHERE restaurant_id = %s
+        AND is_active = 1
         """,
-        [
-            restaurant["owner_id"],
-            restaurant_id,
-            "طلب جديد",
-            f"تم استلام طلب جديد رقم #{order_id} بقيمة {total:.2f} جنيه.",
-            "new_order"
-        ]
+        [restaurant_id]
     )
+
+    notification_users = {restaurant["owner_id"]}
+
+    for staff in staff_users:
+        if staff.get("user_id"):
+            notification_users.add(staff["user_id"])
+
+    for recipient_user_id in notification_users:
+        execute_db(
+            """
+            INSERT INTO notifications
+            (
+                user_id,
+                restaurant_id,
+                title,
+                message,
+                notification_type,
+                is_read
+            )
+            VALUES (%s, %s, %s, %s, %s, 0)
+            """,
+            [
+                recipient_user_id,
+                restaurant_id,
+                "طلب جديد",
+                f"تم استلام طلب جديد رقم #{order_id} بقيمة {total:.2f} جنيه.",
+                "new_order"
+            ]
+        )
 
     # =====================================================
     # حفظ بيانات الطلب في الجلسة
@@ -4524,6 +4540,7 @@ def order_success(order_id):
     return render_template(
         "order_success.html",
         order=order,
+        order_id=order_id,
         items=items,
         restaurant=order
     )

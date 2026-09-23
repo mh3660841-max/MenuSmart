@@ -382,13 +382,14 @@
 
     @page {
         size: A4;
-        margin: 5mm;
+        margin: 4mm;
     }
 
     html, body {
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;
+        font-size: 10px !important;
     }
 
     .invoice-wrapper {
@@ -401,7 +402,7 @@
     .invoice {
         width: 100% !important;
         margin: 0 !important;
-        padding: 8mm !important;
+        padding: 4mm !important;
         border-radius: 0 !important;
         box-shadow: none !important;
     }
@@ -410,23 +411,58 @@
         display: none !important;
     }
 
+    .invoice-header {
+        padding: 5px !important;
+        margin-bottom: 6px !important;
+    }
+
     .invoice-header,
     .info-grid,
     .items-section,
     .totals,
     .notes,
     .invoice-footer {
-        break-inside: avoid;
-        page-break-inside: avoid;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid {
+        gap: 5px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .items-section {
+        margin: 6px 0 !important;
     }
 
     table {
-        page-break-inside: auto;
+        width: 100% !important;
+        font-size: 9px !important;
+        page-break-inside: auto !important;
+    }
+
+    th, td {
+        padding: 4px !important;
     }
 
     tr {
-        page-break-inside: avoid;
-        break-inside: avoid;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .totals {
+        margin-top: 6px !important;
+        padding: 6px !important;
+    }
+
+    .notes {
+        margin-top: 6px !important;
+        padding: 5px !important;
+    }
+
+    .invoice-footer {
+        margin-top: 6px !important;
+        padding: 5px !important;
     }
 }
 </style>

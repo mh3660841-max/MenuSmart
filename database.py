@@ -331,6 +331,25 @@ def init_db():
             "TEXT NOT NULL DEFAULT 'pending'"
         )
 
+        add_column_if_missing(
+            cursor,
+            "users",
+            "email_verified",
+            "BOOLEAN NOT NULL DEFAULT TRUE"
+        )
+        add_column_if_missing(
+            cursor,
+            "users",
+            "email_verification_token",
+            "TEXT"
+        )
+        add_column_if_missing(
+            cursor,
+            "users",
+            "email_verification_expires_at",
+            "TIMESTAMP"
+        )
+
 
         # =====================================================
         # المطاعم

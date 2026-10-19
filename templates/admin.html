@@ -1196,6 +1196,7 @@
                     {{
                         users
                         |selectattr("account_status", "equalto", "pending")
+                        |selectattr("email_verified", "equalto", true)
                         |list
                         |length
                     }}
@@ -1269,6 +1270,7 @@
 
             {% set pending_users = users
                 |selectattr("account_status", "equalto", "pending")
+                |selectattr("email_verified", "equalto", true)
                 |list
             %}
 

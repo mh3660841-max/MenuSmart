@@ -18,6 +18,11 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 
 import os
+import secrets
+import hashlib
+import smtplib
+from datetime import datetime, timedelta, timezone
+from email.message import EmailMessage
 import sqlite3
 import uuid
 import sqlite3
@@ -70,6 +75,52 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = False
+
+
+# =========================================================
+# تأكيد البريد الإلكتروني
+# =========================================================
+
+def create_email_verification_token():
+    token = secrets.token_urlsafe(32)
+    token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+    expires_at = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=24)
+    return token, token_hash, expires_at
+
+
+def send_verification_email(email, token):
+    mail_server = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
+    mail_port = int(os.environ.get("MAIL_PORT", "587"))
+    mail_username = os.environ.get("MAIL_USERNAME")
+    mail_password = os.environ.get("MAIL_APP_PASSWORD")
+    base_url = os.environ.get("BASE_URL", "").rstrip("/")
+
+    if not all((mail_server, mail_username, mail_password, base_url)):
+        raise RuntimeError("إعدادات البريد الإلكتروني غير مكتملة.")
+
+    verification_url = (
+        f"{base_url}/verify-email?token={token}"
+    )
+
+    message = EmailMessage()
+    message["Subject"] = "تأكيد البريد الإلكتروني - MenuSmart"
+    message["From"] = mail_username
+    message["To"] = email
+    message.set_content(
+        "مرحبًا،\n\n"
+        "لتأكيد بريدك الإلكتروني في MenuSmart، افتح الرابط التالي خلال 24 ساعة:\n"
+        f"{verification_url}\n\n"
+        "إذا لم تطلب إنشاء الحساب، يمكنك تجاهل هذه الرسالة."
+    )
+
+    with smtplib.SMTP(mail_server, mail_port, timeout=20) as smtp:
+        smtp.starttls()
+        smtp.login(mail_username, mail_password)
+        smtp.send_message(message)
+
+
+def hash_email_verification_token(token):
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 # =========================================================
 # مجلد رفع الصور العام
@@ -1611,36 +1662,40 @@ def register():
                 "register.html"
             )
 
-        password_hash = generate_password_hash(
-            password
-        )
+        password_hash = generate_password_hash(password)
+        token, token_hash, expires_at = create_email_verification_token()
 
-        execute_db(
+        user_id = execute_db(
             """
             INSERT INTO users (
-                name,
-                email,
-                phone,
-                password,
-                role,
-                is_active,
-                account_status
+                name, email, phone, password, role, is_active,
+                account_status, email_verified,
+                email_verification_token, email_verification_expires_at
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
             """,
             [
-                name,
-                email,
-                phone,
-                password_hash,
-                "restaurant_owner",
-                1,
-                "pending"
+                name, email, phone, password_hash,
+                "restaurant_owner", 1, "email_pending", False,
+                token_hash, expires_at
             ]
         )
 
+        try:
+            send_verification_email(email, token)
+        except Exception:
+            app.logger.exception(
+                "Email verification message could not be sent for new registration."
+            )
+            flash(
+                "تم إنشاء الحساب، لكن تعذر إرسال رسالة التأكيد. يرجى التواصل مع الدعم لإعادة إرسال الرابط.",
+                "danger"
+            )
+            return redirect(url_for("login"))
+
         flash(
-            "تم إنشاء الحساب بنجاح. حسابك قيد مراجعة الإدارة.",
+            "تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيده قبل مراجعة الإدارة.",
             "success"
         )
 
@@ -1657,6 +1712,98 @@ def register():
 #تسجيل الدخول
 
 #=========================================================
+
+@app.route("/verify-email", methods=["GET"])
+def verify_email():
+    token = request.args.get("token", "").strip()
+    if not token:
+        flash("رابط تأكيد البريد غير صالح.", "danger")
+        return redirect(url_for("login"))
+
+    token_hash = hash_email_verification_token(token)
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(
+            """
+            UPDATE users
+            SET email_verified = TRUE,
+                account_status = 'pending',
+                email_verification_token = NULL,
+                email_verification_expires_at = NULL
+            WHERE email_verification_token = %s
+              AND email_verified = FALSE
+              AND email_verification_expires_at > CURRENT_TIMESTAMP
+            RETURNING id
+            """,
+            [token_hash]
+        )
+        confirmed_user = cursor.fetchone()
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        cursor.close()
+
+    if confirmed_user is None:
+        flash(
+            "رابط التأكيد غير صالح أو انتهت صلاحيته أو تم استخدامه بالفعل.",
+            "danger"
+        )
+        return redirect(url_for("login"))
+
+    flash("تم تأكيد بريدك الإلكتروني. حسابك الآن بانتظار موافقة الإدارة.", "success")
+    return redirect(url_for("login"))
+
+
+@app.route("/resend-verification", methods=["POST"])
+def resend_verification_email():
+    email = request.form.get("email", "").strip().lower()
+
+    # رسالة عامة حتى لا نكشف ما إذا كان البريد مسجلًا.
+    generic_message = (
+        "إذا كان البريد مرتبطًا بحساب جديد غير مؤكد، "
+        "فستصلك رسالة تأكيد إذا أمكن إرسالها."
+    )
+
+    if email:
+        user = query_db(
+            """
+            SELECT id, email
+            FROM users
+            WHERE email = %s
+              AND role = %s
+              AND email_verified = FALSE
+            LIMIT 1
+            """,
+            [email, "restaurant_owner"],
+            one=True
+        )
+
+        if user:
+            token, token_hash, expires_at = create_email_verification_token()
+            try:
+                execute_db(
+                    """
+                    UPDATE users
+                    SET email_verification_token = %s,
+                        email_verification_expires_at = %s
+                    WHERE id = %s
+                      AND email_verified = FALSE
+                    """,
+                    [token_hash, expires_at, user["id"]]
+                )
+                send_verification_email(user["email"], token)
+            except Exception:
+                app.logger.exception(
+                    "Email verification resend failed for a new registration."
+                )
+
+    flash(generic_message, "info")
+    return redirect(url_for("login"))
+
 
 @app.route(
     "/login",
@@ -1753,6 +1900,14 @@ def login():
             return render_template(
                 "login.html"
             )
+
+        if user["role"] != "admin" and not user["email_verified"]:
+            session.clear()
+            flash(
+                "يرجى تأكيد بريدك الإلكتروني من الرابط المرسل إليك قبل تسجيل الدخول.",
+                "warning"
+            )
+            return render_template("login.html")
 
         # =================================================
         # حالة الحساب

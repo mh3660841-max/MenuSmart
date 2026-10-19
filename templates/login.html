@@ -645,6 +645,24 @@ stroke-linejoin:round;
                 </form>
 
 
+                                <form method="POST"
+                    action="{{ url_for('resend_verification_email') }}"
+                    class="login-form">
+                    <div class="login-field">
+                        <label for="resend_email">إعادة إرسال تأكيد البريد الإلكتروني</label>
+                        <input type="email"
+                            id="resend_email"
+                            name="email"
+                            class="login-input"
+                            placeholder="example@email.com"
+                            autocomplete="email"
+                            required>
+                    </div>
+                    <button type="submit" class="login-submit">
+                        إعادة إرسال رابط التأكيد
+                    </button>
+                </form>
+
                 <div class="login-divider">
                     أو
                 </div>

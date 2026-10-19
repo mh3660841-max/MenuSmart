@@ -3703,9 +3703,23 @@ def product_delete(product_id):
 # لوحة التحكم
 # =========================================================
 @app.route("/dashboard")
-@restaurant_required
+@login_required
 def dashboard():
-    restaurant = current_restaurant()
+    restaurant = query_db(
+        """
+        SELECT *
+        FROM restaurants
+        WHERE owner_id = %s
+        ORDER BY id DESC
+        LIMIT 1
+        """,
+        [session["user_id"]],
+        one=True
+    )
+
+    if restaurant is None:
+        flash("أكمل بيانات المطعم أولاً.", "warning")
+        return redirect(url_for("profile"))
 
     stats = query_db(
         """

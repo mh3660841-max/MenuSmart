@@ -1964,34 +1964,6 @@ def login():
             )
 
         # =================================================
-        # التحقق من حالة النشاط لصاحب النشاط
-        # =================================================
-        if user["role"] != "admin":
-
-            restaurant = query_db(
-                """
-                SELECT id, is_active
-                FROM restaurants
-                WHERE owner_id = %s
-                LIMIT 1
-                """,
-                [user["id"]],
-                one=True
-            )
-
-            if restaurant is not None and restaurant["is_active"] != 1:
-                session.clear()
-
-                flash(
-                    "تم إيقاف النشاط من الإدارة.",
-                    "danger"
-                )
-
-                return render_template(
-                    "login.html"
-                )
-
-        # =================================================
         # مسح أي جلسة قديمة
         # =================================================
 
@@ -2491,7 +2463,17 @@ def invite_restaurant():
 @login_required
 def profile():
 
-    restaurant = current_restaurant()
+    restaurant = query_db(
+        """
+        SELECT *
+        FROM restaurants
+        WHERE owner_id = %s
+        ORDER BY id DESC
+        LIMIT 1
+        """,
+        [session["user_id"]],
+        one=True
+    )
 
     if request.method == "POST":
 
@@ -2660,9 +2642,9 @@ def profile():
                 "success"
             )
 
-        return redirect(
-            url_for("dashboard")
-        )
+        if restaurant is not None and restaurant["is_active"] == 1:
+            return redirect(url_for("dashboard"))
+        return redirect(url_for("profile"))
 
     return render_template(
         "profile.html",

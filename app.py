@@ -4670,6 +4670,16 @@ def order_success(order_id):
             url_for("home")
         )
 
+    if (
+        session.get("last_order_id") != order_id
+        or session.get("last_order_restaurant") != order["restaurant_slug"]
+    ):
+        flash(
+            "لا يمكن عرض تفاصيل هذا الطلب من الجلسة الحالية.",
+            "warning"
+        )
+        return redirect(url_for("home"))
+
     # =====================================================
     # جلب منتجات الطلب
     # =====================================================

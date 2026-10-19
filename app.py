@@ -264,25 +264,26 @@ def restaurant_required(function):
             SELECT *
             FROM restaurants
             WHERE owner_id = %s
-            AND is_active = 1
+            ORDER BY id DESC
             LIMIT 1
             """,
-            [
-                session["user_id"]
-            ],
+            [session["user_id"]],
             one=True
         )
 
         if restaurant is None:
-
             flash(
-                "يجب إنشاء المطعم أولاً.",
+                "يجب إنشاء بيانات النشاط أولاً.",
                 "warning"
             )
+            return redirect(url_for("profile"))
 
-            return redirect(
-                url_for("profile")
+        if not restaurant["is_active"]:
+            flash(
+                "تم حفظ بيانات نشاطك، والنشاط في انتظار التفعيل من الإدارة.",
+                "warning"
             )
+            return redirect(url_for("profile"))
 
         return function(*args, **kwargs)
 

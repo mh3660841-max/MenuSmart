@@ -92,7 +92,8 @@ def query_db(
 
 def execute_db(
     query,
-    args=()
+    args=(),
+    commit=True
 ):
 
     db = get_db()
@@ -106,7 +107,8 @@ def execute_db(
             args
         )
 
-        db.commit()
+        if commit:
+            db.commit()
 
         last_id = None
 

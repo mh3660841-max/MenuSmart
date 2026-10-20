@@ -4427,185 +4427,192 @@ def checkout():
     # إنشاء أو تحديث العميل
     # =====================================================
 
-    if customer is None:
+    try:
+        if customer is None:
 
-        customer_id = execute_db(
+            customer_id = execute_db(
+                """
+                INSERT INTO customers
+                (
+                    restaurant_id,
+                    name,
+                    phone,
+                    address,
+                    notes,
+                    total_orders,
+                    total_spent
+                )
+                VALUES (%s, %s, %s, %s, %s, 1, %s)
+                RETURNING id
+                """,
+                [
+                    restaurant_id,
+                    customer_name,
+                    customer_phone,
+                    customer_address,
+                    order_notes,
+                    total
+                ],
+                commit=False)
+
+        else:
+
+            customer_id = customer["id"]
+
+            execute_db(
+                """
+                UPDATE customers
+                SET
+                    name = %s,
+                    address = %s,
+                    notes = %s,
+                    total_orders = COALESCE(total_orders, 0) + 1,
+                    total_spent = COALESCE(total_spent, 0) + %s,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = %s
+                AND restaurant_id = %s
+                """,
+                [
+                    customer_name,
+                    customer_address,
+                    order_notes,
+                    total,
+                    customer_id,
+                    restaurant_id
+                ],
+                commit=False)
+
+        # =====================================================
+        # حالة الدفع
+        # =====================================================
+
+        payment_status = "pending"
+
+        # =====================================================
+        # إنشاء الطلب
+        # =====================================================
+
+        order_id = execute_db(
             """
-            INSERT INTO customers
+            INSERT INTO orders
             (
                 restaurant_id,
-                name,
-                phone,
-                address,
+                customer_id,
+                customer_name,
+                customer_phone,
+                customer_address,
                 notes,
-                total_orders,
-                total_spent
+                subtotal,
+                delivery_fee,
+                discount,
+                total,
+                status,
+                payment_method,
+                payment_status
             )
-            VALUES (%s, %s, %s, %s, %s, 1, %s)
+            VALUES (
+                %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s, %s
+            )
             RETURNING id
             """,
             [
                 restaurant_id,
+                customer_id,
                 customer_name,
                 customer_phone,
                 customer_address,
                 order_notes,
-                total
-            ]
-        )
-
-    else:
-
-        customer_id = customer["id"]
-
-        execute_db(
-            """
-            UPDATE customers
-            SET
-                name = %s,
-                address = %s,
-                notes = %s,
-                total_orders = COALESCE(total_orders, 0) + 1,
-                total_spent = COALESCE(total_spent, 0) + %s,
-                updated_at = CURRENT_TIMESTAMP
-            WHERE id = %s
-            AND restaurant_id = %s
-            """,
-            [
-                customer_name,
-                customer_address,
-                order_notes,
+                subtotal,
+                delivery_fee,
+                discount,
                 total,
-                customer_id,
-                restaurant_id
-            ]
-        )
+                "pending",
+                payment_method,
+                payment_status
+            ],
+            commit=False)
 
-    # =====================================================
-    # حالة الدفع
-    # =====================================================
+        # =====================================================
+        # حفظ عناصر الطلب
+        # =====================================================
 
-    payment_status = "pending"
+        for item in prepared_items:
 
-    # =====================================================
-    # إنشاء الطلب
-    # =====================================================
+            execute_db(
+                """
+                INSERT INTO order_items
+                (
+                    order_id,
+                    product_id,
+                    product_name,
+                    quantity,
+                    price,
+                    total
+                )
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """,
+                [
+                    order_id,
+                    item["product_id"],
+                    item["product_name"],
+                    item["quantity"],
+                    item["price"],
+                    item["total"]
+                ],
+                commit=False)
 
-    order_id = execute_db(
-        """
-        INSERT INTO orders
-        (
-            restaurant_id,
-            customer_id,
-            customer_name,
-            customer_phone,
-            customer_address,
-            notes,
-            subtotal,
-            delivery_fee,
-            discount,
-            total,
-            status,
-            payment_method,
-            payment_status
-        )
-        VALUES (
-            %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s, %s
-        )
-        RETURNING id
-        """,
-        [
-            restaurant_id,
-            customer_id,
-            customer_name,
-            customer_phone,
-            customer_address,
-            order_notes,
-            subtotal,
-            delivery_fee,
-            discount,
-            total,
-            "pending",
-            payment_method,
-            payment_status
-        ]
-    )
-
-    # =====================================================
-    # حفظ عناصر الطلب
-    # =====================================================
-
-    for item in prepared_items:
-
-        execute_db(
+        # =====================================================
+        # إشعار صاحب المطعم وجميع الموظفين النشطين
+        # =====================================================
+        staff_users = query_db(
             """
-            INSERT INTO order_items
-            (
-                order_id,
-                product_id,
-                product_name,
-                quantity,
-                price,
-                total
-            )
-            VALUES (%s, %s, %s, %s, %s, %s)
+            SELECT user_id
+            FROM restaurant_staff
+            WHERE restaurant_id = %s
+            AND is_active = 1
             """,
-            [
-                order_id,
-                item["product_id"],
-                item["product_name"],
-                item["quantity"],
-                item["price"],
-                item["total"]
-            ]
+            [restaurant_id]
         )
 
-    # =====================================================
-    # إشعار صاحب المطعم وجميع الموظفين النشطين
-    # =====================================================
-    staff_users = query_db(
-        """
-        SELECT user_id
-        FROM restaurant_staff
-        WHERE restaurant_id = %s
-        AND is_active = 1
-        """,
-        [restaurant_id]
-    )
+        notification_users = {restaurant["owner_id"]}
 
-    notification_users = {restaurant["owner_id"]}
+        for staff in staff_users:
+            if staff.get("user_id"):
+                notification_users.add(staff["user_id"])
 
-    for staff in staff_users:
-        if staff.get("user_id"):
-            notification_users.add(staff["user_id"])
+        for recipient_user_id in notification_users:
+            execute_db(
+                """
+                INSERT INTO notifications
+                (
+                    user_id,
+                    restaurant_id,
+                    title,
+                    message,
+                    notification_type,
+                    is_read
+                )
+                VALUES (%s, %s, %s, %s, %s, 0)
+                """,
+                [
+                    recipient_user_id,
+                    restaurant_id,
+                    "طلب جديد",
+                    f"تم استلام طلب جديد رقم #{order_id} بقيمة {total:.2f} جنيه.",
+                    "new_order"
+                ],
+                commit=False)
 
-    for recipient_user_id in notification_users:
-        execute_db(
-            """
-            INSERT INTO notifications
-            (
-                user_id,
-                restaurant_id,
-                title,
-                message,
-                notification_type,
-                is_read
-            )
-            VALUES (%s, %s, %s, %s, %s, 0)
-            """,
-            [
-                recipient_user_id,
-                restaurant_id,
-                "طلب جديد",
-                f"تم استلام طلب جديد رقم #{order_id} بقيمة {total:.2f} جنيه.",
-                "new_order"
-            ]
-        )
+        # =====================================================
+        # حفظ بيانات الطلب في الجلسة
+        # =====================================================
 
-    # =====================================================
-    # حفظ بيانات الطلب في الجلسة
-    # =====================================================
+        get_db().commit()
+    except Exception:
+        get_db().rollback()
+        raise
+
 
     session["last_order_id"] = order_id
 

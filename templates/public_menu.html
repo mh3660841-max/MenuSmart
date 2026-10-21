@@ -1062,6 +1062,7 @@ margin-top:4px;
 <div><strong>MENU</strong><small>عرض المنيو</small></div>
 </button>
 
+{% if settings and settings.allow_orders|int == 1 %}
 <button type="button" id="startOnlineBtn" class="customer-start-option">
 <span>🛒</span>
 <div><strong>أون لاين</strong><small>تصفح المنيو واطلب الآن</small></div>
@@ -1071,6 +1072,7 @@ margin-top:4px;
 <span>↗</span>
 <div><strong>تتبع</strong><small>تابع حالة طلبك</small></div>
 </button>
+{% endif %}
 </div>
 </div>
 </section>

@@ -607,6 +607,14 @@ def init_db():
             "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
         )
 
+        # إعدادات تصميم شاشة البداية العامة للمنيو
+        add_column_if_missing(cursor, "restaurant_settings", "start_screen_bg", "TEXT DEFAULT '#F5F6F8'")
+        add_column_if_missing(cursor, "restaurant_settings", "start_card_bg", "TEXT DEFAULT '#FFFFFF'")
+        add_column_if_missing(cursor, "restaurant_settings", "start_card_border_color", "TEXT DEFAULT '#D4AF37'")
+        add_column_if_missing(cursor, "restaurant_settings", "start_card_radius", "INTEGER DEFAULT 24")
+        add_column_if_missing(cursor, "restaurant_settings", "start_card_width", "INTEGER DEFAULT 400")
+        add_column_if_missing(cursor, "restaurant_settings", "start_card_padding", "INTEGER DEFAULT 30")
+
         # =====================================================
         # المنيو
         # =====================================================

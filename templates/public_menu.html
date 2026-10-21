@@ -21,6 +21,13 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 {% set card_color = settings.card_color if settings and settings.card_color else '#FFFFFF' %}
 {% set price_color = settings.price_color if settings and settings.price_color else '#8A6508' %}
 {% set card_style = settings.card_style if settings and settings.card_style in ['modern', 'classic', 'rounded'] else 'modern' %}
+{% set start_screen_bg = settings.start_screen_bg if settings and settings.start_screen_bg else '#F5F6F8' %}
+{% set start_card_bg = settings.start_card_bg if settings and settings.start_card_bg else '#FFFFFF' %}
+{% set start_card_border_color = settings.start_card_border_color if settings and settings.start_card_border_color else '#D4AF37' %}
+{% set start_card_radius = settings.start_card_radius if settings and settings.start_card_radius is not none else 24 %}
+{% set start_card_width = settings.start_card_width if settings and settings.start_card_width is not none else 400 %}
+{% set start_card_padding = settings.start_card_padding if settings and settings.start_card_padding is not none else 30 %}
+
 
 :root {
     --menu-card-color: {{ card_color if card_color is string and card_color|length == 7 and card_color[0] == '#' and card_color[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#FFFFFF' }};
@@ -961,7 +968,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 </style><style>
 .customer-start-screen{
 min-height:100vh;
-background:#f5f6f8;
+background:{{ start_screen_bg }};
 display:flex;
 align-items:center;
 justify-content:center;
@@ -971,11 +978,11 @@ box-sizing:border-box;
 
 .customer-start-card{
 width:100%;
-max-width:400px;
-background:#fff;
-border:1px solid #d4af37;
-border-radius:24px;
-padding:30px 20px;
+max-width:{{ start_card_width }}px;
+background:{{ start_card_bg }};
+border:1px solid {{ start_card_border_color }};
+border-radius:{{ start_card_radius }}px;
+padding:{{ start_card_padding }}px;
 box-shadow:0 12px 35px rgba(0,0,0,.10);
 box-sizing:border-box;
 text-align:center;

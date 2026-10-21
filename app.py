@@ -2695,6 +2695,18 @@ def settings():
         hero_color = request.form.get("hero_color", "#171613")
         card_color = request.form.get("card_color", "#FFFFFF")
         price_color = request.form.get("price_color", "#8A6508")
+        start_screen_bg = request.form.get("start_screen_bg", "#F5F6F8")
+        start_card_bg = request.form.get("start_card_bg", "#FFFFFF")
+        start_card_border_color = request.form.get("start_card_border_color", "#D4AF37")
+        def safe_int_setting(name, default, minimum, maximum):
+            try:
+                value = int(request.form.get(name, default))
+            except (TypeError, ValueError):
+                value = default
+            return max(minimum, min(maximum, value))
+        start_card_radius = safe_int_setting("start_card_radius", 24, 0, 60)
+        start_card_width = safe_int_setting("start_card_width", 400, 260, 700)
+        start_card_padding = safe_int_setting("start_card_padding", 30, 0, 80)
         card_style = request.form.get("card_style", "modern")
         if card_style not in ("modern", "classic", "rounded"):
             card_style = "modern"
@@ -2756,6 +2768,12 @@ def settings():
                     hero_color = %s,
                     card_color = %s,
                     price_color = %s,
+                    start_screen_bg = %s,
+                    start_card_bg = %s,
+                    start_card_border_color = %s,
+                    start_card_radius = %s,
+                    start_card_width = %s,
+                    start_card_padding = %s,
                     card_style = %s,
                     currency = %s,
                     language = %s,
@@ -2773,6 +2791,12 @@ def settings():
                     hero_color,
                     card_color,
                     price_color,
+                    start_screen_bg,
+                    start_card_bg,
+                    start_card_border_color,
+                    start_card_radius,
+                    start_card_width,
+                    start_card_padding,
                     card_style,
                     currency,
                     language,
@@ -2797,6 +2821,12 @@ def settings():
                     hero_color,
                     card_color,
                     price_color,
+                    start_screen_bg,
+                    start_card_bg,
+                    start_card_border_color,
+                    start_card_radius,
+                    start_card_width,
+                    start_card_padding,
                     card_style,
                     currency,
                     language,
@@ -2804,7 +2834,7 @@ def settings():
                     allow_delivery,
                     delivery_fee
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
@@ -2815,6 +2845,12 @@ def settings():
                     hero_color,
                     card_color,
                     price_color,
+                    start_screen_bg,
+                    start_card_bg,
+                    start_card_border_color,
+                    start_card_radius,
+                    start_card_width,
+                    start_card_padding,
                     card_style,
                     currency,
                     language,

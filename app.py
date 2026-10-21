@@ -2690,6 +2690,11 @@ def settings():
             "secondary_color",
             "#D4AF37"
         )
+        background_color = request.form.get("background_color", "#F7F7F7")
+        text_color = request.form.get("text_color", "#171717")
+        card_style = request.form.get("card_style", "modern")
+        if card_style not in ("modern", "classic", "rounded"):
+            card_style = "modern"
 
         currency = request.form.get(
             "currency",
@@ -2743,6 +2748,9 @@ def settings():
                 SET
                     primary_color = %s,
                     secondary_color = %s,
+                    background_color = %s,
+                    text_color = %s,
+                    card_style = %s,
                     currency = %s,
                     language = %s,
                     allow_orders = %s,
@@ -2754,6 +2762,9 @@ def settings():
                 [
                     primary_color,
                     secondary_color,
+                    background_color,
+                    text_color,
+                    card_style,
                     currency,
                     language,
                     allow_orders,
@@ -2772,19 +2783,26 @@ def settings():
                     restaurant_id,
                     primary_color,
                     secondary_color,
+                    background_color,
+                    text_color,
+                    card_style,
                     currency,
                     language,
                     allow_orders,
                     allow_delivery,
                     delivery_fee
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
                     primary_color,
                     secondary_color,
+                    background_color,
+                    text_color,
+                    card_style,
                     currency,
+                    language,
                     allow_orders,
                     allow_delivery,
                     delivery_fee

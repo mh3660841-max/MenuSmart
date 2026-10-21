@@ -374,6 +374,27 @@
                value="{{ settings.secondary_color if settings and settings.secondary_color else '#D4AF37' }}">
     </div>
 
+    <div class="form-group">
+        <label for="background_color">لون خلفية المنيو</label>
+        <input type="color" id="background_color" name="background_color"
+               value="{{ settings.background_color if settings and settings.background_color else '#F7F7F7' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="text_color">لون الكتابة</label>
+        <input type="color" id="text_color" name="text_color"
+               value="{{ settings.text_color if settings and settings.text_color else '#171717' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="card_style">شكل كروت المنتجات</label>
+        <select id="card_style" name="card_style">
+            <option value="modern" {% if not settings or settings.card_style == "modern" or not settings.card_style %}selected{% endif %}>عصري</option>
+            <option value="classic" {% if settings and settings.card_style == "classic" %}selected{% endif %}>كلاسيكي</option>
+            <option value="rounded" {% if settings and settings.card_style == "rounded" %}selected{% endif %}>دائري</option>
+        </select>
+    </div>
+
 
     <div class="form-group">
     <label for="currency">العملة</label>

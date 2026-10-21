@@ -564,6 +564,27 @@ def init_db():
         add_column_if_missing(
             cursor,
             "restaurant_settings",
+            "background_color",
+            "TEXT DEFAULT '#F7F7F7'"
+        )
+
+        add_column_if_missing(
+            cursor,
+            "restaurant_settings",
+            "text_color",
+            "TEXT DEFAULT '#171717'"
+        )
+
+        add_column_if_missing(
+            cursor,
+            "restaurant_settings",
+            "card_style",
+            "TEXT DEFAULT 'modern'"
+        )
+
+        add_column_if_missing(
+            cursor,
+            "restaurant_settings",
             "updated_at",
             "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
         )

@@ -15,9 +15,15 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 ><style>
 {% set primary = settings.primary_color if settings and settings.primary_color else '#111111' %}
 {% set secondary = settings.secondary_color if settings and settings.secondary_color else '#D4AF37' %}
+{% set background = settings.background_color if settings and settings.background_color else '#F7F7F7' %}
+{% set text_color = settings.text_color if settings and settings.text_color else '#171717' %}
+{% set card_style = settings.card_style if settings and settings.card_style in ['modern', 'classic', 'rounded'] else 'modern' %}
+
 :root {
     --menu-primary: {{ primary if primary is string and primary|length == 7 and primary[0] == '#' and primary[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#111111' }};
     --menu-secondary: {{ secondary if secondary is string and secondary|length == 7 and secondary[0] == '#' and secondary[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#D4AF37' }};
+    --menu-background: {{ background if background is string and background|length == 7 and background[0] == '#' and background[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#F7F7F7' }};
+    --menu-text: {{ text_color if text_color is string and text_color|length == 7 and text_color[0] == '#' and text_color[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#171717' }};
 }
 
 *{
@@ -26,9 +32,24 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 
 body.public-menu-page{
     margin:0;
-    background:#f7f7f7;
-    color:#171717;
+    background:var(--menu-background, #f7f7f7);
+    color:var(--menu-text, #171717);
     font-family:Arial,Tahoma,sans-serif;
+}
+
+body.public-menu-page .public-product-card{
+    border-radius:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
+}
+
+body.public-menu-page.card-style-classic .public-product-card{
+    border-radius:4px;
+    box-shadow:none;
+}
+
+body.public-menu-page.card-style-rounded .public-product-card{
+    border-radius:28px;
+    box-shadow:0 10px 28px rgba(0,0,0,.08);
 }
 
 
@@ -1032,7 +1053,7 @@ color:#888;
 font-size:11px;
 margin-top:4px;
 }
-</style></head><body class="public-menu-page"><!-- =========================
+</style></head><body class="public-menu-page card-style-{{ card_style }}"><!-- =========================
      CLIENT HEADER
 ========================= --><header class="public-menu-header">
 <div class="public-menu-header-inner">

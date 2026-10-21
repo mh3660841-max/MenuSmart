@@ -580,6 +580,18 @@ def init_db():
             "hero_color",
             "TEXT DEFAULT '#171613'"
         )
+        add_column_if_missing(
+            cursor,
+            "restaurant_settings",
+            "card_color",
+            "TEXT DEFAULT '#FFFFFF'"
+        )
+        add_column_if_missing(
+            cursor,
+            "restaurant_settings",
+            "price_color",
+            "TEXT DEFAULT '#8A6508'"
+        )
 
         add_column_if_missing(
             cursor,

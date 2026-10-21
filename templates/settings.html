@@ -413,6 +413,26 @@
     </div>
 
     <div class="form-group">
+        <label for="card_color">لون خلفية كارت المنتج</label>
+        <input type="color" id="card_color" name="card_color"
+               value="{{ settings.card_color if settings and settings.card_color else '#FFFFFF' }}">
+        <div class="color-precision-row">
+            <input type="text" id="card_color_hex" class="color-hex-input" value="" maxlength="7" placeholder="#FFFFFF" autocomplete="off" aria-label="كود HEX للون card_color">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="price_color">لون سعر المنتج</label>
+        <input type="color" id="price_color" name="price_color"
+               value="{{ settings.price_color if settings and settings.price_color else '#8A6508' }}">
+        <div class="color-precision-row">
+            <input type="text" id="price_color_hex" class="color-hex-input" value="" maxlength="7" placeholder="#8A6508" autocomplete="off" aria-label="كود HEX للون price_color">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label for="card_style">شكل كروت المنتجات</label>
         <select id="card_style" name="card_style">
             <option value="modern" {% if not settings or settings.card_style == "modern" or not settings.card_style %}selected{% endif %}>عصري</option>
@@ -1268,7 +1288,9 @@ document.addEventListener("DOMContentLoaded", function () {
         "secondary_color",
         "background_color",
         "text_color",
-        "hero_color"
+        "hero_color",
+        "card_color",
+        "price_color"
     ];
 
     ids.forEach(function (id) {

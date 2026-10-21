@@ -2693,6 +2693,8 @@ def settings():
         background_color = request.form.get("background_color", "#F7F7F7")
         text_color = request.form.get("text_color", "#171717")
         hero_color = request.form.get("hero_color", "#171613")
+        card_color = request.form.get("card_color", "#FFFFFF")
+        price_color = request.form.get("price_color", "#8A6508")
         card_style = request.form.get("card_style", "modern")
         if card_style not in ("modern", "classic", "rounded"):
             card_style = "modern"
@@ -2752,6 +2754,8 @@ def settings():
                     background_color = %s,
                     text_color = %s,
                     hero_color = %s,
+                    card_color = %s,
+                    price_color = %s,
                     card_style = %s,
                     currency = %s,
                     language = %s,
@@ -2767,6 +2771,8 @@ def settings():
                     background_color,
                     text_color,
                     hero_color,
+                    card_color,
+                    price_color,
                     card_style,
                     currency,
                     language,
@@ -2789,6 +2795,8 @@ def settings():
                     background_color,
                     text_color,
                     hero_color,
+                    card_color,
+                    price_color,
                     card_style,
                     currency,
                     language,
@@ -2796,7 +2804,7 @@ def settings():
                     allow_delivery,
                     delivery_fee
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
@@ -2805,6 +2813,8 @@ def settings():
                     background_color,
                     text_color,
                     hero_color,
+                    card_color,
+                    price_color,
                     card_style,
                     currency,
                     language,

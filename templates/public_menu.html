@@ -17,6 +17,7 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 {% set secondary = settings.secondary_color if settings and settings.secondary_color else '#D4AF37' %}
 {% set background = settings.background_color if settings and settings.background_color else '#F7F7F7' %}
 {% set text_color = settings.text_color if settings and settings.text_color else '#171717' %}
+{% set hero_color = settings.hero_color if settings and settings.hero_color else '#171613' %}
 {% set card_style = settings.card_style if settings and settings.card_style in ['modern', 'classic', 'rounded'] else 'modern' %}
 
 :root {
@@ -161,7 +162,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
     display:none;
     position:relative;
     overflow:hidden;
-    background:radial-gradient(ellipse at top, #343027 0%, #171613 48%, #0b0b0b 100%);
+    background:linear-gradient(135deg, {{ hero_color }}, #0b0b0b);
     color:#fff;
     padding:42px 18px 48px;
     text-align:center;
@@ -183,8 +184,8 @@ body.public-menu-page.card-style-rounded .public-product-card{
 }
 
 .restaurant-logo{
-    width:92px;
-    height:92px;
+    width:120px;
+    height:120px;
     margin:0 auto 18px;
     border:2px solid rgba(212,175,55,.85);
     border-radius:26px;
@@ -876,8 +877,8 @@ body.public-menu-page.card-style-rounded .public-product-card{
     }
 
     .restaurant-logo{
-        width:74px;
-        height:74px;
+        width:96px;
+        height:96px;
 
         border-radius:20px;
     }

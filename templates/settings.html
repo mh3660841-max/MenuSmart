@@ -366,24 +366,50 @@
         <label for="primary_color">اللون الأساسي للمنيو</label>
         <input type="color" id="primary_color" name="primary_color"
                value="{{ settings.primary_color if settings and settings.primary_color else '#111111' }}">
+        <div class="color-precision-row">
+            <input type="text" id="primary_color_hex" class="color-hex-input" value="" maxlength="7" placeholder="#B88A44" autocomplete="off" aria-label="كود HEX للون primary_color">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
     </div>
 
     <div class="form-group">
         <label for="secondary_color">اللون الثانوي للمنيو</label>
         <input type="color" id="secondary_color" name="secondary_color"
                value="{{ settings.secondary_color if settings and settings.secondary_color else '#D4AF37' }}">
+        <div class="color-precision-row">
+            <input type="text" id="secondary_color_hex" class="color-hex-input" value="" maxlength="7" placeholder="#B88A44" autocomplete="off" aria-label="كود HEX للون secondary_color">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
     </div>
 
     <div class="form-group">
         <label for="background_color">لون خلفية المنيو</label>
         <input type="color" id="background_color" name="background_color"
                value="{{ settings.background_color if settings and settings.background_color else '#F7F7F7' }}">
+        <div class="color-precision-row">
+            <input type="text" id="background_color_hex" class="color-hex-input" value="" maxlength="7" placeholder="#B88A44" autocomplete="off" aria-label="كود HEX للون background_color">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
     </div>
 
     <div class="form-group">
         <label for="text_color">لون الكتابة</label>
         <input type="color" id="text_color" name="text_color"
                value="{{ settings.text_color if settings and settings.text_color else '#171717' }}">
+        <div class="color-precision-row">
+            <input type="text" id="text_color_hex" class="color-hex-input" value="" maxlength="7" placeholder="#B88A44" autocomplete="off" aria-label="كود HEX للون text_color">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="hero_color">لون كارت الترحيب والشعار</label>
+        <input type="color" id="hero_color" name="hero_color"
+               value="{{ settings.hero_color if settings and settings.hero_color else '#171613' }}">
+        <div class="color-precision-row">
+            <input type="text" id="hero_color_hex" class="color-hex-input" value="" maxlength="7" placeholder="#B88A44" autocomplete="off" aria-label="كود HEX للون hero_color">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
     </div>
 
     <div class="form-group">
@@ -1203,6 +1229,91 @@ settingsForms.forEach(
 
 </script>
 
+
+
+<style>
+.color-precision-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+.color-hex-input {
+    width: 125px;
+    max-width: 100%;
+    padding: 9px 10px;
+    border: 1px solid #b8b8b8;
+    border-radius: 8px;
+    background: #fff;
+    color: #171717;
+    direction: ltr;
+    text-align: center;
+    font-family: monospace;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+.color-hex-hint {
+    font-size: 12px;
+    opacity: .75;
+}
+.color-hex-input.invalid {
+    border: 2px solid #c62828;
+}
+</style>
+<script id="color-precision-sync">
+document.addEventListener("DOMContentLoaded", function () {
+    const ids = [
+        "primary_color",
+        "secondary_color",
+        "background_color",
+        "text_color",
+        "hero_color"
+    ];
+
+    ids.forEach(function (id) {
+        const picker = document.getElementById(id);
+        const hex = document.getElementById(id + "_hex");
+        if (!picker || !hex) return;
+
+        function syncFromPicker() {
+            hex.value = picker.value.toUpperCase();
+            hex.classList.remove("invalid");
+        }
+
+        picker.addEventListener("input", syncFromPicker);
+        picker.addEventListener("change", syncFromPicker);
+
+        hex.addEventListener("input", function () {
+            let value = hex.value.trim();
+            if (/^[0-9A-Fa-f]{6}$/.test(value)) {
+                value = "#" + value;
+            }
+
+            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                picker.value = value;
+                hex.value = value.toUpperCase();
+                hex.classList.remove("invalid");
+            } else {
+                hex.classList.add("invalid");
+            }
+        });
+
+        hex.addEventListener("blur", function () {
+            const value = hex.value.trim();
+            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                picker.value = value;
+                hex.value = value.toUpperCase();
+                hex.classList.remove("invalid");
+            } else {
+                syncFromPicker();
+            }
+        });
+
+        syncFromPicker();
+    });
+});
+</script>
 
 </body>
 

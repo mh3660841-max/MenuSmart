@@ -574,6 +574,12 @@ def init_db():
             "text_color",
             "TEXT DEFAULT '#171717'"
         )
+        add_column_if_missing(
+            cursor,
+            "restaurant_settings",
+            "hero_color",
+            "TEXT DEFAULT '#171613'"
+        )
 
         add_column_if_missing(
             cursor,

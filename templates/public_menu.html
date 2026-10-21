@@ -950,6 +950,28 @@ font-weight:900;
 color:#777;
 }
 
+.customer-start-welcome{
+    margin: 0 auto 24px;
+    text-align: center;
+}
+.customer-start-welcome h1{
+    margin: 0 0 12px;
+    color: #171717;
+    font-size: 23px;
+    line-height: 1.5;
+}
+.customer-start-welcome h2{
+    margin: 0 0 8px;
+    color: #9b7d1e;
+    font-size: 19px;
+    line-height: 1.6;
+}
+.customer-start-welcome p{
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.8;
+}
 .customer-start-buttons{
 width:100%;
 display:flex;
@@ -1026,6 +1048,12 @@ margin-top:4px;
 {% else %}
 <span>M</span>
 {% endif %}
+</div>
+
+<div class="customer-start-welcome">
+    <h1>{{ restaurant.name|default('Menu Smart') }}</h1>
+    <h2>كل اللي بتحبه… في مكان واحد</h2>
+    <p>اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.</p>
 </div>
 
 <div class="customer-start-buttons">

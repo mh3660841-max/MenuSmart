@@ -29,6 +29,8 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 {% set start_card_padding = settings.start_card_padding if settings and settings.start_card_padding is not none else 30 %}
 {% set start_welcome_text = settings.start_welcome_text if settings and settings.start_welcome_text else 'كل اللي بتحبه… في مكان واحد' %}
 {% set start_welcome_color = settings.start_welcome_color if settings and settings.start_welcome_color else '#9b7d1e' %}
+{% set start_description_text = settings.start_description_text if settings and settings.start_description_text else 'اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.' %}
+{% set start_description_color = settings.start_description_color if settings and settings.start_description_color else '#666666' %}
 
 
 :root {
@@ -1033,7 +1035,7 @@ color:#777;
 }
 .customer-start-welcome p{
     margin: 0;
-    color: #666;
+    color: {{ start_description_color if start_description_color is string and start_description_color|length == 7 and start_description_color[0] == '#' and start_description_color[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#666666' }};
     font-size: 13px;
     line-height: 1.8;
 }
@@ -1118,7 +1120,7 @@ margin-top:4px;
 <div class="customer-start-welcome">
     <h1>{{ restaurant.name|default('Menu Smart') }}</h1>
     <h2>{{ start_welcome_text }}</h2>
-    <p>اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.</p>
+    <p>{{ start_description_text }}</p>
 </div>
 
 <div class="customer-start-buttons">

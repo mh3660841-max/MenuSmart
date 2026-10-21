@@ -486,6 +486,23 @@
     </div>
 
     <div class="form-group">
+        <label for="start_description_text">النص الوصفي أسفل رسالة الترحيب</label>
+        <textarea id="start_description_text" name="start_description_text" rows="2" maxlength="200">{{ settings.start_description_text if settings and settings.start_description_text else 'اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="start_description_color">لون النص الوصفي</label>
+        <input type="color" id="start_description_color" name="start_description_color"
+               value="{{ settings.start_description_color if settings and settings.start_description_color else '#666666' }}">
+        <div class="color-precision-row">
+            <input type="text" id="start_description_color_hex" class="color-hex-input"
+                   value="" maxlength="7" placeholder="#666666" autocomplete="off"
+                   aria-label="كود HEX للون النص الوصفي">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
+    </div>
+
+<div class="form-group">
         <label for="start_card_radius">استدارة حواف البطاقة (0–60)</label>
         <input type="number" id="start_card_radius" name="start_card_radius"
                min="0" max="60"
@@ -1366,6 +1383,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "card_color",
         "price_color",
         "start_welcome_color",
+        "start_description_color",
         "start_screen_bg",
         "start_card_bg",
         "start_card_border_color"

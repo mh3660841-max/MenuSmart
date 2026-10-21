@@ -617,6 +617,9 @@ def init_db():
         add_column_if_missing(cursor, "restaurant_settings", "start_welcome_text", "TEXT DEFAULT 'كل اللي بتحبه… في مكان واحد'")
         add_column_if_missing(cursor, "restaurant_settings", "start_welcome_color", "TEXT DEFAULT '#9b7d1e'")
 
+        add_column_if_missing(cursor, "restaurant_settings", "start_description_text", "TEXT DEFAULT 'اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.'")
+        add_column_if_missing(cursor, "restaurant_settings", "start_description_color", "TEXT DEFAULT '#666666'")
+
         # =====================================================
         # المنيو
         # =====================================================

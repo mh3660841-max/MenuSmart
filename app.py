@@ -2713,6 +2713,12 @@ def settings():
         start_welcome_color = request.form.get("start_welcome_color", "#9b7d1e").strip()
         if len(start_welcome_color) != 7 or not start_welcome_color.startswith("#") or any(c not in "0123456789abcdefABCDEF" for c in start_welcome_color[1:]):
             start_welcome_color = "#9b7d1e"
+        start_description_text = request.form.get("start_description_text", "اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.").strip()[:200]
+        if not start_description_text:
+            start_description_text = "اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة."
+        start_description_color = request.form.get("start_description_color", "#666666").strip()
+        if len(start_description_color) != 7 or not start_description_color.startswith("#") or any(c not in "0123456789abcdefABCDEF" for c in start_description_color[1:]):
+            start_description_color = "#666666"
         card_style = request.form.get("card_style", "modern")
         if card_style not in ("modern", "classic", "rounded"):
             card_style = "modern"
@@ -2782,6 +2788,8 @@ def settings():
                     start_card_padding = %s,
                     start_welcome_text = %s,
                     start_welcome_color = %s,
+                    start_description_text = %s,
+                    start_description_color = %s,
                     card_style = %s,
                     currency = %s,
                     language = %s,
@@ -2807,6 +2815,8 @@ def settings():
                     start_card_padding,
                     start_welcome_text,
                     start_welcome_color,
+                    start_description_text,
+                    start_description_color,
                     card_style,
                     currency,
                     language,
@@ -2839,6 +2849,10 @@ def settings():
                     start_card_padding,
                     start_welcome_text,
                     start_welcome_color,
+                    start_description_text,
+                    start_description_color,
+                    start_description_text,
+                    start_description_color,
                     card_style,
                     currency,
                     language,
@@ -2846,7 +2860,7 @@ def settings():
                     allow_delivery,
                     delivery_fee
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
@@ -2865,6 +2879,8 @@ def settings():
                     start_card_padding,
                     start_welcome_text,
                     start_welcome_color,
+                    start_description_text,
+                    start_description_color,
                     card_style,
                     currency,
                     language,

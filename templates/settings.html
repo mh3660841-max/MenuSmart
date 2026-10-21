@@ -434,20 +434,55 @@
 
     <div class="form-group">
         <label>تصميم شاشة البداية — لون الخلفية</label>
-        <input type="color" name="start_screen_bg"
+        <input type="color" id="start_screen_bg" name="start_screen_bg"
                value="{{ settings.start_screen_bg if settings and settings.start_screen_bg else '#F5F6F8' }}">
+        <div class="color-precision-row">
+            <input type="text" id="start_screen_bg_hex" class="color-hex-input"
+                   value="" maxlength="7" placeholder="#F5F6F8" autocomplete="off"
+                   aria-label="كود HEX للون خلفية شاشة البداية">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
     </div>
 
     <div class="form-group">
         <label>لون بطاقة شاشة البداية</label>
-        <input type="color" name="start_card_bg"
+        <input type="color" id="start_card_bg" name="start_card_bg"
                value="{{ settings.start_card_bg if settings and settings.start_card_bg else '#FFFFFF' }}">
+        <div class="color-precision-row">
+            <input type="text" id="start_card_bg_hex" class="color-hex-input"
+                   value="" maxlength="7" placeholder="#FFFFFF" autocomplete="off"
+                   aria-label="كود HEX للون بطاقة شاشة البداية">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
     </div>
 
     <div class="form-group">
         <label>لون إطار بطاقة شاشة البداية</label>
-        <input type="color" name="start_card_border_color"
+        <input type="color" id="start_card_border_color" name="start_card_border_color"
                value="{{ settings.start_card_border_color if settings and settings.start_card_border_color else '#D4AF37' }}">
+        <div class="color-precision-row">
+            <input type="text" id="start_card_border_color_hex" class="color-hex-input"
+                   value="" maxlength="7" placeholder="#D4AF37" autocomplete="off"
+                   aria-label="كود HEX للون إطار بطاقة شاشة البداية">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="start_welcome_text">رسالة الترحيب في شاشة البداية</label>
+        <textarea id="start_welcome_text" name="start_welcome_text" rows="2" maxlength="200">{{ settings.start_welcome_text if settings and settings.start_welcome_text else 'كل اللي بتحبه… في مكان واحد' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="start_welcome_color">لون رسالة الترحيب</label>
+        <input type="color" id="start_welcome_color" name="start_welcome_color"
+               value="{{ settings.start_welcome_color if settings and settings.start_welcome_color else '#9b7d1e' }}">
+        <div class="color-precision-row">
+            <input type="text" id="start_welcome_color_hex" class="color-hex-input"
+                   value="" maxlength="7" placeholder="#9B7D1E" autocomplete="off"
+                   aria-label="كود HEX للون رسالة الترحيب">
+            <span class="color-hex-hint">كود HEX</span>
+        </div>
     </div>
 
     <div class="form-group">
@@ -1329,7 +1364,11 @@ document.addEventListener("DOMContentLoaded", function () {
         "text_color",
         "hero_color",
         "card_color",
-        "price_color"
+        "price_color",
+        "start_welcome_color",
+        "start_screen_bg",
+        "start_card_bg",
+        "start_card_border_color"
     ];
 
     ids.forEach(function (id) {

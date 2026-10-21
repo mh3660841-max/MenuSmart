@@ -27,6 +27,8 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 {% set start_card_radius = settings.start_card_radius if settings and settings.start_card_radius is not none else 24 %}
 {% set start_card_width = settings.start_card_width if settings and settings.start_card_width is not none else 400 %}
 {% set start_card_padding = settings.start_card_padding if settings and settings.start_card_padding is not none else 30 %}
+{% set start_welcome_text = settings.start_welcome_text if settings and settings.start_welcome_text else 'كل اللي بتحبه… في مكان واحد' %}
+{% set start_welcome_color = settings.start_welcome_color if settings and settings.start_welcome_color else '#9b7d1e' %}
 
 
 :root {
@@ -1025,7 +1027,7 @@ color:#777;
 }
 .customer-start-welcome h2{
     margin: 0 0 8px;
-    color: #9b7d1e;
+    color: {{ start_welcome_color if start_welcome_color is string and start_welcome_color|length == 7 and start_welcome_color[0] == '#' and start_welcome_color[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#9b7d1e' }};
     font-size: 19px;
     line-height: 1.6;
 }
@@ -1115,7 +1117,7 @@ margin-top:4px;
 
 <div class="customer-start-welcome">
     <h1>{{ restaurant.name|default('Menu Smart') }}</h1>
-    <h2>كل اللي بتحبه… في مكان واحد</h2>
+    <h2>{{ start_welcome_text }}</h2>
     <p>اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.</p>
 </div>
 

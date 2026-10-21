@@ -13,6 +13,12 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
     rel="stylesheet"
     href="{{ url_for('static', filename='css/menu.css') }}"
 ><style>
+{% set primary = settings.primary_color if settings and settings.primary_color else '#111111' %}
+{% set secondary = settings.secondary_color if settings and settings.secondary_color else '#D4AF37' %}
+:root {
+    --menu-primary: {{ primary if primary is string and primary|length == 7 and primary[0] == '#' and primary[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#111111' }};
+    --menu-secondary: {{ secondary if secondary is string and secondary|length == 7 and secondary[0] == '#' and secondary[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#D4AF37' }};
+}
 
 *{
     box-sizing:border-box;
@@ -323,8 +329,8 @@ body.public-menu-page{
 }
 
 .menu-category.active{
-    background:#111;
-    color:#d4af37;
+    background:var(--menu-primary, #111111);
+    color:var(--menu-secondary, #D4AF37);
 }
 
 
@@ -407,8 +413,8 @@ body.public-menu-page{
 
     border-radius:50px;
 
-    background:#111;
-    color:#d4af37;
+    background:var(--menu-primary, #111111);
+    color:var(--menu-secondary, #D4AF37);
 
     font-size:10px;
     font-weight:900;
@@ -487,8 +493,8 @@ body.public-menu-page{
 .add-product-btn{
     border:0;
 
-    background:#111;
-    color:#d4af37;
+    background:var(--menu-primary, #111111);
+    color:var(--menu-secondary, #D4AF37);
 
     padding:10px 14px;
 
@@ -504,8 +510,8 @@ body.public-menu-page{
 }
 
 .add-product-btn:hover{
-    background:#d4af37;
-    color:#111;
+    background:var(--menu-secondary, #D4AF37);
+    color:var(--menu-primary, #111111);
 }
 
 .add-product-btn:disabled{

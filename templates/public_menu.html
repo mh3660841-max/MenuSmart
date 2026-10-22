@@ -1416,14 +1416,14 @@ M
   transition:transform .2s ease,background .2s ease,box-shadow .2s ease;
 }
 .customer-back-btn::before{
-  content:"";width:11px;height:11px;
-  border-left:2px solid currentColor;border-bottom:2px solid currentColor;
-  transform:translateX(2px) rotate(45deg);
+content:"";width:10px;height:10px;
+border-left:2px solid currentColor;border-bottom:2px solid currentColor;
+transform:translateX(2px) rotate(45deg);
 }
 .customer-back-btn::after{
-  content:"";position:absolute;width:19px;height:2px;
-  background:currentColor;border-radius:2px;
-  transform:translateX(1px);
+content:"";position:absolute;width:16px;height:2px;
+background:currentColor;border-radius:2px;
+transform:translateX(1px);
 }
 .customer-back-btn:hover{background:rgba(255,255,255,.25);box-shadow:0 8px 26px rgba(0,0,0,.24)}
 .customer-back-btn:active{transform:scale(.92)}
@@ -2377,5 +2377,52 @@ else init();
 })();
 </script>
 
+
+<style id="menusmart-clean-search-categories">
+/* MENUSMART_CLEAN_SEARCH_CATEGORIES_V1 */
+body.public-menu-page .menu-search-box {
+    height: 48px;
+    margin-bottom: 10px;
+    border-radius: 14px;
+    box-shadow: none;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+body.public-menu-page .menu-search-box:focus-within {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--menu-primary, #111111) 12%, transparent);
+}
+body.public-menu-page .menu-categories {
+    gap: 7px;
+    padding: 8px 15px 12px;
+    border-bottom: 0;
+    box-shadow: none;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+body.public-menu-page .menu-categories .menu-category {
+    padding: 8px 14px;
+    border-radius: 12px;
+    box-shadow: none;
+    transform: none;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+body.public-menu-page .menu-categories .menu-category:hover,
+body.public-menu-page .menu-categories .menu-category:focus-visible,
+body.public-menu-page .menu-categories .menu-category:active {
+    transform: none;
+}
+body.public-menu-page .menu-categories .menu-category.active {
+    background: var(--menu-primary, #111111);
+    color: var(--menu-secondary, #D4AF37);
+    border-color: var(--menu-primary, #111111);
+}
+@media (max-width: 768px) {
+    body.public-menu-page .menu-search-box { margin-bottom: 8px; }
+    body.public-menu-page .menu-categories { gap: 6px; padding: 7px 10px 10px; }
+    body.public-menu-page .menu-categories .menu-category { padding: 8px 12px; font-size: 12px; }
+}
+</style>
 </body>
 </html>

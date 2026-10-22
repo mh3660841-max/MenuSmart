@@ -2680,6 +2680,18 @@ def settings():
     )
 
     if request.method == "POST":
+        hero_background_image = (
+            settings_data["hero_background_image"]
+            if settings_data and "hero_background_image" in settings_data.keys()
+            else None
+        )
+        hero_background_upload = request.files.get("hero_background_image")
+        if hero_background_upload and hero_background_upload.filename:
+            uploaded_background = save_uploaded_image(hero_background_upload)
+            if not uploaded_background:
+                flash("تعذر رفع صورة الخلفية. استخدم صورة PNG أو JPG أو WEBP.", "error")
+                return redirect(url_for("settings"))
+            hero_background_image = uploaded_background
 
         primary_color = request.form.get(
             "primary_color",
@@ -2851,8 +2863,7 @@ def settings():
                     start_welcome_color,
                     start_description_text,
                     start_description_color,
-                    start_description_text,
-                    start_description_color,
+                    hero_background_image,
                     card_style,
                     currency,
                     language,
@@ -2860,7 +2871,7 @@ def settings():
                     allow_delivery,
                     delivery_fee
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
@@ -2881,6 +2892,7 @@ def settings():
                     start_welcome_color,
                     start_description_text,
                     start_description_color,
+                    hero_background_image,
                     card_style,
                     currency,
                     language,
@@ -2889,6 +2901,11 @@ def settings():
                     delivery_fee
                 ]
             )
+
+        execute_db(
+            "UPDATE restaurant_settings SET hero_background_image = %s WHERE restaurant_id = %s",
+            [hero_background_image, restaurant["id"]]
+        )
 
         flash(
             "تم حفظ الإعدادات بنجاح.",

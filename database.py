@@ -608,6 +608,7 @@ def init_db():
         )
 
         # إعدادات تصميم شاشة البداية العامة للمنيو
+        add_column_if_missing(cursor, "restaurant_settings", "hero_background_image", "TEXT")
         add_column_if_missing(cursor, "restaurant_settings", "start_screen_bg", "TEXT DEFAULT '#F5F6F8'")
         add_column_if_missing(cursor, "restaurant_settings", "start_card_bg", "TEXT DEFAULT '#FFFFFF'")
         add_column_if_missing(cursor, "restaurant_settings", "start_card_border_color", "TEXT DEFAULT '#D4AF37'")

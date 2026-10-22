@@ -357,8 +357,21 @@
 <form
     method="POST"
     action="{{ url_for('settings') }}"
-    class="settings-form"
->
+    class="settings-form" enctype="multipart/form-data">
+
+
+    <div class="form-group">
+        <label for="hero_background_image">صورة خلفية لوجو واسم المطعم</label>
+        <input type="file" id="hero_background_image" name="hero_background_image"
+               accept="image/png,image/jpeg,image/webp">
+        <small>اختر صورة خفيفة؛ ستظهر خلف اللوجو والاسم مع طبقة شفافة.</small>
+        {% if settings and settings.hero_background_image %}
+        <div style="margin-top:10px">
+            <img src="{{ settings.hero_background_image }}" alt="صورة الخلفية الحالية"
+                 style="display:block;max-width:220px;max-height:120px;object-fit:cover;border-radius:8px">
+        </div>
+        {% endif %}
+    </div>
 
 <div class="form-grid">
 

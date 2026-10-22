@@ -1409,7 +1409,8 @@ M
 <style>
 .customer-back-btn{
   position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;
-  z-index:9999;width:46px;height:46px;border-radius:50%;
+  z-index:100001;width:46px;height:46px;border-radius:50%;
+pointer-events:auto;touch-action:manipulation;
   display:none;align-items:center;justify-content:center;
   cursor:pointer;color:#fff;font-size:0;
   background:rgba(255,255,255,.14);
@@ -1420,12 +1421,12 @@ M
   transition:transform .2s ease,background .2s ease,box-shadow .2s ease;
 }
 .customer-back-btn::before{
-content:"";width:10px;height:10px;
+content:"";width:7px;height:7px;
 border-left:2px solid currentColor;border-bottom:2px solid currentColor;
-transform:translateX(2px) rotate(45deg);
+transform:translateX(1px) rotate(45deg);
 }
 .customer-back-btn::after{
-content:"";position:absolute;width:16px;height:2px;
+content:"";position:absolute;width:11px;height:2px;
 background:currentColor;border-radius:2px;
 transform:translateX(1px);
 }
@@ -2223,17 +2224,18 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "/track?slug={{ restaurant.slug }}";
     };
 
-    back.onclick = function () {
-        start.style.display = "flex";
-        menu.style.display = "none";
-        hero.style.display = "none";
-        back.style.display = "none";
-        cart.style.display = "none";
-
+    back.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        start.style.setProperty("display", "flex", "important");
+        menu.style.setProperty("display", "none", "important");
+        if (hero) hero.style.setProperty("display", "none", "important");
+        back.style.setProperty("display", "none", "important");
+        if (cart) cart.style.setProperty("display", "none", "important");
         addButtons.forEach(function (btn) {
             btn.style.display = "";
         });
-    };
+    }, true);
 });
 </script>
 

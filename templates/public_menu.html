@@ -988,19 +988,20 @@ box-sizing:border-box;
 }
 
 
+
 .start-food-decor{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.start-food{position:absolute;display:block;line-height:1;width:clamp(42px,7vw,68px);height:clamp(42px,7vw,68px);opacity:.94;filter:drop-shadow(0 3px 4px rgba(0,0,0,.13));animation:startFoodFloat 4.8s ease-in-out infinite;user-select:none}
-.start-food.food-1{top:7%;left:7%;animation-delay:-.4s}
-.start-food.food-2{top:12%;right:7%;animation-delay:-1.8s;animation-name:startFoodTilt}
-.start-food.food-3{top:39%;left:3%;animation-delay:-2.6s}
-.start-food.food-4{top:43%;right:3%;animation-delay:-.9s;animation-name:startFoodTilt}
-.start-food.food-5{bottom:20%;left:7%;animation-delay:-3.1s;animation-name:startFoodTilt}
-.start-food.food-6{bottom:13%;right:8%;animation-delay:-1.3s}
-.start-food.food-7{bottom:4%;left:28%;animation-delay:-2.1s;animation-name:startFoodTilt}
-.start-food.food-8{bottom:5%;right:27%;animation-delay:-.6s}
-@keyframes startFoodFloat{0%,100%{transform:translateY(0) rotate(-7deg)}50%{transform:translateY(-12px) rotate(7deg)}}
-@keyframes startFoodTilt{0%,100%{transform:translateY(0) rotate(8deg)}50%{transform:translateY(-9px) rotate(-9deg)}}
+.start-food{position:absolute;display:block;line-height:1;width:clamp(42px,7vw,68px);height:clamp(42px,7vw,68px);opacity:.88;filter:drop-shadow(0 3px 4px rgba(0,0,0,.13));user-select:none;will-change:transform;animation:startFoodDrift 8s linear infinite}
+.start-food.food-1{top:-10%;left:5%;animation-delay:-1s;--food-x:25vw;--food-rotate:14deg}
+.start-food.food-2{top:-18%;left:30%;animation-delay:-5s;--food-x:35vw;--food-rotate:-18deg}
+.start-food.food-3{top:-12%;left:55%;animation-delay:-3s;--food-x:20vw;--food-rotate:12deg}
+.start-food.food-4{top:-20%;left:78%;animation-delay:-7s;--food-x:-18vw;--food-rotate:-14deg}
+.start-food.food-5{top:-15%;left:15%;animation-delay:-6s;--food-x:55vw;--food-rotate:20deg}
+.start-food.food-6{top:-22%;left:68%;animation-delay:-2s;--food-x:-35vw;--food-rotate:-20deg}
+.start-food.food-7{top:-14%;left:42%;animation-delay:-4s;--food-x:28vw;--food-rotate:16deg}
+.start-food.food-8{top:-19%;left:88%;animation-delay:-6.5s;--food-x:-48vw;--food-rotate:-12deg}
+@keyframes startFoodDrift{0%{transform:translate3d(0,-5vh,0) rotate(0deg)}50%{transform:translate3d(calc(var(--food-x)*.5),50vh,0) rotate(var(--food-rotate))}100%{transform:translate3d(var(--food-x),115vh,0) rotate(calc(var(--food-rotate)*-1))}}
 @media(prefers-reduced-motion:reduce){.start-food{animation:none}}
+}
 
 .customer-start-card{
 position:relative;

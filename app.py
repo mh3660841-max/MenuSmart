@@ -3933,13 +3933,15 @@ def public_menu(slug):
     )
 
     if restaurant is None:
-
         return render_template(
             "public_menu.html",
             restaurant=None,
             categories=[],
             products=[]
         ), 404
+
+    if not restaurant["is_active"]:
+        return render_template("restaurant_paused.html"), 200
 
     categories_list = query_db(
         """

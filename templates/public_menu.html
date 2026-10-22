@@ -2337,7 +2337,7 @@ function init(){
   if(b)b.addEventListener("click",function(){setTimeout(syncNav,50)});
  });
  var back=document.getElementById("customerBackBtn");
- if(back)back.addEventListener("click",function(){setTimeout(syncNav,50)});
+ if(back)back.addEventListener("click",function(){requestAnimationFrame(syncNav)});
  var sections=document.getElementById("msNavSections");
  sections.addEventListener("click",function(){
   var target=document.querySelector(".menu-categories")||document.querySelector(".menu-products");

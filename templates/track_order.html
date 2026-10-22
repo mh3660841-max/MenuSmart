@@ -6,16 +6,27 @@
 <title>تتبع الطلب | Menu Smart</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f5f6f8;font-family:Arial,sans-serif;color:#222}
-.track-page{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.page-back{position:absolute;top:18px;right:18px;width:52px;height:52px;border:1px solid #d4af37;border-radius:16px;background:#111;color:#d4af37;text-decoration:none;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.18);z-index:9999}.page-back:active{transform:scale(.94)}.track-card{width:100%;max-width:400px;background:#fff;border:1px solid #e5e7eb;border-radius:24px;padding:30px 20px;box-shadow:0 15px 40px rgba(0,0,0,.07);text-align:center}
-.track-logo{width:90px;height:90px;margin:0 auto 22px;border-radius:20px;overflow:hidden;background:#f1f2f4;display:flex;align-items:center;justify-content:center}
+:root{color-scheme:light;--track-ink:#171717;--track-gold:#d4af37;--track-muted:#777;--track-line:rgba(23,23,23,.09)}
+body{margin:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,175,55,.12),transparent 48%),linear-gradient(145deg,#f8f8f7,#eef0f3);font-family:Arial,sans-serif;color:var(--track-ink);-webkit-font-smoothing:antialiased}
+.track-page{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:88px 20px 28px;overflow:hidden}
+.track-page:before{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(212,175,55,.09);filter:blur(55px);top:12%;left:-120px;pointer-events:none}
+.page-back{position:absolute;top:calc(18px + env(safe-area-inset-top));right:18px;width:46px;height:46px;border:1px solid rgba(212,175,55,.65);border-radius:15px;background:rgba(23,23,23,.94);color:var(--track-gold);text-decoration:none;font-size:25px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.13);z-index:9999;transition:transform .2s,background .2s}.page-back:active{transform:scale(.94)}
+.track-card{position:relative;width:100%;max-width:410px;background:rgba(255,255,255,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.9);border-radius:28px;padding:34px 24px 28px;box-shadow:0 22px 65px rgba(25,25,25,.09),inset 0 1px rgba(255,255,255,.9);text-align:center}
+.track-logo{width:82px;height:82px;margin:0 auto 20px;border-radius:23px;overflow:hidden;background:linear-gradient(145deg,#fff,#f0f0ed);border:1px solid rgba(212,175,55,.28);box-shadow:0 8px 24px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center}
 .track-logo img{width:100%;height:100%;object-fit:contain}
-.track-logo span{font-size:34px;font-weight:900;color:#777}
-.track-card h1{margin:0 0 8px;font-size:24px}
-.track-card p{margin:0 0 24px;color:#777;font-size:13px}
-.track-input{width:100%;height:52px;border:1px solid #ddd;border-radius:14px;padding:0 15px;font-size:15px;text-align:center;outline:none}
-.track-btn{width:100%;height:52px;margin-top:12px;border:0;border-radius:14px;background:#111;color:#d4af37;font-size:15px;font-weight:800;cursor:pointer}
+.track-logo span{font-size:32px;font-weight:900;color:#777}
+.track-card h1{margin:0 0 9px;font-size:25px;letter-spacing:-.4px}
+.track-card p{margin:0 0 26px;color:var(--track-muted);font-size:14px;line-height:1.8}
+.track-input{display:block;width:100%;height:54px;border:1px solid #deded9;border-radius:15px;padding:0 15px;background:rgba(255,255,255,.9);font-family:inherit;font-size:16px;text-align:center;outline:none;transition:border-color .2s,box-shadow .2s}
+.track-input:focus{border-color:var(--track-gold);box-shadow:0 0 0 4px rgba(212,175,55,.13)}
+.track-input::placeholder{color:#999}
+.track-btn{width:100%;height:54px;margin-top:13px;border:1px solid #292929;border-radius:15px;background:linear-gradient(135deg,#242424,#101010);color:var(--track-gold);font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.12);transition:transform .2s,box-shadow .2s}
+.track-btn:active{transform:scale(.985);box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.track-result{margin-top:22px;padding:19px 16px;border:1px solid var(--track-line);border-radius:18px;background:rgba(250,250,248,.92);text-align:center}
+.track-result-label{font-size:13px;color:var(--track-muted);font-weight:700}
+.track-result-status{margin-top:10px;font-size:20px;font-weight:900;color:var(--track-ink);line-height:1.6}
+.track-error{color:#b42318;font-weight:700;font-size:14px}
+@media(max-width:360px){.track-page{padding-left:14px;padding-right:14px}.track-card{padding:28px 18px 22px;border-radius:24px}.track-card h1{font-size:22px}}
 
 </style>
 </head>
@@ -39,12 +50,12 @@ body{margin:0;background:#f5f6f8;font-family:Arial,sans-serif;color:#222}
 <button class="track-btn" type="submit">تتبع الطلب</button>
 </form>
 {% if request.args.get("order_id") %}
-<div style="margin-top:20px;padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fafafa">
+<div class="track-result">
 {% if order %}
-<strong>حالة الطلب</strong>
-{% set status_names = {"pending":"قيد الانتظار","confirmed":"تم تأكيد الطلب","cancelled":"تم إلغاء الطلب"} %}<div style="margin-top:10px;font-size:20px;font-weight:900;color:#111">{{ status_names.get(order.status, order.status) }}</div>
+<div class="track-result-label">حالة الطلب</div>
+{% set status_names = {"pending":"قيد الانتظار","confirmed":"تم تأكيد الطلب","cancelled":"تم إلغاء الطلب"} %}<div class="track-result-status">{{ status_names.get(order.status, order.status) }}</div>
 {% else %}
-<div style="color:#b42318;font-weight:700">رقم الطلب غير موجود</div>
+<div class="track-error">رقم الطلب غير موجود</div>
 {% endif %}
 </div>
 {% endif %}

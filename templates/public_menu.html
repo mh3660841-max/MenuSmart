@@ -999,6 +999,8 @@ box-sizing:border-box;
 .start-food.food-6{top:-22%;left:68%;animation-delay:-2s;--food-x:-35vw;--food-rotate:-20deg}
 .start-food.food-7{top:-14%;left:42%;animation-delay:-4s;--food-x:28vw;--food-rotate:16deg}
 .start-food.food-8{top:-19%;left:88%;animation-delay:-6.5s;--food-x:-48vw;--food-rotate:-12deg}
+.start-food.food-9{top:-16%;left:24%;animation-delay:-3.5s;--food-x:42vw;--food-rotate:18deg}
+.start-food.food-10{top:-21%;left:82%;animation-delay:-5.5s;--food-x:-38vw;--food-rotate:-16deg}
 @keyframes startFoodDrift{0%{transform:translate3d(0,-5vh,0) rotate(0deg)}50%{transform:translate3d(calc(var(--food-x)*.5),50vh,0) rotate(var(--food-rotate))}100%{transform:translate3d(var(--food-x),115vh,0) rotate(calc(var(--food-rotate)*-1))}}
 @media(prefers-reduced-motion:reduce){.start-food{animation:none}}
 }
@@ -1134,75 +1136,16 @@ margin-top:4px;
 
 <section id="customerStartScreen" class="customer-start-screen">
 <div class="start-food-decor" aria-hidden="true">
-<span class="start-food food-1"><svg viewBox="0 0 64 64" width="100%" height="100%">
-<defs><linearGradient id="pizzaCrust" x2="0" y2="1"><stop stop-color="#FFD879"/><stop offset="1" stop-color="#C9752D"/></linearGradient><linearGradient id="pizzaCheese" x2=".3" y2="1"><stop stop-color="#FFE98A"/><stop offset="1" stop-color="#F4A72F"/></linearGradient></defs>
-<path d="M8 10 Q32 1 56 10 L34 57 Q32 62 29 56Z" fill="url(#pizzaCrust)" stroke="#A95D29" stroke-width="2"/>
-<path d="M13 13 Q32 6 51 13 L33 49Z" fill="url(#pizzaCheese)"/>
-<path d="M17 15 Q31 10 45 15" fill="none" stroke="#FFF1B8" stroke-width="2.5" stroke-linecap="round"/>
-<g fill="#D84632" stroke="#A92825" stroke-width="1.4"><circle cx="25" cy="21" r="4.4"/><circle cx="39" cy="19" r="4"/><circle cx="32" cy="34" r="4.3"/></g>
-<g fill="#FFB8A0"><circle cx="24" cy="20" r="1"/><circle cx="38" cy="18" r="1"/></g>
-<path d="M27 46l3-2m5-5 2-2" stroke="#6D9D37" stroke-width="2.5" stroke-linecap="round"/></svg></span>
-
-<span class="start-food food-2"><svg viewBox="0 0 64 64" width="100%" height="100%">
-<defs><linearGradient id="bunTop" x2="0" y2="1"><stop stop-color="#FFD77D"/><stop offset="1" stop-color="#D98232"/></linearGradient><linearGradient id="patty" x2="0" y2="1"><stop stop-color="#75402D"/><stop offset="1" stop-color="#3D241D"/></linearGradient></defs>
-<path d="M7 28 C6 11 18 5 32 5 S58 13 57 28Z" fill="url(#bunTop)" stroke="#A75A28" stroke-width="1.7"/>
-<g fill="#FFF0BD"><ellipse cx="22" cy="15" rx="1.6" ry="1"/><ellipse cx="33" cy="11" rx="1.6" ry="1"/><ellipse cx="43" cy="17" rx="1.6" ry="1"/><ellipse cx="28" cy="21" rx="1.5" ry="1"/></g>
-<path d="M7 29 Q15 22 22 29 T37 29 T57 29 L55 35 L9 35Z" fill="#63AE45"/>
-<path d="M8 34 L56 34 L52 42 L12 42Z" fill="#F5C64B" stroke="#D99A28" stroke-width="1.4"/>
-<path d="M10 41 Q32 34 54 41 L52 49 Q32 56 12 49Z" fill="url(#patty)" stroke="#39231D" stroke-width="1.5"/>
-<path d="M11 48 Q32 54 53 48 L57 52 Q55 60 32 60 Q9 60 7 52Z" fill="url(#bunTop)" stroke="#A75A28" stroke-width="1.7"/>
-<path d="M15 52 Q30 57 48 52" fill="none" stroke="#FFE4A0" stroke-width="1.6"/></svg></span>
-
-<span class="start-food food-3"><svg viewBox="0 0 64 64" width="100%" height="100%">
-<defs><linearGradient id="bread" x2="0" y2="1"><stop stop-color="#FFF0BD"/><stop offset="1" stop-color="#DCA45B"/></linearGradient></defs>
-<path d="M6 18 Q6 9 15 7 L57 48 Q59 53 53 56Z" fill="url(#bread)" stroke="#B8793C" stroke-width="2"/>
-<path d="M11 17 L48 51" stroke="#F6D69B" stroke-width="3" stroke-linecap="round"/>
-<path d="M14 19 L19 16 L43 40 L38 45Z" fill="#E44B38"/>
-<path d="M18 24 L23 20 L47 44 L42 49Z" fill="#6BAE45"/>
-<path d="M23 29 L28 25 L51 48 L46 53Z" fill="#F2C34E"/>
-<path d="M8 23 Q7 15 15 14 L52 49" fill="none" stroke="#FFF7D9" stroke-width="2.5" stroke-linecap="round"/>
-<path d="M6 18 L14 10 L58 49 L53 56Z" fill="none" stroke="#B8793C" stroke-width="1.5"/></svg></span>
-
-<span class="start-food food-4"><svg viewBox="0 0 64 64" width="100%" height="100%">
-<defs><linearGradient id="fryBox" x2="0" y2="1"><stop stop-color="#F45A45"/><stop offset="1" stop-color="#B92530"/></linearGradient><linearGradient id="fry" x2="0" y2="1"><stop stop-color="#FFE78B"/><stop offset="1" stop-color="#E99A2E"/></linearGradient></defs>
-<g stroke="#C98227" stroke-width="1.4" fill="url(#fry)"><path d="M13 28 L10 7 L19 5 L24 29Z"/><path d="M23 27 L24 4 L33 5 L33 29Z"/><path d="M33 28 L39 8 L48 11 L43 33Z"/><path d="M42 30 L48 16 L56 21 L50 36Z"/></g>
-<path d="M9 27 L55 27 L48 57 Q32 63 16 57Z" fill="url(#fryBox)" stroke="#9F2630" stroke-width="2"/>
-<path d="M12 34 Q32 39 52 34 L50 42 Q31 47 14 42Z" fill="#FFCE4D"/>
-<path d="M19 50 Q31 54 43 50" fill="none" stroke="#FF9380" stroke-width="2" stroke-linecap="round"/></svg></span>
-
-<span class="start-food food-5"><svg viewBox="0 0 64 64" width="100%" height="100%">
-<defs><linearGradient id="tacoShell" x2="0" y2="1"><stop stop-color="#FFE08A"/><stop offset="1" stop-color="#C98231"/></linearGradient></defs>
-<path d="M6 34 Q10 8 32 8 Q54 8 58 34 L54 44 Q32 57 10 44Z" fill="url(#tacoShell)" stroke="#A96A28" stroke-width="2"/>
-<path d="M10 32 Q15 13 32 13 Q49 13 54 32 L49 39 Q32 48 15 39Z" fill="#69A746"/>
-<path d="M12 30 Q32 20 52 30 L48 38 Q32 45 16 38Z" fill="#D94737"/>
-<g fill="#F7D15C"><circle cx="20" cy="27" r="3"/><circle cx="33" cy="24" r="3"/><circle cx="43" cy="31" r="3"/><circle cx="27" cy="36" r="3"/></g>
-<path d="M9 35 Q32 52 55 35" fill="none" stroke="#F9D58B" stroke-width="3" stroke-linecap="round"/></svg></span>
-
-<span class="start-food food-6"><svg viewBox="0 0 64 64" width="100%" height="100%">
-<defs><linearGradient id="donut" x2="0" y2="1"><stop stop-color="#F6B66E"/><stop offset="1" stop-color="#C96D35"/></linearGradient><linearGradient id="icing" x2="0" y2="1"><stop stop-color="#FFB7D4"/><stop offset="1" stop-color="#E65B9A"/></linearGradient></defs>
-<ellipse cx="32" cy="35" rx="26" ry="22" fill="#A94F2C" opacity=".22"/>
-<path d="M7 31 C7 14 21 7 34 10 C49 10 58 22 56 35 C54 49 42 56 28 54 C14 53 6 43 7 31Z" fill="url(#donut)" stroke="#A85A30" stroke-width="1.8"/>
-<path d="M9 28 C12 13 25 10 34 13 C45 12 53 21 53 29 L47 31 L45 25 L39 29 L34 23 L28 28 L23 23 L18 31 L12 29 L13 37 L8 36Z" fill="url(#icing)"/>
-<path d="M26 27 C22 31 23 39 29 41 C35 44 42 39 41 33 C40 27 32 24 26 27Z" fill="#FFF1D4" stroke="#B45D36" stroke-width="2"/>
-<g stroke-linecap="round" stroke-width="2.5"><path d="M17 21l4 2" stroke="#FFE76A"/><path d="M43 20l-3 3" stroke="#6DCCB0"/><path d="M17 39l4-2" stroke="#FFF0B0"/><path d="M45 39l-3 2" stroke="#F6D55A"/></g></svg></span>
-
-<span class="start-food food-7"><svg viewBox="0 0 64 64" width="100%" height="100%">
-<defs><linearGradient id="cup" x2="0" y2="1"><stop stop-color="#FF7567"/><stop offset="1" stop-color="#D52F42"/></linearGradient><linearGradient id="drink" x2="0" y2="1"><stop stop-color="#FFDA7C"/><stop offset="1" stop-color="#E89A35"/></linearGradient></defs>
-<path d="M34 21 L44 3 L49 5 L39 25Z" fill="#65C6B5" stroke="#277D75" stroke-width="1.5"/>
-<path d="M13 20 L53 20 L48 56 Q33 62 18 56Z" fill="url(#cup)" stroke="#B52C3A" stroke-width="2"/>
-<path d="M11 18 Q32 14 55 18 L54 24 Q32 28 12 24Z" fill="#FFF0CE" stroke="#B52C3A" stroke-width="1.5"/>
-<path d="M19 31 Q25 34 30 31" fill="none" stroke="#FFB0A0" stroke-width="2.5" stroke-linecap="round"/>
-<path d="M22 43 Q32 48 42 43" fill="none" stroke="#FFB0A0" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="24" cy="24" r="2" fill="url(#drink)"/><circle cx="37" cy="23" r="2" fill="url(#drink)"/></svg></span>
-
-<span class="start-food food-8"><svg viewBox="0 0 64 64" width="100%" height="100%">
-<defs><linearGradient id="wrapBread" x2="0" y2="1"><stop stop-color="#FFE4A0"/><stop offset="1" stop-color="#C98A43"/></linearGradient></defs>
-<path d="M12 9 L55 35 L37 59 L7 22Z" fill="url(#wrapBread)" stroke="#A96C32" stroke-width="2"/>
-<path d="M16 14 L48 35 L39 47 L12 20Z" fill="#67A84B"/>
-<path d="M19 17 L45 34 L38 43 L15 21Z" fill="#E64C3B"/>
-<path d="M21 21 L42 35 L36 42 L18 24Z" fill="#F7C94F"/>
-<path d="M12 9 L55 35 L37 59 L7 22Z" fill="none" stroke="#FCE2A9" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M15 12 L11 21 M21 16 L17 25 M27 20 L23 29" stroke="#B8793C" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+<span class="start-food food-1"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msPizza" x2="0" y2="1"><stop stop-color="#FFE9A0"/><stop offset="1" stop-color="#E9A23B"/></linearGradient></defs><path d="M7 12Q32 1 57 12L35 56Q32 62 29 56Z" fill="#C77A37"/><path d="M12 13Q32 6 52 13L33 49Z" fill="url(#msPizza)"/><g fill="#D74735" stroke="#AC2F28" stroke-width="1.3"><circle cx="25" cy="20" r="4"/><circle cx="40" cy="18" r="4"/><circle cx="32" cy="34" r="4"/></g><path d="M20 30l4-2m13 9 4-3" stroke="#6F9D42" stroke-width="3" stroke-linecap="round"/></svg></span>
+<span class="start-food food-2"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msBun" x2="0" y2="1"><stop stop-color="#FFD98A"/><stop offset="1" stop-color="#D68A3E"/></linearGradient><linearGradient id="msMeat" x2="0" y2="1"><stop stop-color="#80503A"/><stop offset="1" stop-color="#43271E"/></linearGradient></defs><path d="M7 28C5 12 18 5 32 5S59 13 57 28Z" fill="url(#msBun)" stroke="#B36B32" stroke-width="1.5"/><g fill="#FFF1C8"><ellipse cx="22" cy="15" rx="1.5" ry="1"/><ellipse cx="34" cy="11" rx="1.5" ry="1"/><ellipse cx="43" cy="18" rx="1.5" ry="1"/></g><path d="M7 29Q17 22 27 29T57 29L54 35H10Z" fill="#66AC4C"/><path d="M9 34H55L51 42H13Z" fill="#F8C94D"/><path d="M10 41Q32 35 54 41L52 49Q32 56 12 49Z" fill="url(#msMeat)"/><path d="M8 49Q32 56 56 49L57 53Q53 61 32 60Q10 60 7 53Z" fill="url(#msBun)" stroke="#B36B32" stroke-width="1.5"/></svg></span>
+<span class="start-food food-3"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msFries" x2="0" y2="1"><stop stop-color="#FFF0A0"/><stop offset="1" stop-color="#E99B2C"/></linearGradient></defs><g fill="url(#msFries)" stroke="#D18A25" stroke-width="1.3"><path d="M12 30L9 7L18 5L24 31Z"/><path d="M23 29L24 4L33 5L34 31Z"/><path d="M34 29L40 8L49 11L44 34Z"/><path d="M43 32L49 16L57 21L51 38Z"/></g><path d="M9 28H55L49 56Q32 63 15 56Z" fill="#D93640" stroke="#A92A35" stroke-width="1.7"/><path d="M15 36Q32 41 51 36" fill="none" stroke="#FFB65B" stroke-width="3"/><path d="M21 48Q32 52 43 48" fill="none" stroke="#F76C69" stroke-width="2"/></svg></span>
+<span class="start-food food-4"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msCup" x2="0" y2="1"><stop stop-color="#FF8272"/><stop offset="1" stop-color="#D93245"/></linearGradient></defs><path d="M34 20L44 3L49 5L39 23Z" fill="#70D0C0"/><path d="M12 20H53L48 56Q32 62 17 56Z" fill="url(#msCup)" stroke="#AD2639" stroke-width="1.8"/><path d="M10 18Q32 14 55 18L54 24Q32 28 11 24Z" fill="#FFF0D0" stroke="#AD2639" stroke-width="1.5"/><path d="M20 34Q25 37 30 34M34 45Q39 48 43 44" fill="none" stroke="#FFC0A7" stroke-width="2.5" stroke-linecap="round"/><circle cx="23" cy="24" r="2" fill="#F8C35A"/><circle cx="38" cy="23" r="2" fill="#F8C35A"/></svg></span>
+<span class="start-food food-5"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msTaco" x2="0" y2="1"><stop stop-color="#FFE69A"/><stop offset="1" stop-color="#C98536"/></linearGradient></defs><path d="M6 34Q10 8 32 8Q54 8 58 34L53 44Q32 57 11 44Z" fill="url(#msTaco)" stroke="#A96B2D" stroke-width="1.8"/><path d="M10 32Q16 13 32 13Q49 13 54 32L49 39Q32 48 15 39Z" fill="#69A94A"/><path d="M12 30Q32 20 52 30L48 38Q32 45 16 38Z" fill="#D94B3A"/><g fill="#F6CF58"><circle cx="20" cy="27" r="3"/><circle cx="33" cy="24" r="3"/><circle cx="43" cy="31" r="3"/><circle cx="27" cy="36" r="3"/></g></svg></span>
+<span class="start-food food-6"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msDonut" x2="0" y2="1"><stop stop-color="#F7C17D"/><stop offset="1" stop-color="#C9793D"/></linearGradient><linearGradient id="msIcing" x2="0" y2="1"><stop stop-color="#FFC6DF"/><stop offset="1" stop-color="#E96BA5"/></linearGradient></defs><path d="M7 31C7 14 21 7 34 10C49 10 58 22 56 35C54 49 42 56 28 54C14 53 6 43 7 31Z" fill="url(#msDonut)" stroke="#A95E32" stroke-width="1.5"/><path d="M9 28C12 13 25 10 34 13C45 12 53 21 53 29L47 31L45 25L39 29L34 23L28 28L23 23L18 31L12 29L13 37L8 36Z" fill="url(#msIcing)"/><path d="M26 27C22 31 23 39 29 41C35 44 42 39 41 33C40 27 32 24 26 27Z" fill="#FFF0D9" stroke="#B96B3E" stroke-width="1.8"/><g stroke-linecap="round" stroke-width="2.5"><path d="M17 21l4 2" stroke="#FFE36A"/><path d="M43 20l-3 3" stroke="#65CDB0"/><path d="M17 39l4-2" stroke="#FFF0B0"/><path d="M45 39l-3 2" stroke="#F6D55A"/></g></svg></span>
+<span class="start-food food-7"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msCake" x2="0" y2="1"><stop stop-color="#FFD3D9"/><stop offset="1" stop-color="#E78D9E"/></linearGradient></defs><path d="M8 25L55 25L50 52L32 60L13 52Z" fill="url(#msCake)" stroke="#BD6B77" stroke-width="1.5"/><path d="M8 25L32 8L55 25L32 35Z" fill="#FFF0E4" stroke="#C77A82" stroke-width="1.5"/><path d="M13 35L50 35L48 42L15 42Z" fill="#7A3D35"/><path d="M12 48L49 48" stroke="#FFF0E4" stroke-width="3"/><path d="M32 8Q27 2 24 8Q25 15 32 17Q40 14 39 8Q35 3 32 8Z" fill="#E74D62"/><circle cx="30" cy="8" r="1.5" fill="#FFE7A0"/></svg></span>
+<span class="start-food food-8"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msChicken" x2="0" y2="1"><stop stop-color="#FFD987"/><stop offset="1" stop-color="#D88734"/></linearGradient></defs><path d="M16 17C22 7 37 8 44 18C52 28 47 40 36 45L27 49L21 58L13 55L16 46C6 37 7 26 16 17Z" fill="url(#msChicken)" stroke="#B76C2B" stroke-width="1.8"/><path d="M18 21Q26 13 36 18M17 30Q26 23 37 28M22 39Q30 34 38 37" fill="none" stroke="#FFF0B3" stroke-width="2.5" stroke-linecap="round"/><path d="M14 49L8 56M20 52L17 61" stroke="#FFF0DF" stroke-width="5" stroke-linecap="round"/></svg></span>
+<span class="start-food food-9"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msHotdog" x2="0" y2="1"><stop stop-color="#FFD7A0"/><stop offset="1" stop-color="#C9854C"/></linearGradient></defs><rect x="5" y="20" width="54" height="26" rx="13" fill="url(#msHotdog)" stroke="#B77740" stroke-width="1.5" transform="rotate(-12 32 33)"/><rect x="10" y="24" width="44" height="17" rx="8.5" fill="#B94332" transform="rotate(-12 32 33)"/><path d="M13 29Q22 22 29 30T47 28" fill="none" stroke="#FFD64F" stroke-width="4" stroke-linecap="round"/><path d="M16 36l4-2m10 4 4-2m7-5 4-2" stroke="#69A94A" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+<span class="start-food food-10"><svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="msSoda" x2="0" y2="1"><stop stop-color="#B6E9F7"/><stop offset="1" stop-color="#429CC9"/></linearGradient></defs><path d="M26 18L38 3L42 6L32 22Z" fill="#E9F8FF" stroke="#7CBED8" stroke-width="1.3"/><path d="M12 20H52L47 56Q32 62 17 56Z" fill="url(#msSoda)" stroke="#368AB5" stroke-width="1.8"/><path d="M10 18Q32 14 54 18L53 24Q32 28 11 24Z" fill="#F5FCFF" stroke="#368AB5" stroke-width="1.5"/><circle cx="23" cy="33" r="3" fill="#EAFBFF" opacity=".9"/><circle cx="38" cy="43" r="4" fill="#EAFBFF" opacity=".8"/><path d="M21 48Q31 51 41 47" fill="none" stroke="#EAFBFF" stroke-width="2.5" stroke-linecap="round"/></svg></span>
 </div>
 <div class="customer-start-card">
 <div class="customer-start-logo">

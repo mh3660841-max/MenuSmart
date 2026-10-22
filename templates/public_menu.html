@@ -984,6 +984,115 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
 }
 
+
+/* MENUSMART_PUBLIC_MENU_REDESIGN_V1 */
+body.public-menu-page {
+    background: var(--menu-background, #F7F7F7);
+    color: var(--menu-text, #171717);
+}
+.menu-search-box {
+    background: var(--menu-card-color, #FFFFFF);
+    border: 1px solid color-mix(in srgb, var(--menu-text, #171717) 12%, transparent);
+    border-radius: 18px;
+    box-shadow: 0 6px 22px rgba(0,0,0,.045);
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.menu-search-box:focus-within {
+    border-color: var(--menu-primary, #111111);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--menu-primary, #111111) 12%, transparent);
+}
+.menu-search-box input { color: var(--menu-text, #171717); }
+.menu-search-box input::placeholder { color: color-mix(in srgb, var(--menu-text, #171717) 55%, transparent); }
+.menu-categories {
+    background: var(--menu-background, #F7F7F7);
+    border-bottom: 1px solid color-mix(in srgb, var(--menu-text, #171717) 10%, transparent);
+    gap: 10px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+.menu-category {
+    background: color-mix(in srgb, var(--menu-primary, #111111) 7%, var(--menu-card-color, #FFFFFF));
+    color: var(--menu-text, #171717);
+    border: 1px solid color-mix(in srgb, var(--menu-text, #171717) 8%, transparent);
+    padding: 10px 18px;
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.menu-category:active { transform: scale(.97); }
+.menu-category.active {
+    background: var(--menu-primary, #111111);
+    color: var(--menu-secondary, #D4AF37);
+    border-color: var(--menu-primary, #111111);
+}
+.menu-products { gap: 20px; padding-top: 18px; }
+.public-product-card {
+    min-width: 0;
+    background: var(--menu-card-color, #FFFFFF);
+    border: 1px solid color-mix(in srgb, var(--menu-text, #171717) 10%, transparent);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,.045);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+@media (hover: hover) {
+    .public-product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(0,0,0,.09);
+    }
+}
+.public-product-image { background: color-mix(in srgb, var(--menu-text, #171717) 5%, var(--menu-card-color, #FFFFFF)); }
+.public-product-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.product-image-placeholder { background: color-mix(in srgb, var(--menu-text, #171717) 5%, var(--menu-card-color, #FFFFFF)); }
+.public-product-info { min-width: 0; padding: 17px; }
+.public-product-title-row h2 {
+    color: var(--menu-text, #171717);
+    font-weight: 800;
+    letter-spacing: -.2px;
+}
+.public-product-description { color: var(--menu-text, #171717); opacity: .78; }
+.public-product-bottom {
+    border-top: 1px solid color-mix(in srgb, var(--menu-text, #171717) 10%, transparent);
+    align-items: center;
+    padding-top: 14px;
+}
+.public-product-price {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    padding: 7px 11px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--menu-price-color, #8A6508) 11%, var(--menu-card-color, #FFFFFF));
+    color: var(--menu-price-color, #8A6508);
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1.4;
+}
+.add-product-btn {
+    background: var(--menu-primary, #111111);
+    color: var(--menu-secondary, #D4AF37);
+    border: 1px solid var(--menu-primary, #111111);
+    border-radius: 13px;
+    font-weight: 800;
+    transition: filter .2s ease, transform .2s ease;
+}
+.add-product-btn:active { transform: scale(.97); }
+@media (max-width: 768px) {
+    .menu-products { gap: 12px; padding: 12px 10px; }
+    .public-product-card { border-radius: 17px; }
+    .public-product-image { height: 150px; }
+    .public-product-info { padding: 11px; }
+    .public-product-bottom { align-items: stretch; gap: 9px; margin-top: 11px; padding-top: 10px; }
+    .public-product-price { font-size: 14px; padding: 6px 9px; }
+    .add-product-btn { width: 100%; border-radius: 11px; padding: 9px 10px; }
+}
+@media (max-width: 380px) {
+    .menu-products { gap: 9px; padding-left: 8px; padding-right: 8px; }
+    .public-product-image { height: 125px; }
+    .public-product-info { padding: 9px; }
+    .public-product-title-row h2 { font-size: 13px; }
+    .public-product-description { font-size: 10px; }
+    .public-product-price { font-size: 13px; }
+}
 </style><style>
 .customer-start-screen{
 position:relative;
@@ -1120,7 +1229,110 @@ color:#888;
 font-size:11px;
 margin-top:4px;
 }
-</style></head><body class="public-menu-page card-style-{{ card_style }}"><!-- =========================
+</style>
+<style id="menusmart-premium-effects">
+.public-menu-page .menu-search-box,
+.public-menu-page .menu-category,
+.public-menu-page .public-product-card {
+  -webkit-backdrop-filter:blur(12px) saturate(1.15);
+  backdrop-filter:blur(12px) saturate(1.15);
+}
+.public-menu-page .menu-category,
+.public-menu-page .public-product-card,
+.public-menu-page .add-product-btn {
+  transition:transform .25s ease,box-shadow .25s ease,opacity .3s ease;
+}
+.public-menu-page .menu-category:hover,
+.public-menu-page .menu-category:focus-visible {
+  transform:translateY(-2px);
+}
+.public-menu-page .public-product-card {
+  position:relative;isolation:isolate;overflow:hidden;
+}
+.public-menu-page .public-product-card::after {
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  opacity:0;background:radial-gradient(circle at var(--ms-x,50%) var(--ms-y,50%),rgba(255,255,255,.22),transparent 65%);
+  transition:opacity .2s ease;
+}
+.public-menu-page .public-product-card:hover::after,
+.public-menu-page .public-product-card:focus-within::after {opacity:1}
+.public-menu-page .public-product-card:hover {
+  transform:translateY(-3px);
+  box-shadow:0 12px 28px rgba(0,0,0,.13);
+}
+.public-menu-page .add-product-btn:hover {
+  filter:brightness(1.08);box-shadow:0 0 0 3px rgba(255,255,255,.16);
+}
+.public-menu-page .restaurant-hero {
+  position:relative;
+}
+.public-menu-page .restaurant-hero::after {
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at var(--ms-spot-x,50%) var(--ms-spot-y,35%),rgba(255,255,255,.22),transparent 65%);
+}
+.public-menu-page .ms-ambient-layer {
+  position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;
+}
+.public-menu-page .ms-ambient-particle {
+  position:absolute;left:var(--px);top:var(--py);width:3px;height:3px;border-radius:50%;
+  background:rgba(255,255,255,.75);box-shadow:0 0 10px rgba(255,255,255,.4);
+  animation:msAmbient var(--dur) ease-in-out var(--delay) infinite;
+}
+@keyframes msAmbient {
+  0%,100%{transform:translateY(12px);opacity:0}
+  25%,75%{opacity:.5}
+  50%{transform:translateY(-35px);opacity:.25}
+}
+.public-menu-page .public-product-card.ms-reveal-pending {
+  opacity:0;transform:translateY(12px);
+}
+.public-menu-page .public-product-card.ms-revealed {
+  opacity:1;transform:translateY(0);
+}
+.public-menu-page .public-product-card.ms-cat-enter {
+  animation:msCatEnter .3s ease both;
+}
+@keyframes msCatEnter {
+  from{opacity:.4;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(prefers-reduced-motion:reduce) {
+  .public-menu-page .ms-ambient-particle{display:none!important;animation:none!important}
+  .public-menu-page .public-product-card,
+  .public-menu-page .menu-category,
+  .public-menu-page .add-product-btn{transition:none!important}
+  .public-menu-page .public-product-card.ms-reveal-pending{opacity:1;transform:none}
+  .public-menu-page .public-product-card.ms-cat-enter{animation:none!important}
+}
+</style>
+
+
+<style id="menusmart-nav-lightbox-v1">
+/* Floating mobile navigation */
+#msQuickNav{display:none;position:fixed;z-index:9990;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));align-items:center;justify-content:space-around;gap:5px;padding:9px 8px;border:1px solid rgba(255,255,255,.24);border-radius:22px;background:rgba(24,27,32,.86);color:#fff;box-shadow:0 10px 35px rgba(0,0,0,.24);-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25)}
+body.ms-bottom-nav-open #msQuickNav{display:flex}
+#msQuickNav button{appearance:none;border:0;background:transparent;color:inherit;flex:1;min-width:0;min-height:43px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:inherit;font-size:11px;cursor:pointer;transition:background .2s,transform .2s}
+#msQuickNav button:active{transform:scale(.95)}
+#msQuickNav button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+#msQuickNav .ms-nav-icon{font-size:19px;line-height:1}
+body.ms-bottom-nav-open{padding-bottom:85px}
+body.public-menu-page .public-product-image{overflow:hidden;cursor:zoom-in}
+body.public-menu-page .public-product-image img{transition:transform .38s cubic-bezier(.2,.7,.2,1);transform-origin:center}
+@media(hover:hover){
+ body.public-menu-page .public-product-image:hover img{transform:scale(1.07)}
+}
+#msImageViewer{display:none;position:fixed;inset:0;z-index:100000;background:rgba(8,10,14,.94);align-items:center;justify-content:center;padding:22px;box-sizing:border-box;opacity:0;transition:opacity .22s ease}
+#msImageViewer.ms-viewer-open{display:flex;opacity:1}
+#msImageViewer img{display:block;max-width:100%;max-height:84dvh;object-fit:contain;border-radius:12px;transform:scale(.97);transition:transform .22s ease;box-shadow:0 15px 55px rgba(0,0,0,.35)}
+#msImageViewer.ms-viewer-open img{transform:scale(1)}
+#msImageViewer .ms-viewer-close{position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.13);color:white;font-size:27px;line-height:1;cursor:pointer}
+#msImageViewer .ms-viewer-close:focus-visible{outline:2px solid white;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){
+ #msQuickNav button,#msImageViewer,#msImageViewer img,body.public-menu-page .public-product-image img{transition:none!important}
+}
+</style>
+
+</head><body class="public-menu-page card-style-{{ card_style }}"><!-- =========================
      CLIENT HEADER
 ========================= --><header class="public-menu-header">
 <div class="public-menu-header-inner">
@@ -1192,27 +1404,33 @@ M
 
 <style>
 .customer-back-btn{
-position:fixed;
-top:18px;
-right:18px;
-z-index:9999;
-width:52px;
-height:52px;
-border:1px solid #d4af37;
-border-radius:16px;
-background:#111;
-color:#d4af37;
-font-size:28px;
-font-weight:700;
-display:none;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-box-shadow:0 6px 18px rgba(0,0,0,.18);
+  position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;
+  z-index:9999;width:46px;height:46px;border-radius:50%;
+  display:none;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;font-size:0;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.32);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  box-shadow:0 6px 22px rgba(0,0,0,.18);
+  transition:transform .2s ease,background .2s ease,box-shadow .2s ease;
 }
-.customer-back-btn:active{transform:scale(.94);}
+.customer-back-btn::before{
+  content:"";width:11px;height:11px;
+  border-left:2px solid currentColor;border-bottom:2px solid currentColor;
+  transform:translateX(2px) rotate(45deg);
+}
+.customer-back-btn::after{
+  content:"";position:absolute;width:19px;height:2px;
+  background:currentColor;border-radius:2px;
+  transform:translateX(1px);
+}
+.customer-back-btn:hover{background:rgba(255,255,255,.25);box-shadow:0 8px 26px rgba(0,0,0,.24)}
+.customer-back-btn:active{transform:scale(.92)}
+.customer-back-btn:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.customer-back-btn{transition:none}}
 </style>
-<button type="button" id="customerBackBtn" class="customer-back-btn" aria-label="رجوع">←</button>
+<button type="button" id="customerBackBtn" class="customer-back-btn" aria-label="رجوع"></button>
 <main class="menu-wrapper"><div class="menu-content">
 
 
@@ -2014,5 +2232,150 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 });
 </script>
+
+<script id="menusmart-premium-effects-js">
+(function(){
+function init(){
+ var body=document.body,hero=document.querySelector(".restaurant-hero");
+ if(!body||!body.classList.contains("public-menu-page"))return;
+ var reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ if(hero&&!reduced){
+  var layer=document.createElement("div");
+  layer.className="ms-ambient-layer";layer.setAttribute("aria-hidden","true");
+  for(var i=0;i<14;i++){
+   var d=document.createElement("span");d.className="ms-ambient-particle";
+   d.style.setProperty("--px",(Math.random()*96+2)+"%");
+   d.style.setProperty("--py",(Math.random()*85+5)+"%");
+   d.style.setProperty("--dur",(8+Math.random()*9)+"s");
+   d.style.setProperty("--delay",(-Math.random()*12)+"s");
+   layer.appendChild(d);
+  }
+  hero.insertBefore(layer,hero.firstChild);
+  hero.addEventListener("pointermove",function(e){
+   var r=hero.getBoundingClientRect();
+   hero.style.setProperty("--ms-spot-x",((e.clientX-r.left)/r.width*100)+"%");
+   hero.style.setProperty("--ms-spot-y",((e.clientY-r.top)/r.height*100)+"%");
+  },{passive:true});
+ }
+ var cards=[].slice.call(document.querySelectorAll(".public-product-card"));
+ var observer=null;
+ if(!reduced&&"IntersectionObserver" in window){
+  cards.forEach(function(c){c.classList.add("ms-reveal-pending")});
+  observer=new IntersectionObserver(function(entries){
+   entries.forEach(function(e){if(e.isIntersecting){
+    e.target.classList.remove("ms-reveal-pending");
+    e.target.classList.add("ms-revealed");observer.unobserve(e.target);
+   }});
+  },{threshold:.05});
+  cards.forEach(function(c){observer.observe(c)});
+ }else cards.forEach(function(c){c.classList.add("ms-revealed")});
+ document.addEventListener("pointermove",function(e){
+  var c=e.target.closest&&e.target.closest(".public-product-card");
+  if(!c)return;var r=c.getBoundingClientRect();
+  c.style.setProperty("--ms-x",((e.clientX-r.left)/r.width*100)+"%");
+  c.style.setProperty("--ms-y",((e.clientY-r.top)/r.height*100)+"%");
+ },{passive:true});
+ function refresh(){
+  cards.forEach(function(c){
+   if(!c.getClientRects().length)return;
+   c.classList.remove("ms-cat-enter");
+   if(observer){c.classList.remove("ms-revealed");c.classList.add("ms-reveal-pending");observer.observe(c)}
+   else if(!reduced){void c.offsetWidth;c.classList.add("ms-cat-enter","ms-revealed")}
+  });
+ }
+ document.addEventListener("click",function(e){
+  if(e.target.closest&&e.target.closest(".menu-category"))setTimeout(refresh,80);
+ });
+ var search=document.querySelector(".menu-search-box input");
+ if(search)search.addEventListener("input",function(){setTimeout(refresh,100)});
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
+else init();
+})();
+</script>
+
+
+<nav id="msQuickNav" aria-label="التنقل السريع">
+ <button type="button" id="msNavSections"><span class="ms-nav-icon" aria-hidden="true">☷</span><span>الأقسام</span></button>
+ <button type="button" id="msNavSearch"><span class="ms-nav-icon" aria-hidden="true">⌕</span><span>بحث</span></button>
+ <button type="button" id="msNavCart"><span class="ms-nav-icon" aria-hidden="true">🛒</span><span>السلة</span></button>
+</nav>
+<div id="msImageViewer" role="dialog" aria-modal="true" aria-label="عرض صورة المنتج">
+ <button type="button" class="ms-viewer-close" aria-label="إغلاق الصورة">×</button>
+ <img alt="" src="">
+</div>
+<script id="menusmart-nav-lightbox-js-v1">
+(function(){
+"use strict";
+function init(){
+ var body=document.body,nav=document.getElementById("msQuickNav");
+ if(!body||!nav)return;
+ var menu=document.querySelector(".menu-wrapper");
+ var hero=document.querySelector(".restaurant-hero");
+ var start=document.getElementById("customerStartScreen");
+ var viewer=document.getElementById("msImageViewer");
+ var viewerImg=viewer.querySelector("img");
+ var close=viewer.querySelector(".ms-viewer-close");
+ var previousFocus=null;
+ function syncNav(){
+  var visible=menu&&getComputedStyle(menu).display!=="none";
+  nav.style.display=visible?"flex":"none";
+  body.classList.toggle("ms-bottom-nav-open",!!visible);
+ }
+ syncNav();
+ if(menu&&"MutationObserver" in window){
+  new MutationObserver(syncNav).observe(menu,{attributes:true,attributeFilter:["style","class"]});
+ }
+ ["startMenuBtn","startOnlineBtn"].forEach(function(id){
+  var b=document.getElementById(id);
+  if(b)b.addEventListener("click",function(){setTimeout(syncNav,50)});
+ });
+ var back=document.getElementById("customerBackBtn");
+ if(back)back.addEventListener("click",function(){setTimeout(syncNav,50)});
+ var sections=document.getElementById("msNavSections");
+ sections.addEventListener("click",function(){
+  var target=document.querySelector(".menu-categories")||document.querySelector(".menu-products");
+  if(target)target.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+ });
+ document.getElementById("msNavSearch").addEventListener("click",function(){
+  var input=document.querySelector(".menu-search-box input");
+  if(input){input.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(function(){input.focus({preventScroll:true})},250)}
+ });
+ document.getElementById("msNavCart").addEventListener("click",function(){
+  var cart=document.getElementById("openCartBtn");
+  if(cart&&getComputedStyle(cart).display!=="none")cart.click();
+ });
+ function openViewer(img){
+  if(!img||!img.src)return;
+  previousFocus=img;
+  viewerImg.src=img.currentSrc||img.src;
+  viewerImg.alt=img.alt||"صورة المنتج";
+  viewer.style.display="flex";
+  requestAnimationFrame(function(){viewer.classList.add("ms-viewer-open")});
+  body.style.overflow="hidden";
+  close.focus();
+ }
+ function closeViewer(){
+  viewer.classList.remove("ms-viewer-open");
+  viewer.style.display="none";
+  viewerImg.removeAttribute("src");
+  body.style.overflow="";
+  if(previousFocus&&previousFocus.isConnected)previousFocus.focus({preventScroll:true});
+ }
+ document.addEventListener("click",function(e){
+  var img=e.target.closest&&e.target.closest(".public-product-image img");
+  if(img){e.preventDefault();e.stopPropagation();openViewer(img)}
+ });
+ close.addEventListener("click",closeViewer);
+ viewer.addEventListener("click",function(e){if(e.target===viewer)closeViewer()});
+ document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"&&viewer.style.display==="flex")closeViewer();
+ });
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
+else init();
+})();
+</script>
+
 </body>
 </html>

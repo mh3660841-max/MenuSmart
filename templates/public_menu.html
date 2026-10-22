@@ -2205,7 +2205,7 @@ document.addEventListener("DOMContentLoaded", function () {
         menu.style.display = "block";
         hero.style.display = "block";
         back.style.display = "block";
-        cart.style.display = online ? "" : "none";
+        if (cart) cart.style.display = online ? "" : "none";
 
         addButtons.forEach(function (btn) {
             btn.style.display = online ? "" : "none";
@@ -2216,11 +2216,13 @@ document.addEventListener("DOMContentLoaded", function () {
         openPage(false);
     };
 
-    document.getElementById("startOnlineBtn").onclick = function () {
+    const onlineBtn = document.getElementById("startOnlineBtn");
+    if (onlineBtn) onlineBtn.onclick = function () {
         openPage(true);
     };
 
-    document.getElementById("startTrackBtn").onclick = function () {
+    const trackBtn = document.getElementById("startTrackBtn");
+    if (trackBtn) trackBtn.onclick = function () {
         window.location.href = "/track?slug={{ restaurant.slug }}";
     };
 

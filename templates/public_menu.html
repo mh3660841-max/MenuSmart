@@ -992,16 +992,16 @@ box-sizing:border-box;
 
 .start-food-decor{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .start-food{position:absolute;display:block;line-height:1;width:clamp(42px,7vw,68px);height:clamp(42px,7vw,68px);opacity:.9;filter:drop-shadow(0 4px 6px rgba(0,0,0,.14));user-select:none;will-change:transform}
-.start-food.food-1{left:4%;top:-12%;--food-x:18vw;--food-r:12deg;animation:foodFall 9s linear infinite;animation-delay:-1s}
-.start-food.food-2{left:24%;bottom:-12%;--food-x:20vw;--food-r:-14deg;animation:foodRise 10s linear infinite;animation-delay:-6s}
-.start-food.food-3{left:43%;top:-14%;--food-x:14vw;--food-r:16deg;animation:foodFall 11s linear infinite;animation-delay:-7s}
-.start-food.food-4{left:65%;bottom:-12%;--food-x:18vw;--food-r:-12deg;animation:foodRise 9.5s linear infinite;animation-delay:-2s}
-.start-food.food-5{left:84%;top:-13%;--food-x:-12vw;--food-r:14deg;animation:foodFall 10.5s linear infinite;animation-delay:-4s}
-.start-food.food-6{left:12%;bottom:-12%;--food-x:24vw;--food-r:13deg;animation:foodRise 11s linear infinite;animation-delay:-8s}
-.start-food.food-7{left:34%;top:-13%;--food-x:20vw;--food-r:-15deg;animation:foodFall 9.8s linear infinite;animation-delay:-5s}
-.start-food.food-8{left:55%;bottom:-12%;--food-x:15vw;--food-r:12deg;animation:foodRise 10.8s linear infinite;animation-delay:-3s}
-.start-food.food-9{left:73%;top:-14%;--food-x:-18vw;--food-r:-13deg;animation:foodFall 11.5s linear infinite;animation-delay:-9s}
-.start-food.food-10{left:91%;bottom:-12%;--food-x:-25vw;--food-r:15deg;animation:foodRise 10s linear infinite;animation-delay:-4.5s}
+.start-food.food-1{left:4%;top:-12%;--food-x:18vw;--food-r:12deg;animation:none;animation-delay:-1s}
+.start-food.food-2{left:24%;bottom:-12%;--food-x:20vw;--food-r:-14deg;animation:none;animation-delay:-6s}
+.start-food.food-3{left:43%;top:-14%;--food-x:14vw;--food-r:16deg;animation:none;animation-delay:-7s}
+.start-food.food-4{left:65%;bottom:-12%;--food-x:18vw;--food-r:-12deg;animation:none;animation-delay:-2s}
+.start-food.food-5{left:84%;top:-13%;--food-x:-12vw;--food-r:14deg;animation:none;animation-delay:-4s}
+.start-food.food-6{left:12%;bottom:-12%;--food-x:24vw;--food-r:13deg;animation:none;animation-delay:-8s}
+.start-food.food-7{left:34%;top:-13%;--food-x:20vw;--food-r:-15deg;animation:none;animation-delay:-5s}
+.start-food.food-8{left:55%;bottom:-12%;--food-x:15vw;--food-r:12deg;animation:none;animation-delay:-3s}
+.start-food.food-9{left:73%;top:-14%;--food-x:-18vw;--food-r:-13deg;animation:none;animation-delay:-9s}
+.start-food.food-10{left:91%;bottom:-12%;--food-x:-25vw;--food-r:15deg;animation:none;animation-delay:-4.5s}
 @keyframes foodFall{0%{transform:translate3d(0,-5vh,0) rotate(0deg)}50%{transform:translate3d(calc(var(--food-x)*.5),50vh,0) rotate(var(--food-r))}100%{transform:translate3d(var(--food-x),115vh,0) rotate(0deg)}}
 @keyframes foodRise{0%{transform:translate3d(0,115vh,0) rotate(0deg)}50%{transform:translate3d(calc(var(--food-x)*.5),50vh,0) rotate(var(--food-r))}100%{transform:translate3d(var(--food-x),-15vh,0) rotate(0deg)}}
 @media(prefers-reduced-motion:reduce){.start-food{animation:none}}

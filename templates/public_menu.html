@@ -31,6 +31,9 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 {% set start_welcome_color = settings.start_welcome_color if settings and settings.start_welcome_color else '#9b7d1e' %}
 {% set start_description_text = settings.start_description_text if settings and settings.start_description_text else 'اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.' %}
 {% set start_description_color = settings.start_description_color if settings and settings.start_description_color else '#666666' %}
+{% set contact_text_color = settings.contact_text_color if settings and settings.contact_text_color else '#666666' %}
+{% set contact_icon_bg_color = settings.contact_icon_bg_color if settings and settings.contact_icon_bg_color else '#FFFFFF' %}
+{% set contact_icon_border_color = settings.contact_icon_border_color if settings and settings.contact_icon_border_color else '#D4AF37' %}
 
 
 :root {
@@ -1273,8 +1276,8 @@ flex:0 0 42px;
 width:42px;
 height:42px;
 border-radius:13px;
-background:{{ start_card_bg }};
-border:1px solid {{ start_card_border_color }};
+background:{{ contact_icon_bg_color }};
+border:1px solid {{ contact_icon_border_color }};
 font-size:22px;
 }
 
@@ -1457,7 +1460,7 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
 </div>
 </div>
 {% if restaurant.phone or restaurant.address %}
-<div class="customer-start-contact" style="width:100%;max-width:{{ start_card_width }}px;box-sizing:border-box;color:{{ start_description_color }};">
+<div class="customer-start-contact" style="width:100%;max-width:{{ start_card_width }}px;box-sizing:border-box;color:{{ contact_text_color }};">
 {% if restaurant.phone %}
 <a class="customer-start-contact-item" href="tel:{{ restaurant.phone }}">
 <span class="customer-start-contact-icon" aria-hidden="true">☎</span>

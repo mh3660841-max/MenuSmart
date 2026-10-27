@@ -2729,6 +2729,22 @@ def settings():
         if not start_description_text:
             start_description_text = "اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة."
         start_description_color = request.form.get("start_description_color", "#666666").strip()
+        contact_text_color = request.form.get("contact_text_color", "#666666").strip()
+        contact_icon_bg_color = request.form.get("contact_icon_bg_color", "#FFFFFF").strip()
+        contact_icon_border_color = request.form.get("contact_icon_border_color", "#D4AF37").strip()
+
+        for field_name, field_value, default_value in (
+            ("contact_text_color", contact_text_color, "#666666"),
+            ("contact_icon_bg_color", contact_icon_bg_color, "#FFFFFF"),
+            ("contact_icon_border_color", contact_icon_border_color, "#D4AF37"),
+        ):
+            if len(field_value) != 7 or not field_value.startswith("#") or any(c not in "0123456789abcdefABCDEF" for c in field_value[1:]):
+                if field_name == "contact_text_color":
+                    contact_text_color = default_value
+                elif field_name == "contact_icon_bg_color":
+                    contact_icon_bg_color = default_value
+                else:
+                    contact_icon_border_color = default_value
         if len(start_description_color) != 7 or not start_description_color.startswith("#") or any(c not in "0123456789abcdefABCDEF" for c in start_description_color[1:]):
             start_description_color = "#666666"
         card_style = request.form.get("card_style", "modern")
@@ -2802,6 +2818,9 @@ def settings():
                     start_welcome_color = %s,
                     start_description_text = %s,
                     start_description_color = %s,
+                    contact_text_color = %s,
+                    contact_icon_bg_color = %s,
+                    contact_icon_border_color = %s,
                     card_style = %s,
                     currency = %s,
                     language = %s,
@@ -2829,6 +2848,9 @@ def settings():
                     start_welcome_color,
                     start_description_text,
                     start_description_color,
+                    contact_text_color,
+                    contact_icon_bg_color,
+                    contact_icon_border_color,
                     card_style,
                     currency,
                     language,
@@ -2863,6 +2885,9 @@ def settings():
                     start_welcome_color,
                     start_description_text,
                     start_description_color,
+                    contact_text_color,
+                    contact_icon_bg_color,
+                    contact_icon_border_color,
                     hero_background_image,
                     card_style,
                     currency,
@@ -2871,7 +2896,7 @@ def settings():
                     allow_delivery,
                     delivery_fee
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
@@ -2892,6 +2917,9 @@ def settings():
                     start_welcome_color,
                     start_description_text,
                     start_description_color,
+                    contact_text_color,
+                    contact_icon_bg_color,
+                    contact_icon_border_color,
                     hero_background_image,
                     card_style,
                     currency,

@@ -3963,17 +3963,14 @@ def menu():
 
 @app.route("/menu/<slug>")
 def public_menu(slug):
-
     restaurant = query_db(
         """
-        SELECT *
+        SELECT id, name, slug, description, address, phone, logo, is_active
         FROM restaurants
         WHERE slug = %s
         LIMIT 1
         """,
-        [
-            slug
-        ],
+        [slug],
         one=True
     )
 
@@ -3990,44 +3987,65 @@ def public_menu(slug):
 
     categories_list = query_db(
         """
-        SELECT *
+        SELECT id, name
         FROM categories
         WHERE restaurant_id = %s
         AND is_active = 1
         ORDER BY sort_order ASC, id ASC
         """,
-        [
-            restaurant["id"]
-        ]
+        [restaurant["id"]]
     )
 
     products_list = query_db(
         """
         SELECT
-            products.*,
-            categories.name AS category_name
+            id,
+            category_id,
+            name,
+            image,
+            featured AS is_popular,
+            available,
+            description,
+            price
         FROM products
-        LEFT JOIN categories
-            ON categories.id = products.category_id
-        WHERE products.restaurant_id = %s
-        AND products.available = 1
-        ORDER BY products.id ASC
+        WHERE restaurant_id = %s
+        AND available = 1
+        ORDER BY id ASC
         """,
-        [
-            restaurant["id"]
-        ]
+        [restaurant["id"]]
     )
 
     settings_data = query_db(
         """
-        SELECT *
+        SELECT
+            allow_orders,
+            background_color,
+            card_color,
+            card_style,
+            contact_icon_bg_color,
+            contact_icon_border_color,
+            contact_text_color,
+            hero_background_image,
+            hero_color,
+            price_color,
+            primary_color,
+            secondary_color,
+            start_card_bg,
+            start_card_border_color,
+            start_card_padding,
+            start_card_radius,
+            start_card_width,
+            start_description_color,
+            start_description_text,
+            start_screen_bg,
+            start_welcome_color,
+            start_welcome_text,
+            text_color
         FROM restaurant_settings
         WHERE restaurant_id = %s
         LIMIT 1
         """,
-        [
-            restaurant["id"]
-        ],
+        [restaurant["id"]],
         one=True
     )
 
@@ -4038,6 +4056,7 @@ def public_menu(slug):
         products=products_list,
         settings=settings_data
     )
+
 
 # =========================================================
 # تفاصيل المنتج

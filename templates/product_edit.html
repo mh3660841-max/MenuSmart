@@ -169,11 +169,7 @@
                                 id="price"
                                 name="price"
 
-                                value="{{
-                                    product.price
-                                    if product
-                                    else request.form.get('price', '')
-                                }}"
+                                value="{% if request.method == 'POST' %}{{ request.form.get('price', '') }}{% elif product.old_price and product.old_price > product.price %}{{ product.old_price }}{% else %}{{ product.price }}{% endif %}"
 
                                 placeholder="150"
                                 min="0"
@@ -192,36 +188,29 @@
 
                     <div class="form-group">
 
-                        <label for="old_price">
-                            السعر القديم
+                        <label for="discount_percent">
+                            نسبة الخصم
                         </label>
 
                         <div class="price-input">
 
                             <input
                                 type="number"
-                                id="old_price"
-                                name="old_price"
-
-                                value="{{
-                                    product.old_price
-                                    if product
-                                    else request.form.get('old_price', '')
-                                }}"
-
-                                placeholder="180"
+                                id="discount_percent"
+                                name="discount_percent"
+                                value="{% if request.method == 'POST' %}{{ request.form.get('discount_percent', '0') }}{% elif product.old_price and product.old_price > product.price %}{{ ((product.old_price - product.price) / product.old_price * 100)|round(2) }}{% else %}0{% endif %}"
+                                placeholder="20"
                                 min="0"
+                                max="100"
                                 step="0.01"
                             >
 
-                            <span>
-                                جنيه
-                            </span>
+                            <span>%</span>
 
                         </div>
 
                         <small>
-                            اختياري لإظهار سعر قبل الخصم.
+                            أدخل نسبة من 0 إلى 100، وسيُحسب سعر البيع تلقائيًا عند الحفظ.
                         </small>
 
                     </div>
@@ -655,8 +644,7 @@ const descriptionInput =
 const priceInput =
     document.getElementById("price");
 
-const oldPriceInput =
-    document.getElementById("old_price");
+const discountInput = document.getElementById("discount_percent");
 
 const categoryInput =
     document.getElementById("category_id");
@@ -719,47 +707,47 @@ if (descriptionInput) {
 }
 
 
+function updatePricePreview() {
+    const basePrice = Number(priceInput.value);
+    const discount = Number(discountInput.value || 0);
+
+    if (
+        !Number.isFinite(basePrice) ||
+        basePrice < 0 ||
+        !Number.isFinite(discount) ||
+        discount < 0 ||
+        discount > 100
+    ) {
+        previewPrice.textContent = priceInput.value || "0";
+        previewOldPrice.style.display = "none";
+        return;
+    }
+
+    const salePrice = Math.round(
+        (basePrice * (100 - discount) / 100 + Number.EPSILON) * 100
+    ) / 100;
+
+    previewPrice.textContent = salePrice.toFixed(2);
+
+    if (discount > 0) {
+        previewOldPrice.textContent = basePrice.toFixed(2) + " جنيه";
+        previewOldPrice.style.display = "inline";
+    } else {
+        previewOldPrice.style.display = "none";
+    }
+}
+
 if (priceInput) {
-
-    priceInput.addEventListener(
-        "input",
-        function () {
-
-            previewPrice.textContent =
-                this.value || "0";
-
-        }
-    );
-
+    priceInput.addEventListener("input", updatePricePreview);
 }
 
-
-if (oldPriceInput) {
-
-    oldPriceInput.addEventListener(
-        "input",
-        function () {
-
-            if (this.value) {
-
-                previewOldPrice.style.display =
-                    "inline";
-
-                previewOldPrice.textContent =
-                    this.value + " جنيه";
-
-            } else {
-
-                previewOldPrice.style.display =
-                    "none";
-
-            }
-
-        }
-    );
-
+if (discountInput) {
+    discountInput.addEventListener("input", updatePricePreview);
 }
 
+if (priceInput && discountInput) {
+    updatePricePreview();
+}
 
 if (categoryInput) {
 

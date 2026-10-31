@@ -1087,6 +1087,33 @@ body.public-menu-page {
     font-weight: 900;
     line-height: 1.4;
 }
+.public-product-pricing {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+}
+
+.public-product-old-price {
+    color: #888;
+    font-size: 12px;
+    text-decoration: line-through;
+    white-space: nowrap;
+}
+
+.public-product-discount {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 7px;
+    border-radius: 7px;
+    background: #FCE8E8;
+    color: #B42318;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
 .add-product-btn {
     background: var(--menu-primary, #111111);
     color: var(--menu-secondary, #D4AF37);
@@ -1416,6 +1443,16 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
 #msImageViewer.ms-viewer-open{display:flex;opacity:1}
 #msImageViewer img{display:block;max-width:100%;max-height:84dvh;object-fit:contain;border-radius:12px;transform:scale(.97);transition:transform .22s ease;box-shadow:0 15px 55px rgba(0,0,0,.35)}
 #msImageViewer.ms-viewer-open img{transform:scale(1)}
+#msImageViewer .ms-viewer-content{width:min(100%,560px);max-height:92dvh;display:flex;flex-direction:column;align-items:center;gap:14px;overflow-y:auto}
+#msImageViewer .ms-viewer-content img{max-width:100%;max-height:55dvh}
+#msImageViewer .ms-viewer-details{width:100%;box-sizing:border-box;text-align:center;color:#fff;padding:4px 12px 12px}
+#msImageViewer .ms-viewer-details h2{font-size:20px;margin:0 0 8px;font-weight:800}
+#msImageViewer .ms-viewer-description{font-size:14px;line-height:1.8;margin:0 0 12px;color:rgba(255,255,255,.82)}
+#msImageViewer .ms-viewer-pricing{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap}
+#msImageViewer .ms-viewer-old-price{text-decoration:line-through;color:#c5c5c5;font-size:14px}
+#msImageViewer .ms-viewer-discount{background:#b42318;color:#fff;border-radius:20px;padding:4px 9px;font-size:12px;font-weight:700}
+#msImageViewer .ms-viewer-sale-price{font-size:18px;color:#fff;font-weight:800}
+
 #msImageViewer .ms-viewer-close{position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.13);color:white;font-size:27px;line-height:1;cursor:pointer}
 #msImageViewer .ms-viewer-close:focus-visible{outline:2px solid white;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){
@@ -1697,13 +1734,25 @@ transform:translateX(1px);
 
                     <div class="public-product-bottom">
 
-                        <strong class="public-product-price">
+                        <div class="public-product-pricing">
 
-                            {{ product.price|default(0) }}
+                            {% if product.old_price and product.old_price > product.price %}
 
-                            جنيه
+                            <span class="public-product-old-price">
+                                {{ product.old_price }} جنيه
+                            </span>
 
-                        </strong>
+                            <span class="public-product-discount">
+                                خصم {{ ((product.old_price - product.price) / product.old_price * 100)|round(0)|int }}%
+                            </span>
+
+                            {% endif %}
+
+                            <strong class="public-product-price">
+                                {{ product.price|default(0) }} جنيه
+                            </strong>
+
+                        </div>
 
 
                         <button
@@ -2429,9 +2478,20 @@ else init();
  <button type="button" id="msNavSearch"><span class="ms-nav-icon" aria-hidden="true">⌕</span><span>بحث</span></button>
  <button type="button" id="msNavCart"><span class="ms-nav-icon" aria-hidden="true">🛒</span><span>السلة</span></button>
 </nav>
-<div id="msImageViewer" role="dialog" aria-modal="true" aria-label="عرض صورة المنتج">
- <button type="button" class="ms-viewer-close" aria-label="إغلاق الصورة">×</button>
- <img alt="" src="">
+<div id="msImageViewer" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
+ <button type="button" class="ms-viewer-close" aria-label="إغلاق التفاصيل">×</button>
+ <div class="ms-viewer-content">
+  <img alt="" src="">
+  <div class="ms-viewer-details">
+   <h2 class="ms-viewer-name"></h2>
+   <p class="ms-viewer-description" hidden></p>
+   <div class="ms-viewer-pricing">
+    <span class="ms-viewer-old-price" hidden></span>
+    <span class="ms-viewer-discount" hidden></span>
+    <strong class="ms-viewer-sale-price"></strong>
+   </div>
+  </div>
+ </div>
 </div>
 <script id="menusmart-nav-lightbox-js-v1">
 (function(){
@@ -2476,9 +2536,34 @@ function init(){
  });
  function openViewer(img){
   if(!img||!img.src)return;
+  var card=img.closest(".public-product-card");
+  if(!card)return;
+
+  var name=card.querySelector(".public-product-title-row h2");
+  var description=card.querySelector(".public-product-description");
+  var oldPrice=card.querySelector(".public-product-old-price");
+  var discount=card.querySelector(".public-product-discount");
+  var salePrice=card.querySelector(".public-product-price");
+
   previousFocus=img;
   viewerImg.src=img.currentSrc||img.src;
-  viewerImg.alt=img.alt||"صورة المنتج";
+  viewerImg.alt=name?name.textContent.trim():"صورة المنتج";
+
+  viewer.querySelector(".ms-viewer-name").textContent=name?name.textContent.trim():"";
+  var detailsDescription=viewer.querySelector(".ms-viewer-description");
+  detailsDescription.textContent=description?description.textContent.trim():"";
+  detailsDescription.hidden=!detailsDescription.textContent;
+
+  var detailsOldPrice=viewer.querySelector(".ms-viewer-old-price");
+  detailsOldPrice.textContent=oldPrice?oldPrice.textContent.trim():"";
+  detailsOldPrice.hidden=!oldPrice;
+
+  var detailsDiscount=viewer.querySelector(".ms-viewer-discount");
+  detailsDiscount.textContent=discount?discount.textContent.trim():"";
+  detailsDiscount.hidden=!discount;
+
+  viewer.querySelector(".ms-viewer-sale-price").textContent=salePrice?salePrice.textContent.trim():"";
+
   viewer.style.display="flex";
   requestAnimationFrame(function(){viewer.classList.add("ms-viewer-open")});
   body.style.overflow="hidden";

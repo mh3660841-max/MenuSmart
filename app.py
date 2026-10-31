@@ -24,6 +24,7 @@ import secrets
 import hashlib
 import smtplib
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from email.message import EmailMessage
 import sqlite3
 import uuid
@@ -125,7 +126,8 @@ def get_public_menu_cached_data(restaurant_id):
             featured AS is_popular,
             available,
             description,
-            price
+            price,
+            old_price
         FROM products
         WHERE restaurant_id = %s
         AND available = 1
@@ -3536,9 +3538,44 @@ def product_add():
             "0"
         ).strip()
 
+        old_price = request.form.get(
+            "old_price",
+            ""
+        ).strip()
+
         category_id = request.form.get(
             "category_id"
         )
+
+        if category_id:
+            try:
+                category_id = int(category_id)
+            except (ValueError, TypeError):
+                flash("القسم المحدد غير صحيح.", "danger")
+                return render_template(
+                    "product_add.html",
+                    restaurant=restaurant,
+                    categories=categories_list
+                )
+
+            category = query_db(
+                """
+                SELECT id
+                FROM categories
+                WHERE id = %s AND restaurant_id = %s
+                """,
+                [category_id, restaurant["id"]],
+                one=True
+            )
+            if category is None:
+                flash("القسم المحدد غير تابع لهذا المطعم.", "danger")
+                return render_template(
+                    "product_add.html",
+                    restaurant=restaurant,
+                    categories=categories_list
+                )
+        else:
+            category_id = None
 
         available = (
             1
@@ -3606,6 +3643,37 @@ def product_add():
                 categories=categories_list
             )
 
+        if not (0 <= price_value < float("inf")):
+            flash("السعر يجب أن يكون رقمًا موجبًا وصحيحًا.", "danger")
+            return render_template(
+                "product_add.html",
+                restaurant=restaurant,
+                categories=categories_list
+            )
+
+        old_price_value = None
+        if old_price:
+            try:
+                old_price_value = float(old_price)
+            except (ValueError, TypeError):
+                flash("السعر القديم غير صحيح.", "danger")
+                return render_template(
+                    "product_add.html",
+                    restaurant=restaurant,
+                    categories=categories_list
+                )
+
+            if not (0 <= old_price_value < float("inf")) or old_price_value <= price_value:
+                flash(
+                    "السعر القديم يجب أن يكون أكبر من سعر البيع.",
+                    "danger"
+                )
+                return render_template(
+                    "product_add.html",
+                    restaurant=restaurant,
+                    categories=categories_list
+                )
+
         execute_db(
             """
             INSERT INTO products
@@ -3615,19 +3683,19 @@ def product_add():
                 name,
                 description,
                 price,
+                old_price,
                 image,
                 available
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """,
             [
                 restaurant["id"],
-                category_id
-                if category_id
-                else None,
+                category_id if category_id else None,
                 name,
                 description,
                 price_value,
+                old_price_value,
                 image_name,
                 available
             ]
@@ -3721,9 +3789,9 @@ def product_edit(product_id):
             "0"
         ).strip()
 
-        old_price = request.form.get(
-            "old_price",
-            ""
+        discount_percent = request.form.get(
+            "discount_percent",
+            "0"
         ).strip()
 
         category_id = request.form.get(
@@ -3734,6 +3802,38 @@ def product_edit(product_id):
             "status",
             "active"
         )
+
+        if category_id:
+            try:
+                category_id = int(category_id)
+            except (ValueError, TypeError):
+                flash("القسم المحدد غير صحيح.", "danger")
+                return render_template(
+                    "product_edit.html",
+                    restaurant=restaurant,
+                    product=product,
+                    categories=categories_list
+                )
+
+            category = query_db(
+                """
+                SELECT id
+                FROM categories
+                WHERE id = %s AND restaurant_id = %s
+                """,
+                [category_id, restaurant["id"]],
+                one=True
+            )
+            if category is None:
+                flash("القسم المحدد غير تابع لهذا المطعم.", "danger")
+                return render_template(
+                    "product_edit.html",
+                    restaurant=restaurant,
+                    product=product,
+                    categories=categories_list
+                )
+        else:
+            category_id = None
 
         available = (
             1
@@ -3746,12 +3846,7 @@ def product_edit(product_id):
         )
 
         if not name:
-
-            flash(
-                "اسم المنتج مطلوب.",
-                "danger"
-            )
-
+            flash("اسم المنتج مطلوب.", "danger")
             return render_template(
                 "product_edit.html",
                 restaurant=restaurant,
@@ -3760,21 +3855,26 @@ def product_edit(product_id):
             )
 
         try:
+            base_price_value = Decimal(price)
+            discount_value = Decimal(discount_percent)
 
-            price_value = float(
-                price
-            )
+            if not base_price_value.is_finite() or not discount_value.is_finite():
+                raise InvalidOperation
 
-        except (
-            ValueError,
-            TypeError
-        ):
+            if base_price_value < 0:
+                raise ValueError("negative price")
 
-            flash(
-                "السعر غير صحيح.",
-                "danger"
-            )
+            if not Decimal("0") <= discount_value <= Decimal("100"):
+                raise ValueError("invalid discount")
 
+            sale_price_value = (
+                base_price_value
+                * (Decimal("100") - discount_value)
+                / Decimal("100")
+            ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+
+        except (InvalidOperation, ValueError, TypeError):
+            flash("السعر أو نسبة الخصم غير صحيحة.", "danger")
             return render_template(
                 "product_edit.html",
                 restaurant=restaurant,
@@ -3782,32 +3882,9 @@ def product_edit(product_id):
                 categories=categories_list
             )
 
-        old_price_value = None
-
-        if old_price:
-
-            try:
-
-                old_price_value = float(
-                    old_price
-                )
-
-            except (
-                ValueError,
-                TypeError
-            ):
-
-                flash(
-                    "السعر القديم غير صحيح.",
-                    "danger"
-                )
-
-                return render_template(
-                    "product_edit.html",
-                    restaurant=restaurant,
-                    product=product,
-                    categories=categories_list
-                )
+        original_price_value = (
+            base_price_value if discount_value > 0 else None
+        )
 
         image_name = product["image"]
 
@@ -3854,8 +3931,8 @@ def product_edit(product_id):
                 else None,
                 name,
                 description,
-                price_value,
-                old_price_value,
+                sale_price_value,
+                original_price_value,
                 image_name,
                 available,
                 product_id,

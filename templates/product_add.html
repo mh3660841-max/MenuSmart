@@ -1021,6 +1021,33 @@
                         </div>
 
 
+                        <div class="product-form-group">
+
+                            <label for="old_price">
+                                السعر القديم (اختياري)
+                            </label>
+
+                            <div class="price-wrapper">
+
+                                <input
+                                    type="number"
+                                    id="old_price"
+                                    name="old_price"
+                                    value="{{ request.form.get('old_price', '') }}"
+                                    placeholder="180"
+                                    min="0"
+                                    step="0.01"
+                                >
+
+                                <span class="price-currency">
+                                    جنيه
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
                         <!-- CATEGORY -->
 
                         <div class="product-form-group">

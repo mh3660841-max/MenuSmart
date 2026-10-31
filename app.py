@@ -18,6 +18,8 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 
 import os
+import time
+import threading
 import secrets
 import hashlib
 import smtplib
@@ -64,6 +66,92 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# =========================================================
+# كاش المنيو العامة
+# =========================================================
+
+PUBLIC_MENU_CACHE_TTL = 30
+PUBLIC_MENU_CACHE_MAX_ENTRIES = 256
+
+_public_menu_cache = {}
+_public_menu_cache_lock = threading.Lock()
+_public_menu_cache_generation = 0
+
+
+def invalidate_public_menu_cache(restaurant_id):
+    global _public_menu_cache_generation
+
+    restaurant_id = int(restaurant_id)
+
+    with _public_menu_cache_lock:
+        _public_menu_cache.pop(restaurant_id, None)
+        _public_menu_cache_generation += 1
+
+
+def get_public_menu_cached_data(restaurant_id):
+    restaurant_id = int(restaurant_id)
+    now = time.monotonic()
+
+    with _public_menu_cache_lock:
+        entry = _public_menu_cache.get(restaurant_id)
+
+        if entry and now - entry[0] < PUBLIC_MENU_CACHE_TTL:
+            return entry[1]
+
+        if entry:
+            _public_menu_cache.pop(restaurant_id, None)
+
+        generation = _public_menu_cache_generation
+
+    categories = query_db(
+        """
+        SELECT id, name
+        FROM categories
+        WHERE restaurant_id = %s
+        AND is_active = 1
+        ORDER BY sort_order ASC, id ASC
+        """,
+        [restaurant_id]
+    )
+
+    products = query_db(
+        """
+        SELECT
+            id,
+            category_id,
+            name,
+            image,
+            featured AS is_popular,
+            available,
+            description,
+            price
+        FROM products
+        WHERE restaurant_id = %s
+        AND available = 1
+        ORDER BY id ASC
+        """,
+        [restaurant_id]
+    )
+
+    data = (categories, products)
+
+    with _public_menu_cache_lock:
+        if generation == _public_menu_cache_generation:
+            if len(_public_menu_cache) >= PUBLIC_MENU_CACHE_MAX_ENTRIES:
+                oldest_id = min(
+                    _public_menu_cache,
+                    key=lambda key: _public_menu_cache[key][0]
+                )
+                _public_menu_cache.pop(oldest_id, None)
+
+            _public_menu_cache[restaurant_id] = (
+                time.monotonic(),
+                data
+            )
+
+    return data
+
 
 
 
@@ -3102,6 +3190,8 @@ def category_add():
         ]
     )
 
+    invalidate_public_menu_cache(restaurant["id"])
+
     flash(
         "تم إضافة القسم بنجاح.",
         "success"
@@ -3261,6 +3351,8 @@ def category_edit(category_id):
             ]
         )
 
+        invalidate_public_menu_cache(restaurant["id"])
+
         flash(
             "تم تعديل القسم بنجاح.",
             "success"
@@ -3325,6 +3417,8 @@ def category_delete(category_id):
             restaurant["id"]
         ]
     )
+
+    invalidate_public_menu_cache(restaurant["id"])
 
     flash(
         "تم حذف القسم.",
@@ -3538,6 +3632,8 @@ def product_add():
                 available
             ]
         )
+
+        invalidate_public_menu_cache(restaurant["id"])
 
         flash(
             "تم إضافة المنتج.",
@@ -3767,6 +3863,8 @@ def product_edit(product_id):
             ]
         )
 
+        invalidate_public_menu_cache(restaurant["id"])
+
         flash(
             "تم تعديل المنتج.",
             "success"
@@ -3833,6 +3931,8 @@ def product_delete(product_id):
             restaurant["id"]
         ]
     )
+
+    invalidate_public_menu_cache(restaurant["id"])
 
     flash(
         "تم حذف المنتج بنجاح.",
@@ -3985,35 +4085,7 @@ def public_menu(slug):
     if not restaurant["is_active"]:
         return render_template("restaurant_paused.html"), 200
 
-    categories_list = query_db(
-        """
-        SELECT id, name
-        FROM categories
-        WHERE restaurant_id = %s
-        AND is_active = 1
-        ORDER BY sort_order ASC, id ASC
-        """,
-        [restaurant["id"]]
-    )
-
-    products_list = query_db(
-        """
-        SELECT
-            id,
-            category_id,
-            name,
-            image,
-            featured AS is_popular,
-            available,
-            description,
-            price
-        FROM products
-        WHERE restaurant_id = %s
-        AND available = 1
-        ORDER BY id ASC
-        """,
-        [restaurant["id"]]
-    )
+    categories_list, products_list = get_public_menu_cached_data(restaurant["id"])
 
     settings_data = query_db(
         """

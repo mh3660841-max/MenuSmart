@@ -780,6 +780,19 @@ def current_restaurant():
     )
 
 
+def _currency_label(currency):
+    currency_labels = {
+        "EGP": "جنيه مصري",
+        "SAR": "ريال سعودي",
+        "AED": "درهم إماراتي",
+        "USD": "دولار أمريكي",
+    }
+    return currency_labels.get(
+        str(currency or "EGP").upper(),
+        "جنيه مصري"
+    )
+
+
 # =========================================================
 # لغة النشاط الحالية
 # =========================================================
@@ -4419,11 +4432,46 @@ AND products.restaurant_id = %s
 
 @app.route("/cart")
 def cart():
+    restaurant_slug = request.args.get("restaurant_slug", "").strip()
+
+    if restaurant_slug:
+        restaurant = query_db(
+            """
+            SELECT *
+            FROM restaurants
+            WHERE slug = %s
+            AND is_active = 1
+            LIMIT 1
+            """,
+            [restaurant_slug],
+            one=True
+        )
+    else:
+        restaurant = current_restaurant()
+
+    if restaurant is None:
+        return redirect(url_for("home"))
+
+    restaurant_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+
+    currency_label = _currency_label(
+        restaurant_settings["currency"] if restaurant_settings else "EGP"
+    )
 
     return render_template(
         "cart.html",
         user=current_user(),
-        restaurant=current_restaurant()
+        restaurant=restaurant,
+        currency_label=currency_label
     )
 # =========================================================
 # إتمام الطلب
@@ -4439,11 +4487,53 @@ def cart():
 )
 def checkout():
 
+    restaurant_slug = request.args.get("restaurant_slug", "").strip()
+    checkout_url = (
+        url_for("checkout", restaurant_slug=restaurant_slug)
+        if restaurant_slug else url_for("checkout")
+    )
+
+
     if request.method == "GET":
+        restaurant_slug = request.args.get("restaurant_slug", "").strip()
+
+        restaurant = None
+        if restaurant_slug:
+            restaurant = query_db(
+                """
+                SELECT *
+                FROM restaurants
+                WHERE slug = %s
+                AND is_active = 1
+                LIMIT 1
+                """,
+                [restaurant_slug],
+                one=True
+            )
+
+        if restaurant is None:
+            return redirect(url_for("home"))
+
+        restaurant_settings = query_db(
+            """
+            SELECT currency
+            FROM restaurant_settings
+            WHERE restaurant_id = %s
+            LIMIT 1
+            """,
+            [restaurant["id"]],
+            one=True
+        )
+
+        currency_label = _currency_label(
+            restaurant_settings["currency"] if restaurant_settings else "EGP"
+        )
 
         return render_template(
             "checkout.html",
-            user=current_user()
+            user=current_user(),
+            restaurant=restaurant,
+            currency_label=currency_label
         )
 
     customer_name = request.form.get(
@@ -4488,7 +4578,7 @@ def checkout():
         )
 
         return redirect(
-            url_for("checkout")
+            checkout_url
         )
 
     if not customer_phone:
@@ -4499,7 +4589,7 @@ def checkout():
         )
 
         return redirect(
-            url_for("checkout")
+            checkout_url
         )
 
     if not customer_address:
@@ -4510,7 +4600,7 @@ def checkout():
         )
 
         return redirect(
-            url_for("checkout")
+            checkout_url
         )
 
     # =====================================================
@@ -4557,7 +4647,7 @@ def checkout():
         )
 
         return redirect(
-            url_for("checkout")
+            checkout_url
         )
 
     # =====================================================
@@ -4698,7 +4788,7 @@ def checkout():
             )
 
             return redirect(
-                url_for("checkout")
+                checkout_url
             )
 
         if not product["available"]:
@@ -4709,7 +4799,7 @@ def checkout():
             )
 
             return redirect(
-                url_for("checkout")
+                checkout_url
             )
 
         if restaurant_id is None:
@@ -4724,7 +4814,7 @@ def checkout():
             )
 
             return redirect(
-                url_for("checkout")
+                checkout_url
             )
 
         valid_products.append(
@@ -4793,6 +4883,10 @@ def checkout():
             restaurant_id
         ],
         one=True
+    )
+
+    currency_label = _currency_label(
+        restaurant_settings["currency"] if restaurant_settings else "EGP"
     )
 
     if restaurant_settings:
@@ -5062,7 +5156,7 @@ def checkout():
                     recipient_user_id,
                     restaurant_id,
                     "طلب جديد",
-                    f"تم استلام طلب جديد رقم #{order_id} بقيمة {total:.2f} جنيه.",
+                    f"تم استلام طلب جديد رقم #{order_id} بقيمة {total:.2f} {currency_label}.",
                     "new_order"
                 ],
                 commit=False)

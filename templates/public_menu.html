@@ -2289,7 +2289,7 @@ checkoutBtn.addEventListener(
         if(cart.length){
 
             window.location.href =
-                "{{ url_for('checkout') }}";
+                "{{ url_for('checkout', restaurant_slug=restaurant.slug) }}";
 
         }
 

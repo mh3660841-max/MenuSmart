@@ -507,7 +507,7 @@
                     </span>
 
                     <strong id="summarySubtotal">
-                        0 جنيه
+                        0 {{ currency_label }}
                     </strong>
 
                 </div>
@@ -536,7 +536,7 @@
                 </span>
 
                 <strong id="summaryTotal">
-                    0 جنيه
+                    0 {{ currency_label }}
                 </strong>
 
             </div>
@@ -628,11 +628,13 @@ const checkoutBtn =
     );
 
 
+const currencyLabel = {{ currency_label|tojson }};
+
 function formatPrice(value) {
 
     return Number(value || 0)
         .toFixed(2) +
-        " جنيه";
+        " " + currencyLabel;
 
 }
 
@@ -927,7 +929,7 @@ if (checkoutBtn) {
 
 
             window.location.href =
-                "{{ url_for('checkout') }}";
+                "{{ url_for('checkout', restaurant_slug=restaurant.slug) }}";
 
         }
     );

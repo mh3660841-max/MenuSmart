@@ -565,7 +565,7 @@
 
 
         <a
-            href="{{ url_for('cart') }}"
+            href="{{ url_for('cart', restaurant_slug=restaurant.slug) }}"
             class="checkout-cart-link"
         >
             🛒 السلة
@@ -627,7 +627,7 @@
 
                 <form
                     method="POST"
-                    action="{{ url_for('checkout') }}"
+                    action="{{ url_for('checkout', restaurant_slug=restaurant.slug) }}"
                     id="checkoutForm"
                 >
 
@@ -851,7 +851,7 @@
                     </span>
 
                     <strong id="checkoutSubtotal">
-                        0.00 جنيه
+                        0.00 {{ currency_label }}
                     </strong>
 
                 </div>
@@ -877,7 +877,7 @@
                     </span>
 
                     <strong id="checkoutTotal">
-                        0.00 جنيه
+                        0.00 {{ currency_label }}
                     </strong>
 
                 </div>
@@ -950,9 +950,11 @@ try {
 }
 
 
+const currencyLabel = {{ currency_label|tojson }};
+
 function formatPrice(value) {
 
-    return Number(value || 0).toFixed(2) + " جنيه";
+    return Number(value || 0).toFixed(2) + " " + currencyLabel;
 
 }
 

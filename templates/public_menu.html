@@ -1947,7 +1947,7 @@ transform:translateX(1px);
 </footer><script>
 
 let cart = JSON.parse(
-    localStorage.getItem("menusmart_cart") || "[]"
+    localStorage.getItem("menusmart_cart_{{ restaurant.id }}") || "[]"
 );
 
 
@@ -1992,7 +1992,7 @@ const products =
 function saveCart(){
 
     localStorage.setItem(
-        "menusmart_cart",
+        "menusmart_cart_{{ restaurant.id }}",
         JSON.stringify(cart)
     );
 

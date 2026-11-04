@@ -4493,27 +4493,28 @@ def checkout():
         if restaurant_slug else url_for("checkout")
     )
 
+    restaurant = None
+    if restaurant_slug:
+        restaurant = query_db(
+            """
+            SELECT *
+            FROM restaurants
+            WHERE slug = %s
+            AND is_active = 1
+            LIMIT 1
+            """,
+            [restaurant_slug],
+            one=True
+        )
 
-    if request.method == "GET":
-        restaurant_slug = request.args.get("restaurant_slug", "").strip()
-
-        restaurant = None
-        if restaurant_slug:
-            restaurant = query_db(
-                """
-                SELECT *
-                FROM restaurants
-                WHERE slug = %s
-                AND is_active = 1
-                LIMIT 1
-                """,
-                [restaurant_slug],
-                one=True
-            )
-
-        if restaurant is None:
+    if restaurant is None:
+        if request.method == "GET":
             return redirect(url_for("home"))
 
+        flash("المطعم غير متاح حاليًا.", "danger")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
         restaurant_settings = query_db(
             """
             SELECT currency
@@ -4738,7 +4739,7 @@ def checkout():
 
     valid_products = []
 
-    restaurant_id = None
+    restaurant_id = restaurant["id"]
 
     # =====================================================
     # التحقق من المنتجات
@@ -4802,20 +4803,12 @@ def checkout():
                 checkout_url
             )
 
-        if restaurant_id is None:
-
-            restaurant_id = product["restaurant_id"]
-
-        elif restaurant_id != product["restaurant_id"]:
-
+        if product["restaurant_id"] != restaurant_id:
             flash(
-                "لا يمكن إنشاء طلب يحتوي على منتجات من مطاعم مختلفة.",
+                "أحد المنتجات لا يتبع هذا المطعم.",
                 "danger"
             )
-
-            return redirect(
-                checkout_url
-            )
+            return redirect(checkout_url)
 
         valid_products.append(
             {
@@ -4832,35 +4825,6 @@ def checkout():
 
         flash(
             "لم يتم العثور على منتجات صالحة في السلة.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("home")
-        )
-
-    # =====================================================
-    # التأكد من أن المطعم موجود ومفعّل
-    # =====================================================
-
-    restaurant = query_db(
-        """
-        SELECT *
-        FROM restaurants
-        WHERE id = %s
-        AND is_active = 1
-        LIMIT 1
-        """,
-        [
-            restaurant_id
-        ],
-        one=True
-    )
-
-    if restaurant is None:
-
-        flash(
-            "المطعم غير متاح حاليًا.",
             "danger"
         )
 
@@ -5269,7 +5233,8 @@ def order_success(order_id):
         order=order,
         order_id=order_id,
         items=items,
-        restaurant=order
+        restaurant=order,
+        restaurant_id=order["restaurant_id"]
     )
 
 

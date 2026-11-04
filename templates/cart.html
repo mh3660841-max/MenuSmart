@@ -581,7 +581,7 @@
 let cart =
     JSON.parse(
         localStorage.getItem(
-            "menusmart_cart"
+            "menusmart_cart_{{ restaurant.id }}"
         ) || "[]"
     );
 
@@ -835,7 +835,7 @@ function renderCart() {
 function saveCart() {
 
     localStorage.setItem(
-        "menusmart_cart",
+        "menusmart_cart_{{ restaurant.id }}",
         JSON.stringify(cart)
     );
 

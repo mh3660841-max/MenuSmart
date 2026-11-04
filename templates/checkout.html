@@ -936,7 +936,7 @@ try {
 
     cart =
         JSON.parse(
-            localStorage.getItem("menusmart_cart") || "[]"
+            localStorage.getItem("menusmart_cart_{{ restaurant.id }}") || "[]"
         );
 
     if (!Array.isArray(cart)) {

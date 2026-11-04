@@ -781,6 +781,38 @@
 
                         </label>
 
+                        <div
+                            id="onlinePaymentDetails"
+                            hidden
+                            style="margin-top:12px;padding:15px;border:1px solid #e3e3df;border-radius:13px;background:#fff;line-height:1.9;"
+                        >
+                            {% if instapay_address %}
+                                <div style="margin-bottom:10px;">
+                                    <strong>InstaPay</strong>
+                                    <div dir="ltr" style="text-align:right;overflow-wrap:anywhere;">
+                                        {{ instapay_address }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if wallet_number %}
+                                <div>
+                                    <strong>المحفظة الإلكترونية</strong>
+                                    <div dir="ltr" style="text-align:right;overflow-wrap:anywhere;">
+                                        {{ wallet_number }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if not instapay_address and not wallet_number %}
+                                <div>
+                                    بيانات الدفع الإلكتروني غير متاحة حاليًا.
+                                    يرجى التواصل مع المطعم.
+                                </div>
+                            {% endif %}
+                        </div>
+
+
                     </div>
 
 
@@ -951,6 +983,30 @@ try {
 
 
 const currencyLabel = {{ currency_label|tojson }};
+
+const onlinePaymentDetails =
+    document.getElementById("onlinePaymentDetails");
+
+const paymentMethodInputs =
+    document.querySelectorAll('input[name="payment_method"]');
+
+function updateOnlinePaymentDetails() {
+    const selectedPayment = document.querySelector(
+        'input[name="payment_method"]:checked'
+    );
+
+    if (onlinePaymentDetails) {
+        onlinePaymentDetails.hidden =
+            !selectedPayment || selectedPayment.value !== "online";
+    }
+}
+
+paymentMethodInputs.forEach(function(input) {
+    input.addEventListener("change", updateOnlinePaymentDetails);
+});
+
+updateOnlinePaymentDetails();
+
 
 function formatPrice(value) {
 

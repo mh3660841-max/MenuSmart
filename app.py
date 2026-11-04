@@ -4517,7 +4517,7 @@ def checkout():
     if request.method == "GET":
         restaurant_settings = query_db(
             """
-            SELECT currency
+            SELECT currency, wallet_number, instapay_address
             FROM restaurant_settings
             WHERE restaurant_id = %s
             LIMIT 1
@@ -4534,7 +4534,9 @@ def checkout():
             "checkout.html",
             user=current_user(),
             restaurant=restaurant,
-            currency_label=currency_label
+            currency_label=currency_label,
+            wallet_number=(restaurant_settings["wallet_number"] if restaurant_settings else ""),
+            instapay_address=(restaurant_settings["instapay_address"] if restaurant_settings else "")
         )
 
     customer_name = request.form.get(

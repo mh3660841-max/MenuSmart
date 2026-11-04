@@ -1,3 +1,10 @@
+{% set currency_labels = {
+    'EGP': 'جنيه مصري',
+    'SAR': 'ريال سعودي',
+    'AED': 'درهم إماراتي',
+    'USD': 'دولار أمريكي'
+} %}
+{% set currency_label = currency_labels.get(settings.currency if settings and settings.currency else 'EGP', 'جنيه مصري') %}
 <!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#111111"><title>
     {{ restaurant.name|default('Menu Smart') }} | المنيو
 </title><meta
@@ -1760,7 +1767,7 @@ transform:translateX(1px);
                             {% if product.old_price and product.old_price > product.price %}
 
                             <span class="public-product-old-price">
-                                {{ product.old_price }} جنيه
+                                {{ product.old_price }} {{ currency_label }}
                             </span>
 
                             <span class="public-product-discount">
@@ -1770,14 +1777,14 @@ transform:translateX(1px);
                             {% endif %}
 
                             <strong class="public-product-price">
-                                {{ product.price|default(0) }} جنيه
+                                {{ product.price|default(0) }} {{ currency_label }}
                             </strong>
 
                             {% if product.sizes %}
                             <div class="public-product-sizes" aria-label="أحجام المنتج">
                                 {% for size in product.sizes %}
                                 <span class="public-product-size">
-                                    {{ size.name }}: {{ size.price }} جنيه
+                                    {{ size.name }}: {{ size.price }} {{ currency_label }}
                                 </span>
                                 {% endfor %}
                             </div>
@@ -1909,8 +1916,8 @@ transform:translateX(1px);
             الإجمالي
         </span>
 
-        <strong id="cartTotal">
-            0 جنيه
+        <strong id="cartTotal" data-currency="{{ currency_label }}">
+            0 {{ currency_label }}
         </strong>
 
     </div>
@@ -2016,7 +2023,7 @@ function updateCart(){
 
 
     cartTotal.textContent =
-        total.toFixed(2) + " جنيه";
+        total.toFixed(2) + " " + cartTotal.dataset.currency;
 
 
     checkoutBtn.disabled =
@@ -2070,8 +2077,7 @@ function updateCart(){
                         </strong>
 
                         <span>
-                            ${Number(item.price).toFixed(2)}
-                            جنيه
+                            ${Number(item.price).toFixed(2)} ${cartTotal.dataset.currency}
                         </span>
 
                     </div>
@@ -2102,8 +2108,7 @@ function updateCart(){
 
                     <strong class="cart-item-total">
 
-                        ${itemTotal.toFixed(2)}
-                        جنيه
+                        ${itemTotal.toFixed(2)} ${cartTotal.dataset.currency}
 
                     </strong>
 

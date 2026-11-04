@@ -4316,6 +4316,7 @@ def public_menu(slug):
         """
         SELECT
             allow_orders,
+            currency,
             background_color,
             card_color,
             card_style,

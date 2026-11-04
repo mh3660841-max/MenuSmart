@@ -553,6 +553,9 @@ def init_db():
             "delivery_fee",
             "NUMERIC(12,2) DEFAULT 0"
         )
+        add_column_if_missing(cursor, "restaurant_settings", "wallet_number", "TEXT DEFAULT ''")
+        add_column_if_missing(cursor, "restaurant_settings", "instapay_address", "TEXT DEFAULT ''")
+
 
         add_column_if_missing(
             cursor,
@@ -918,6 +921,24 @@ def init_db():
 
 
         # =====================================================
+        # =====================================================
+        # أحجام المنتجات
+        # =====================================================
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS product_sizes (
+                id BIGSERIAL PRIMARY KEY,
+                product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+                name TEXT NOT NULL,
+                price NUMERIC(12,2) NOT NULL DEFAULT 0,
+                sort_order INTEGER NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_product_sizes_product_id
+            ON product_sizes(product_id)
+        """)
+
         # خيارات المنتجات
         # =====================================================
 

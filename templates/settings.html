@@ -941,6 +941,24 @@
     </div>
 
 
+
+    <div class="form-group">
+        <label for="wallet_number">رقم المحفظة الإلكترونية</label>
+        <input type="tel" id="wallet_number" name="wallet_number"
+               maxlength="30" inputmode="tel"
+               value="{{ settings.wallet_number|default('') if settings else '' }}"
+               placeholder="رقم المحفظة">
+        <small>الرقم الذي سيحوّل إليه العميل عند اختيار المحفظة.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="instapay_address">عنوان أو رقم InstaPay</label>
+        <input type="text" id="instapay_address" name="instapay_address"
+               maxlength="100"
+               value="{{ settings.instapay_address|default('') if settings else '' }}"
+               placeholder="عنوان أو رقم InstaPay">
+        <small>البيانات التي ستظهر للعميل عند اختيار InstaPay.</small>
+    </div>
 </div>
 
 

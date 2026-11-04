@@ -136,6 +136,33 @@ def get_public_menu_cached_data(restaurant_id):
         [restaurant_id]
     )
 
+    product_sizes = query_db(
+        """
+        SELECT product_id, id, name, price, sort_order
+        FROM product_sizes
+        WHERE product_id IN (
+            SELECT id
+            FROM products
+            WHERE restaurant_id = %s
+            AND available = 1
+        )
+        ORDER BY product_id ASC, sort_order ASC, id ASC
+        """,
+        [restaurant_id]
+    )
+
+    sizes_by_product = {}
+    for size in product_sizes:
+        sizes_by_product.setdefault(size["product_id"], []).append({
+            "id": size["id"],
+            "name": size["name"],
+            "price": size["price"],
+            "sort_order": size["sort_order"]
+        })
+
+    for product in products:
+        product["sizes"] = sizes_by_product.get(product["id"], [])
+
     data = (categories, products)
 
     with _public_menu_cache_lock:
@@ -156,6 +183,58 @@ def get_public_menu_cached_data(restaurant_id):
 
 
 
+
+
+def parse_product_sizes_form():
+    names = request.form.getlist("size_name")
+    prices = request.form.getlist("size_price")
+
+    if len(names) != len(prices):
+        return None, "بيانات الأحجام غير مكتملة."
+
+    sizes = []
+    seen_names = set()
+
+    for index, (raw_name, raw_price) in enumerate(zip(names, prices)):
+        name = (raw_name or "").strip()
+        price_text = (raw_price or "").strip()
+
+        if not name and not price_text:
+            continue
+
+        if not name or not price_text:
+            return None, "أدخل اسم وسعر كل حجم."
+
+        if len(name) > 60:
+            return None, "اسم الحجم يجب ألا يتجاوز 60 حرفًا."
+
+        normalized_name = name.casefold()
+        if normalized_name in seen_names:
+            return None, "لا يمكن تكرار اسم الحجم نفسه."
+
+        seen_names.add(normalized_name)
+
+        try:
+            price = Decimal(price_text)
+        except (InvalidOperation, ValueError, TypeError):
+            return None, "سعر أحد الأحجام غير صحيح."
+
+        if not price.is_finite() or price < 0:
+            return None, "أسعار الأحجام يجب أن تكون أرقامًا موجبة أو صفرًا."
+
+        if price >= Decimal("10000000000"):
+            return None, "سعر أحد الأحجام أكبر من الحد المسموح."
+
+        if price != price.quantize(Decimal("0.01")):
+            return None, "أسعار الأحجام تقبل منزلتين عشريتين فقط."
+
+        sizes.append({
+            "name": name,
+            "price": price,
+            "sort_order": index
+        })
+
+    return sizes, None
 
 
 # =========================================================
@@ -2885,6 +2964,9 @@ def settings():
 
             delivery_fee = 0
 
+        wallet_number = request.form.get("wallet_number", "").strip()[:30]
+        instapay_address = request.form.get("instapay_address", "").strip()[:100]
+
         if settings_data:
 
             execute_db(
@@ -2917,6 +2999,8 @@ def settings():
                     allow_orders = %s,
                     allow_delivery = %s,
                     delivery_fee = %s,
+                    wallet_number = %s,
+                    instapay_address = %s,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE restaurant_id = %s
                 """,
@@ -2947,6 +3031,8 @@ def settings():
                     allow_orders,
                     allow_delivery,
                     delivery_fee,
+                    wallet_number,
+                    instapay_address,
                     restaurant["id"]
                 ]
             )
@@ -2984,9 +3070,11 @@ def settings():
                     language,
                     allow_orders,
                     allow_delivery,
-                    delivery_fee
+                    delivery_fee,
+                    wallet_number,
+                    instapay_address
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
@@ -3017,7 +3105,9 @@ def settings():
                     allow_orders,
                     allow_delivery,
                     delivery_fee
-                ]
+                ,
+                    wallet_number,
+                    instapay_address]
             )
 
         execute_db(
@@ -3543,6 +3633,15 @@ def product_add():
             ""
         ).strip()
 
+        sizes, sizes_error = parse_product_sizes_form()
+        if sizes_error:
+            flash(sizes_error, "danger")
+            return render_template(
+                "product_add.html",
+                restaurant=restaurant,
+                categories=categories_list
+            )
+
         category_id = request.form.get(
             "category_id"
         )
@@ -3674,32 +3773,63 @@ def product_add():
                     categories=categories_list
                 )
 
-        execute_db(
-            """
-            INSERT INTO products
-            (
-                restaurant_id,
-                category_id,
-                name,
-                description,
-                price,
-                old_price,
-                image,
-                available
+        db = get_db()
+        cursor = db.cursor()
+
+        try:
+            cursor.execute(
+                """
+                INSERT INTO products
+                (
+                    restaurant_id,
+                    category_id,
+                    name,
+                    description,
+                    price,
+                    old_price,
+                    image,
+                    available
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING id
+                """,
+                [
+                    restaurant["id"],
+                    category_id if category_id else None,
+                    name,
+                    description,
+                    price_value,
+                    old_price_value,
+                    image_name,
+                    available
+                ]
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """,
-            [
-                restaurant["id"],
-                category_id if category_id else None,
-                name,
-                description,
-                price_value,
-                old_price_value,
-                image_name,
-                available
-            ]
-        )
+
+            product_id = cursor.fetchone()[0]
+
+            for size in sizes:
+                cursor.execute(
+                    """
+                    INSERT INTO product_sizes
+                    (product_id, name, price, sort_order)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    [
+                        product_id,
+                        size["name"],
+                        size["price"],
+                        size["sort_order"]
+                    ]
+                )
+
+            db.commit()
+
+        except Exception:
+            db.rollback()
+            raise
+
+        finally:
+            cursor.close()
 
         invalidate_public_menu_cache(restaurant["id"])
 
@@ -3742,23 +3872,13 @@ def product_edit(product_id):
         WHERE products.id = %s
         AND products.restaurant_id = %s
         """,
-        [
-            product_id,
-            restaurant["id"]
-        ],
+        [product_id, restaurant["id"]],
         one=True
     )
 
     if product is None:
-
-        flash(
-            "المنتج غير موجود.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("products")
-        )
+        flash("المنتج غير موجود.", "danger")
+        return redirect(url_for("products"))
 
     categories_list = query_db(
         """
@@ -3767,41 +3887,44 @@ def product_edit(product_id):
         WHERE restaurant_id = %s
         ORDER BY sort_order ASC, id ASC
         """,
-        [
-            restaurant["id"]
-        ]
+        [restaurant["id"]]
     )
+
+    product_sizes = []
+
+    if request.method == "GET":
+        product_sizes = query_db(
+            """
+            SELECT id, name, price, sort_order
+            FROM product_sizes
+            WHERE product_id = %s
+            ORDER BY sort_order ASC, id ASC
+            """,
+            [product_id]
+        )
 
     if request.method == "POST":
 
-        name = request.form.get(
-            "name",
-            ""
-        ).strip()
-
-        description = request.form.get(
-            "description",
-            ""
-        ).strip()
-
-        price = request.form.get(
-            "price",
-            "0"
-        ).strip()
-
+        name = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        price = request.form.get("price", "0").strip()
         discount_percent = request.form.get(
-            "discount_percent",
-            "0"
+            "discount_percent", "0"
         ).strip()
+        category_id = request.form.get("category_id")
+        status = request.form.get("status", "active")
 
-        category_id = request.form.get(
-            "category_id"
-        )
+        sizes, sizes_error = parse_product_sizes_form()
 
-        status = request.form.get(
-            "status",
-            "active"
-        )
+        if sizes_error:
+            flash(sizes_error, "danger")
+            return render_template(
+                "product_edit.html",
+                restaurant=restaurant,
+                product=product,
+                categories=categories_list,
+                product_sizes=product_sizes
+            )
 
         if category_id:
             try:
@@ -3812,7 +3935,8 @@ def product_edit(product_id):
                     "product_edit.html",
                     restaurant=restaurant,
                     product=product,
-                    categories=categories_list
+                    categories=categories_list,
+                    product_sizes=product_sizes
                 )
 
             category = query_db(
@@ -3824,26 +3948,21 @@ def product_edit(product_id):
                 [category_id, restaurant["id"]],
                 one=True
             )
+
             if category is None:
                 flash("القسم المحدد غير تابع لهذا المطعم.", "danger")
                 return render_template(
                     "product_edit.html",
                     restaurant=restaurant,
                     product=product,
-                    categories=categories_list
+                    categories=categories_list,
+                    product_sizes=product_sizes
                 )
         else:
             category_id = None
 
-        available = (
-            1
-            if status == "active"
-            else 0
-        )
-
-        image = request.files.get(
-            "image"
-        )
+        available = 1 if status == "active" else 0
+        image = request.files.get("image")
 
         if not name:
             flash("اسم المنتج مطلوب.", "danger")
@@ -3851,14 +3970,18 @@ def product_edit(product_id):
                 "product_edit.html",
                 restaurant=restaurant,
                 product=product,
-                categories=categories_list
+                categories=categories_list,
+                product_sizes=product_sizes
             )
 
         try:
             base_price_value = Decimal(price)
             discount_value = Decimal(discount_percent)
 
-            if not base_price_value.is_finite() or not discount_value.is_finite():
+            if (
+                not base_price_value.is_finite()
+                or not discount_value.is_finite()
+            ):
                 raise InvalidOperation
 
             if base_price_value < 0:
@@ -3871,7 +3994,10 @@ def product_edit(product_id):
                 base_price_value
                 * (Decimal("100") - discount_value)
                 / Decimal("100")
-            ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+            ).quantize(
+                Decimal("0.01"),
+                rounding=ROUND_HALF_UP
+            )
 
         except (InvalidOperation, ValueError, TypeError):
             flash("السعر أو نسبة الخصم غير صحيحة.", "danger")
@@ -3879,7 +4005,8 @@ def product_edit(product_id):
                 "product_edit.html",
                 restaurant=restaurant,
                 product=product,
-                categories=categories_list
+                categories=categories_list,
+                product_sizes=product_sizes
             )
 
         original_price_value = (
@@ -3889,73 +4016,94 @@ def product_edit(product_id):
         image_name = product["image"]
 
         if image and image.filename:
-
-            new_image = save_uploaded_image(
-                image
-            )
+            new_image = save_uploaded_image(image)
 
             if new_image is None:
-
-                flash(
-                    "نوع الصورة غير مسموح به.",
-                    "danger"
-                )
-
+                flash("نوع الصورة غير مسموح به.", "danger")
                 return render_template(
                     "product_edit.html",
                     restaurant=restaurant,
                     product=product,
-                    categories=categories_list
+                    categories=categories_list,
+                    product_sizes=product_sizes
                 )
 
             image_name = new_image
 
-        execute_db(
-            """
-            UPDATE products
-            SET
-                category_id = %s,
-                name = %s,
-                description = %s,
-                price = %s,
-                old_price = %s,
-                image = %s,
-                available = %s,
-                updated_at = CURRENT_TIMESTAMP
-            WHERE id = %s
-            AND restaurant_id = %s
-            """,
-            [
-                category_id
-                if category_id
-                else None,
-                name,
-                description,
-                sale_price_value,
-                original_price_value,
-                image_name,
-                available,
-                product_id,
-                restaurant["id"]
-            ]
-        )
+        db = get_db()
+        cursor = db.cursor()
+
+        try:
+            cursor.execute(
+                """
+                UPDATE products
+                SET
+                    category_id = %s,
+                    name = %s,
+                    description = %s,
+                    price = %s,
+                    old_price = %s,
+                    image = %s,
+                    available = %s,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = %s
+                AND restaurant_id = %s
+                """,
+                [
+                    category_id if category_id else None,
+                    name,
+                    description,
+                    sale_price_value,
+                    original_price_value,
+                    image_name,
+                    available,
+                    product_id,
+                    restaurant["id"]
+                ]
+            )
+
+            cursor.execute(
+                """
+                DELETE FROM product_sizes
+                WHERE product_id = %s
+                """,
+                [product_id]
+            )
+
+            for size in sizes:
+                cursor.execute(
+                    """
+                    INSERT INTO product_sizes
+                    (product_id, name, price, sort_order)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    [
+                        product_id,
+                        size["name"],
+                        size["price"],
+                        size["sort_order"]
+                    ]
+                )
+
+            db.commit()
+
+        except Exception:
+            db.rollback()
+            raise
+
+        finally:
+            cursor.close()
 
         invalidate_public_menu_cache(restaurant["id"])
-
-        flash(
-            "تم تعديل المنتج.",
-            "success"
-        )
-
-        return redirect(
-            url_for("products")
-        )
+        flash("تم تعديل المنتج.", "success")
+        return redirect(url_for("products"))
 
     return render_template(
         "product_edit.html",
         restaurant=restaurant,
         product=product,
-        categories=categories_list
+        categories=categories_list,
+        product_sizes=product_sizes
     )
 
 

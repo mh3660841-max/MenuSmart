@@ -34,6 +34,70 @@
     href="{{ url_for('static', filename='css/menu.css') }}"
 >
 
+<style>
+/* PRODUCT SIZES */
+
+        .product-sizes-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .product-sizes-help {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .product-size-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-size-row input {
+            min-width: 0;
+        }
+
+        .product-size-remove {
+            min-height: 44px;
+            padding: 0 12px;
+            border: 1px solid #e5caca;
+            border-radius: 10px;
+            background: #fff5f5;
+            color: #b42318;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .product-size-add {
+            align-self: flex-start;
+            min-height: 42px;
+            padding: 0 16px;
+            border: 1px solid #d4af37;
+            border-radius: 10px;
+            background: #fffaf0;
+            color: #806515;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        @media (max-width: 520px) {
+            .product-size-row {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            }
+
+            .product-size-remove {
+                grid-column: 1 / -1;
+                justify-self: start;
+            }
+        }
+</style>
 </head><body class="dashboard-page menu-management-page">{% include 'shared_header.html' %}<main class="dashboard-main"><div class="dashboard-container">
 
 
@@ -219,7 +283,56 @@
                 </div>
 
 
-                <div class="form-group">
+
+<div class="form-group product-sizes-section">
+    <label>أحجام المنتج وأسعارها (اختياري)</label>
+    <small class="product-sizes-help">
+        اترك القسم فارغًا إذا كان المنتج له سعر واحد فقط.
+        يمكنك إضافة أكثر من حجم بسعر مختلف.
+    </small>
+
+    <div id="productSizesContainer">
+        {% if request.method == 'POST' %}
+            {% set size_names = request.form.getlist('size_name') %}
+            {% set size_prices = request.form.getlist('size_price') %}
+        {% else %}
+            {% set size_names = product_sizes|map(attribute='name')|list %}
+            {% set size_prices = product_sizes|map(attribute='price')|list %}
+        {% endif %}
+
+        {% if size_names %}
+            {% for size_name in size_names %}
+                <div class="product-size-row">
+                    <input type="text" name="size_name"
+                           value="{{ size_name }}" maxlength="60"
+                           placeholder="اسم الحجم، مثل صغير"
+                           aria-label="اسم الحجم">
+                    <input type="number" name="size_price"
+                           value="{{ size_prices[loop.index0] if loop.index0 < size_prices|length else '' }}"
+                           min="0" step="0.01" placeholder="السعر"
+                           aria-label="سعر الحجم">
+                    <button type="button" class="product-size-remove">حذف</button>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="product-size-row">
+                <input type="text" name="size_name" maxlength="60"
+                       placeholder="اسم الحجم، مثل صغير"
+                       aria-label="اسم الحجم">
+                <input type="number" name="size_price" min="0"
+                       step="0.01" placeholder="السعر"
+                       aria-label="سعر الحجم">
+                <button type="button" class="product-size-remove">حذف</button>
+            </div>
+        {% endif %}
+    </div>
+
+    <button type="button" id="addProductSize" class="product-size-add">
+        + إضافة حجم
+    </button>
+</div>
+
+<div class="form-group">
 
                     <label for="category_id">
                         القسم
@@ -817,6 +930,54 @@ if (imageInput) {
         }
     );
 
+}
+
+
+/* OPTIONAL PRODUCT SIZES */
+const productSizesContainer =
+    document.getElementById("productSizesContainer");
+const addProductSizeButton =
+    document.getElementById("addProductSize");
+
+if (productSizesContainer && addProductSizeButton) {
+    function createProductSizeRow() {
+        const row = document.createElement("div");
+        row.className = "product-size-row";
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.name = "size_name";
+        nameInput.maxLength = 60;
+        nameInput.placeholder = "اسم الحجم، مثل صغير";
+        nameInput.setAttribute("aria-label", "اسم الحجم");
+
+        const priceInput = document.createElement("input");
+        priceInput.type = "number";
+        priceInput.name = "size_price";
+        priceInput.min = "0";
+        priceInput.step = "0.01";
+        priceInput.placeholder = "السعر";
+        priceInput.setAttribute("aria-label", "سعر الحجم");
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "product-size-remove";
+        removeButton.textContent = "حذف";
+
+        row.append(nameInput, priceInput, removeButton);
+        return row;
+    }
+
+    addProductSizeButton.addEventListener("click", function () {
+        productSizesContainer.appendChild(createProductSizeRow());
+    });
+
+    productSizesContainer.addEventListener("click", function (event) {
+        const removeButton = event.target.closest(".product-size-remove");
+        if (removeButton && productSizesContainer.contains(removeButton)) {
+            removeButton.closest(".product-size-row").remove();
+        }
+    });
 }
 
 </script></body></html>

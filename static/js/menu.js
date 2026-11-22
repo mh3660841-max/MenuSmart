@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const currencyLabel = document.body.dataset.currency || "EGP";
 
     /* =========================================
        MENU SEARCH
@@ -1089,7 +1090,7 @@ function updateCartInterface() {
 
         element.textContent =
             formatMenuPrice(total) +
-            " جنيه";
+            " " + currencyLabel;
 
     });
 
@@ -1103,7 +1104,7 @@ function updateCartInterface() {
 
         cartTotalElement.textContent =
             formatMenuPrice(total) +
-            " جنيه";
+            " " + currencyLabel;
 
     }
 
@@ -1226,7 +1227,7 @@ function renderCartPage() {
 
                                 <span>
                                     ${formatMenuPrice(price)}
-                                    جنيه
+                                    ${currencyLabel}
                                 </span>
 
                             </div>
@@ -1256,7 +1257,7 @@ function renderCartPage() {
                             <strong class="cart-item-total">
 
                                 ${formatMenuPrice(itemTotal)}
-                                جنيه
+                                ${currencyLabel}
 
                             </strong>
 
@@ -1373,13 +1374,13 @@ function renderCartPage() {
 
                                 <p>
                                     ${formatMenuPrice(price)}
-                                    جنيه
+                                    ${currencyLabel}
                                 </p>
 
                                 <div class="cart-item-price">
 
                                     ${formatMenuPrice(itemTotal)}
-                                    جنيه
+                                    ${currencyLabel}
 
                                 </div>
 

@@ -1,10 +1,10 @@
 {% set currency_labels = {
-    'EGP': 'جنيه مصري',
-    'SAR': 'ريال سعودي',
-    'AED': 'درهم إماراتي',
-    'USD': 'دولار أمريكي'
+    'EGP': 'EGP',
+    'SAR': 'SAR',
+    'AED': 'AED',
+    'USD': 'USD'
 } %}
-{% set currency_label = currency_labels.get(settings.currency if settings and settings.currency else 'EGP', 'جنيه مصري') %}
+{% set currency_label = currency_labels.get(settings.currency if settings and settings.currency else 'EGP', 'EGP') %}
 <!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#111111"><title>
     {{ restaurant.name|default('Menu Smart') }} | المنيو
 </title><meta
@@ -47,6 +47,7 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
     --menu-card-color: {{ card_color if card_color is string and card_color|length == 7 and card_color[0] == '#' and card_color[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#FFFFFF' }};
     --menu-price-color: {{ price_color if price_color is string and price_color|length == 7 and price_color[0] == '#' and price_color[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#8A6508' }};
     --menu-primary: {{ primary if primary is string and primary|length == 7 and primary[0] == '#' and primary[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#111111' }};
+    --menu-hero-accent: {{ primary if primary is string and primary|length == 7 and primary[0] == '#' and primary[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#8b5cf6' }};
     --menu-secondary: {{ secondary if secondary is string and secondary|length == 7 and secondary[0] == '#' and secondary[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#D4AF37' }};
     --menu-background: {{ background if background is string and background|length == 7 and background[0] == '#' and background[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#F7F7F7' }};
     --menu-text: {{ text_color if text_color is string and text_color|length == 7 and text_color[0] == '#' and text_color[1:]|lower|replace('0','')|replace('1','')|replace('2','')|replace('3','')|replace('4','')|replace('5','')|replace('6','')|replace('7','')|replace('8','')|replace('9','')|replace('a','')|replace('b','')|replace('c','')|replace('d','')|replace('e','')|replace('f','') == '' else '#171717' }};
@@ -87,8 +88,8 @@ body.public-menu-page.card-style-rounded .public-product-card{
     position:sticky;
     top:0;
     z-index:1000;
-    background:rgba(255,255,255,.96);
-    border-bottom:1px solid #eee;
+    background:rgba(17,26,46,.96);
+    border-bottom:1px solid #27324b;
     backdrop-filter:blur(12px);
 }
 
@@ -105,7 +106,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
 .public-brand{
     text-decoration:none;
-    color:#111;
+    color:#edf1ff;
 
     display:flex;
     align-items:center;
@@ -121,8 +122,8 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     border-radius:11px;
 
-    background:#111;
-    color:#fff;
+    background:#8b5cf6;
+    color:#ffffff;
 
     display:flex;
     align-items:center;
@@ -139,8 +140,8 @@ body.public-menu-page.card-style-rounded .public-product-card{
 .menu-cart-button{display:none;
     border:0;
 
-    background:#111;
-    color:#fff;
+    background:#8b5cf6;
+    color:#ffffff;
 
     min-width:52px;
     height:44px;
@@ -161,8 +162,8 @@ body.public-menu-page.card-style-rounded .public-product-card{
 }
 
 .menu-cart-button b{
-    background:#fff;
-    color:#111;
+    background:#edf1ff;
+    color:#080d1b;
 
     min-width:20px;
     height:20px;
@@ -195,14 +196,14 @@ body.public-menu-page.card-style-rounded .public-product-card{
     color:#fff;
     padding:42px 18px 48px;
     text-align:center;
-    border-bottom:1px solid rgba(212,175,55,.45);
+    border-bottom:1px solid color-mix(in srgb, var(--menu-hero-accent) 45%, transparent);
 }
 .restaurant-hero::before{
     content:"";
     position:absolute;
     inset:0;
     pointer-events:none;
-    background:linear-gradient(135deg, rgba(212,175,55,.10), transparent 42%, rgba(212,175,55,.05));
+    background:linear-gradient(135deg, color-mix(in srgb, var(--menu-hero-accent) 10%, transparent), transparent 42%, color-mix(in srgb, var(--menu-hero-accent) 5%, transparent));
 }
 
 
@@ -306,39 +307,38 @@ body.public-menu-page.card-style-rounded .public-product-card{
 ========================= */
 
 .menu-search-box{
-    height:52px;
-
+    height:54px;
     background:#fff;
-
-    border:1px solid #e9e9e9;
+    border:1px solid #e5e7eb;
     border-radius:16px;
-
     display:flex;
     align-items:center;
-
-    gap:10px;
-
-    padding:0 15px;
-
+    gap:11px;
+    padding:0 16px;
     margin-bottom:16px;
-
-    box-shadow:0 4px 18px rgba(0,0,0,.04);
+    box-shadow:0 4px 18px rgba(0,0,0,.045);
 }
 
 .menu-search-icon{
+    flex:0 0 auto;
     font-size:18px;
+    line-height:1;
 }
 
 .menu-search-box input{
     width:100%;
-
+    min-width:0;
     border:0;
     outline:0;
-
     background:transparent;
-
+    color:#1f2937;
     font-size:14px;
     font-family:inherit;
+}
+
+.menu-search-box input::placeholder{
+    color:#9ca3af;
+    opacity:1;
 }
 
 
@@ -681,11 +681,11 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     justify-content:space-between;
 
-    border-bottom:1px solid #eee;
+    border-bottom:1px solid #e5e7eb;
 }
 
 .cart-header span{
-    color:#999;
+    color:#6b7280;
 
     font-size:11px;
 }
@@ -704,7 +704,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     border-radius:10px;
 
-    background:#f3f3f3;
+    background:#f3f4f6;
 
     font-size:23px;
 
@@ -724,7 +724,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     padding:70px 20px;
 
-    color:#888;
+    color:#6b7280;
 }
 
 .cart-empty div{
@@ -736,7 +736,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 .cart-empty h3{
     margin:0;
 
-    color:#222;
+    color:#1f2937;
 }
 
 .cart-empty p{
@@ -755,7 +755,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     padding:15px 0;
 
-    border-bottom:1px solid #eee;
+    border-bottom:1px solid #e5e7eb;
 }
 
 .cart-item-info{
@@ -771,7 +771,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 }
 
 .cart-item-info span{
-    color:#9b7d1e;
+    color:#8b5cf6;
 
     font-size:12px;
 
@@ -794,7 +794,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     border-radius:8px;
 
-    background:#f1f1ef;
+    background:#f3f4f6;
 
     cursor:pointer;
 
@@ -804,7 +804,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 .cart-item-total{
     grid-column:1/-1;
 
-    color:#333;
+    color:#1f2937;
 
     font-size:13px;
 }
@@ -815,7 +815,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 .cart-footer{
     padding:18px 18px 90px;
 
-    border-top:1px solid #eee;
+    border-top:1px solid #e5e7eb;
 
     background:#fff;
 }
@@ -831,7 +831,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 }
 
 .cart-total-row strong{
-    color:#9b7d1e;
+    color:#8b5cf6;
 
     font-size:18px;
 }
@@ -845,9 +845,9 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     border-radius:13px;
 
-    background:#111;
+    background:#8b5cf6;
 
-    color:#d4af37;
+    color:#ffffff;
 
     font-family:inherit;
 
@@ -859,9 +859,9 @@ body.public-menu-page.card-style-rounded .public-product-card{
 }
 
 .checkout-button:disabled{
-    background:#ddd;
+    background:#e5e7eb;
 
-    color:#999;
+    color:#6b7280;
 
     cursor:not-allowed;
 }
@@ -876,7 +876,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     text-align:center;
 
-    border-top:1px solid #eee;
+    border-top:1px solid #e5e7eb;
 
     background:#fff;
 }
@@ -951,7 +951,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
 
     .public-product-image{
         width:100%;
-        height:135px;
+        height:190px;
         min-height:0;
     }
 
@@ -1004,7 +1004,7 @@ body.public-menu-page {
     color: var(--menu-text, #171717);
 }
 .menu-search-box {
-    background: var(--menu-card-color, #FFFFFF);
+    background: #FFFFFF;
     border: 1px solid color-mix(in srgb, var(--menu-text, #171717) 12%, transparent);
     border-radius: 18px;
     box-shadow: 0 6px 22px rgba(0,0,0,.045);
@@ -1055,15 +1055,18 @@ body.public-menu-page {
 .public-product-image { background: color-mix(in srgb, var(--menu-text, #171717) 5%, var(--menu-card-color, #FFFFFF)); }
 .public-product-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .product-image-placeholder { background: color-mix(in srgb, var(--menu-text, #171717) 5%, var(--menu-card-color, #FFFFFF)); }
-.public-product-info { min-width: 0; padding: 17px; }
+.public-product-info { min-width: 0; padding: 17px; display: flex; flex-direction: column; gap: 14px; }
 .public-product-title-row h2 {
     color: var(--menu-text, #171717);
+    margin: 0;
     font-weight: 800;
     letter-spacing: -.2px;
+    line-height: 1.45;
 }
 .public-product-description { color: var(--menu-text, #171717); opacity: .78; }
 
 .public-product-description {
+    margin: 8px 0 0;
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -1107,20 +1110,34 @@ body.public-menu-page {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 5px;
+    gap: 7px;
     width: 100%;
+    margin-top: 4px;
 }
 
 .public-product-size {
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    padding: 4px 8px;
-    border-radius: 8px;
+    justify-content: center;
+    gap: 2px;
+    min-width: 76px;
+    padding: 8px 12px;
+    border: 1px solid color-mix(in srgb, var(--menu-primary, #111111) 20%, transparent);
+    border-radius: 11px;
     background: color-mix(in srgb, var(--menu-primary, #111111) 7%, var(--menu-card-color, #FFFFFF));
     color: var(--menu-text, #171717);
+    line-height: 1.4;
+    flex: 0 1 auto;
+}
+.public-product-size-name {
     font-size: 11px;
     font-weight: 700;
-    line-height: 1.5;
+}
+.public-product-size-price {
+    font-size: 13px;
+    font-weight: 900;
+    white-space: nowrap;
 }
 
 .public-product-old-price {
@@ -1154,8 +1171,8 @@ body.public-menu-page {
 @media (max-width: 768px) {
     .menu-products { gap: 12px; padding: 12px 10px; }
     .public-product-card { border-radius: 17px; }
-    .public-product-image { height: 150px; }
-    .public-product-info { padding: 11px; }
+    .public-product-image { height: 145px; }
+    .public-product-info { padding: 12px; }
     .public-product-bottom { align-items: stretch; gap: 9px; margin-top: 11px; padding-top: 10px; }
     .public-product-price { font-size: 14px; padding: 6px 9px; }
     .add-product-btn { width: 100%; border-radius: 11px; padding: 9px 10px; }
@@ -1163,7 +1180,7 @@ body.public-menu-page {
 @media (max-width: 380px) {
     .menu-products { gap: 9px; padding-left: 8px; padding-right: 8px; }
     .public-product-image { height: 125px; }
-    .public-product-info { padding: 9px; }
+    .public-product-info { padding: 10px; }
     .public-product-title-row h2 { font-size: 13px; }
     .public-product-description { font-size: 10px; }
     .public-product-price { font-size: 13px; }
@@ -1187,8 +1204,6 @@ box-sizing:border-box;
 
 
 
-}
-}
 
 .customer-start-card{
 position:relative;
@@ -1784,7 +1799,8 @@ transform:translateX(1px);
                             <div class="public-product-sizes" aria-label="أحجام المنتج">
                                 {% for size in product.sizes %}
                                 <span class="public-product-size">
-                                    {{ size.name }}: {{ size.price }} {{ currency_label }}
+                                    <span class="public-product-size-name">{{ size.name }}</span>
+                                    <span class="public-product-size-price">{{ size.price }} {{ currency_label }}</span>
                                 </span>
                                 {% endfor %}
                             </div>

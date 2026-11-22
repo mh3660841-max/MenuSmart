@@ -6,103 +6,169 @@
     <title>دخول الموظفين | Menu Smart</title>
 
     <style>
-        *{
-            box-sizing:border-box;
-        }
 
-        body{
-            margin:0;
-            min-height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:#f4f6f9;
-            font-family:Arial,sans-serif;
-            padding:20px;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .login-card{
-            width:100%;
-            max-width:430px;
-            background:#fff;
-            padding:35px;
-            border-radius:22px;
-            box-shadow:0 15px 40px rgba(0,0,0,.08);
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px 16px;
+    background:
+        radial-gradient(ellipse at 85% 10%, rgba(139, 92, 246, .2), transparent 42%),
+        radial-gradient(ellipse at 10% 90%, rgba(56, 189, 248, .13), transparent 40%),
+        #080d1b;
+    font-family: Arial, sans-serif;
+    color: #edf1ff;
+}
 
-        .logo{
-            text-align:center;
-            font-size:28px;
-            font-weight:800;
-            margin-bottom:10px;
-        }
+.login-card {
+    width: 100%;
+    max-width: 430px;
+    padding: 36px;
+    background: linear-gradient(150deg, #17223a, #111a2e);
+    border: 1px solid rgba(148, 163, 184, .17);
+    border-radius: 23px;
+    box-shadow: 0 24px 65px rgba(0, 0, 0, .32);
+}
 
-        .logo span{
-            color:#d4af37;
-        }
+.logo {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: .2px;
+    margin-bottom: 18px;
+    color: #edf1ff;
+}
 
-        h1{
-            text-align:center;
-            margin:10px 0;
-            color:#111827;
-        }
+.logo span {
+    color: #a78bfa;
+}
 
-        .subtitle{
-            text-align:center;
-            color:#6b7280;
-            margin-bottom:25px;
-        }
+h1 {
+    text-align: center;
+    margin: 10px 0;
+    color: #fff;
+    font-size: 24px;
+}
 
-        label{
-            display:block;
-            margin:12px 0 7px;
-            font-weight:700;
-            color:#374151;
-        }
+.subtitle {
+    text-align: center;
+    color: #9aa8c0;
+    margin-bottom: 27px;
+    font-size: 14px;
+    line-height: 1.8;
+}
 
-        input{
-            width:100%;
-            padding:14px;
-            border:1px solid #d1d5db;
-            border-radius:12px;
-            background:#fff;
-            font-size:15px;
-        }
+label {
+    display: block;
+    margin: 15px 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #d7def0;
+}
 
-        input:focus{
-            outline:none;
-            border-color:#d4af37;
-            box-shadow:0 0 0 3px rgba(212,175,55,.12);
-        }
+input {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid rgba(148, 163, 184, .25);
+    border-radius: 12px;
+    background: #0d1628;
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
 
-        button{
-            width:100%;
-            margin-top:22px;
-            padding:14px;
-            border:0;
-            border-radius:12px;
-            background:#111827;
-            color:#fff;
-            font-size:16px;
-            font-weight:700;
-            cursor:pointer;
-        }
+input::placeholder {
+    color: #718096;
+}
 
-        .back{
-            display:block;
-            text-align:center;
-            margin-top:20px;
-            color:#6b7280;
-            text-decoration:none;
-        }
+input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, .17);
+}
 
-        .flash{
-            padding:12px;
-            border-radius:10px;
-            margin-bottom:15px;
-            background:#fff7ed;
-            color:#9a3412;
-        }
+button {
+    width: 100%;
+    margin-top: 24px;
+    padding: 15px;
+    border: 1px solid rgba(196, 181, 253, .25);
+    border-radius: 12px;
+    background: linear-gradient(110deg, #6d28d9, #8b5cf6);
+    color: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter .2s ease, transform .2s ease;
+}
+
+button:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+}
+
+button:focus-visible,
+.back:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 3px;
+}
+
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 22px;
+    color: #9aa8c0;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.back:hover {
+    color: #38bdf8;
+}
+
+.flash {
+    padding: 13px 14px;
+    border: 1px solid rgba(251, 146, 60, .25);
+    border-radius: 11px;
+    margin-bottom: 16px;
+    background: rgba(154, 52, 18, .15);
+    color: #fdba74;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 28px 21px;
+        border-radius: 19px;
+    }
+
+    .logo {
+        font-size: 25px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    input,
+    button,
+    .back {
+        transition: none;
+    }
+}
+
     </style>
 </head>
 

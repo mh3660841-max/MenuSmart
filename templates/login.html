@@ -1,715 +1,519 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101B30">
+    <meta name="description" content="تسجيل الدخول إلى Menu Smart">
+    <title>{{ t('login') }} | Menu Smart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<meta
-    name="theme-color"
-    content="#111111"
->
-
-<title>{{ t('login') }} | Menu Smart</title>
-
-<meta
-    name="description"
-    content="تسجيل الدخول إلى حسابك في Menu Smart لإدارة نشاطك والمنيو الإلكتروني."
->
-
-<link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='css/style.css') }}"
->
-
-<style>
-
-    /* =====================================================
-       MENU SMART - LOGIN PAGE
-    ===================================================== */
-
-    * {
-        box-sizing: border-box;
-    }
-
-    body.auth-page {
-        margin: 0;
-        min-height: 100vh;
-        font-family: inherit;
-        background: #f4f4f2;
-        color: #111;
-    }
-
-    .login-page {
-        min-height: 100vh;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-
-    /* =========================
-       BRAND SIDE
-    ========================= */
-
-    .login-brand-side {
-        position: relative;
-        overflow: hidden;
-        min-height: 100vh;
-        padding: 45px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        background:
-            radial-gradient(
-                circle at 20% 20%,
-                rgba(212,175,55,0.18),
-                transparent 30%
-            ),
-            linear-gradient(
-                145deg,
-                #0c0c0c,
-                #151515 55%,
-                #202020
-            );
-        color: #fff;
-    }
-
-    .login-brand-side::before {
-        content: "";
-        position: absolute;
-        width: 420px;
-        height: 420px;
-        left: -180px;
-        bottom: -180px;
-        border: 1px solid rgba(212,175,55,0.18);
-        border-radius: 50%;
-        box-shadow:
-            0 0 0 45px rgba(212,175,55,0.025),
-            0 0 0 90px rgba(212,175,55,0.018);
-    }
-
-    .login-brand-side::after {
-        content: "";
-        position: absolute;
-        width: 220px;
-        height: 220px;
-        right: -90px;
-        top: -90px;
-        border-radius: 50%;
-        background: rgba(212,175,55,0.05);
-    }
-
-    .login-brand-content {
-        position: relative;
-        z-index: 2;
-        max-width: 520px;
-        margin: auto;
-    }
-
-    .login-brand-logo {
-        width: 120px;
-        height: 120px;
-    }
-
-    .login-brand-content h1 {
-        margin: 0 0 18px;
-        font-size: clamp(36px, 4vw, 58px);
-        line-height: 1.15;
-        font-weight: 900;
-        letter-spacing: -1.5px;
-    }
-
-    .login-brand-content h1 span {
-        color: #d4af37;
-    }
-
-    .login-brand-content > p {
-        max-width: 470px;
-        margin: 0;
-        color: rgba(255,255,255,0.66);
-        font-size: 16px;
-        line-height: 2;
-    }
-
-    .login-features {
-        display: grid;
-        gap: 13px;
-        margin-top: 35px;
-    }
-
-    .login-feature {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: rgba(255,255,255,0.82);
-        font-size: 14px;
-    }
-
-    .login-feature-icon {
-        width: 34px;
-        height: 34px;
-        flex: 0 0 34px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(212,175,55,0.22);
-        border-radius: 10px;
-        color: #d4af37;
-        background: rgba(212,175,55,0.07);
-        font-size: 14px;
-    }
-
-    .login-brand-footer {
-        position: relative;
-        z-index: 2;
-        color: rgba(255,255,255,0.35);
-        font-size: 12px;
-    }
-
-    /* =========================
-       FORM SIDE
-    ========================= */
-
-    .login-form-side {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 35px;
-        background: #f7f7f5;
-    }
-
-    .login-form-wrapper {
-        width: 100%;
-        max-width: 440px;
-    }
-
-    .login-top {
-        margin-bottom: 30px;
-    }
-
-    .login-mobile-brand {
-        display: none;
-    }
-
-    .login-top-label {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 12px;
-        color: #b18c18;
-        font-size: 12px;
-        font-weight: 800;
-    }
-
-    .login-top-label::before {
-        content: "";
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #d4af37;
-    }
-
-    .login-top h2 {
-        margin: 0 0 9px;
-        font-size: 32px;
-        font-weight: 900;
-        letter-spacing: -0.5px;
-    }
-
-    .login-top p {
-        margin: 0;
-        color: #777;
-        font-size: 14px;
-        line-height: 1.8;
-    }
-
-    /* =========================
-       ALERT
-    ========================= */
-
-    .login-messages {
-        margin-bottom: 18px;
-    }
-
-    .login-message {
-        padding: 12px 14px;
-        border-radius: 11px;
-        font-size: 13px;
-        line-height: 1.6;
-    }
-
-    .login-message.error,
-    .login-message.danger {
-        color: #a52222;
-        background: #fff0f0;
-        border: 1px solid #ffd8d8;
-    }
-
-    .login-message.success {
-        color: #187345;
-        background: #effaf3;
-        border: 1px solid #d4f1df;
-    }
-
-    .login-message.warning {
-        color: #896719;
-        background: #fff9e8;
-        border: 1px solid #f6e8b4;
-    }
-
-    /* =========================
-       CARD
-    ========================= */
-
-    .login-card {
-        padding: 30px;
-        border: 1px solid #e8e8e4;
-        border-radius: 22px;
-        background: #fff;
-        box-shadow:
-            0 20px 55px rgba(0,0,0,0.07);
-    }
-
-    .login-form {
-        display: grid;
-        gap: 19px;
-    }
-
-    .login-field {
-        display: grid;
-        gap: 8px;
-    }
-
-    .login-field label {
-        color: #222;
-        font-size: 13px;
-        font-weight: 800;
-    }
-
-    .login-input {
-        width: 100%;
-        height: 52px;
-        padding: 0 15px;
-        border: 1px solid #deded9;
-        border-radius: 12px;
-        outline: none;
-        background: #fafaf8;
-        color: #111;
-        font-family: inherit;
-        font-size: 14px;
-        transition: 0.2s ease;
-    }
-
-    .login-input::placeholder {
-        color: #aaa;
-    }
-
-    .login-input:focus {
-        border-color: #d4af37;
-        background: #fff;
-        box-shadow:
-            0 0 0 4px rgba(212,175,55,0.10);
-    }
-
-    .login-submit {
-        width: 100%;
-        height: 53px;
-        margin-top: 3px;
-        border: none;
-        border-radius: 12px;
-        background: #111;
-        color: #fff;
-        font-family: inherit;
-        font-size: 14px;
-        font-weight: 900;
-        cursor: pointer;
-        transition: 0.25s ease;
-    }
-
-    .login-submit:hover {
-        background: #d4af37;
-        color: #111;
-        transform: translateY(-1px);
-        box-shadow:
-            0 12px 25px rgba(212,175,55,0.20);
-    }
-
-    .login-divider {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin: 24px 0 20px;
-        color: #aaa;
-        font-size: 12px;
-    }
-
-    .login-divider::before,
-    .login-divider::after {
-        content: "";
-        height: 1px;
-        flex: 1;
-        background: #ededeb;
-    }
-
-    .login-register {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        color: #777;
-        font-size: 13px;
-    }
-
-    .login-register a {
-        color: #111;
-        font-weight: 900;
-        text-decoration: none;
-    }
-
-    .login-register a:hover {
-        color: #b18c18;
-    }
-
-    .login-back {
-        display: block;
-        margin-top: 20px;
-        color: #888;
-        text-align: center;
-        font-size: 12px;
-        text-decoration: none;
-    }
-
-    .login-back:hover {
-        color: #111;
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media (max-width: 850px) {
-
-        .login-page {
-            grid-template-columns: 1fr;
-        }
-
-        .login-brand-side {
-            display: none;
-        }
-
-        .login-form-side {
+    <style>
+        .auth-page {
+            --auth-navy: #101B30;
+            --auth-purple: #8B5CF6;
+            --auth-purple-dark: #6D28D9;
+            --auth-cyan: #38BDF8;
+            --auth-text: #172033;
+            --auth-muted: #718096;
             min-height: 100vh;
-            padding: 25px 18px;
-        }
-
-        .login-form-wrapper {
-            max-width: 480px;
-        }
-
-        .login-mobile-brand {
+            padding: 32px 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 35px;
-            color: #111;
-            font-size: 19px;
+            background:
+                radial-gradient(ellipse at 12% 15%, rgba(139,92,246,.22), transparent 38%),
+                radial-gradient(ellipse at 88% 85%, rgba(56,189,248,.15), transparent 35%),
+                var(--auth-navy);
+            color: var(--auth-text);
+            font-family: "Tajawal", "Cairo", Tahoma, Arial, sans-serif;
+        }
+
+        .auth-page *,
+        .auth-page *::before,
+        .auth-page *::after {
+            box-sizing: border-box;
+        }
+
+        .auth-shell {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .auth-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            margin-bottom: 22px;
+            color: #fff;
+        }
+
+        .auth-logo {
+            width: 43px;
+            height: 43px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--auth-purple), var(--auth-cyan));
+            color: #fff;
+            font-size: 25px;
+            font-weight: 900;
+            box-shadow: 0 8px 25px rgba(139,92,246,.3);
+        }
+
+        .auth-brand-name {
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .auth-card {
+            padding: 38px 34px 30px;
+            border: 1px solid rgba(255,255,255,.55);
+            border-radius: 25px;
+            background: #fff;
+            box-shadow: 0 24px 70px rgba(0,0,0,.28);
+        }
+
+        .auth-heading {
+            margin: 0;
+            color: var(--auth-text);
+            font-size: 27px;
+            font-weight: 900;
+            text-align: center;
+        }
+
+        .auth-description {
+            margin: 9px 0 27px;
+            color: var(--auth-muted);
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .auth-messages {
+            display: grid;
+            gap: 9px;
+            margin-bottom: 20px;
+        }
+
+        .auth-message {
+            padding: 11px 13px;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .auth-message.success {
+            color: #166534;
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .auth-message.danger {
+            color: #991b1b;
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .auth-message.warning {
+            color: #92400e;
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+
+        .auth-message.info {
+            color: #075985;
+            background: #f0f9ff;
+            border-color: #bae6fd;
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 17px;
+        }
+
+        .auth-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .auth-label {
+            color: #26344b;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .auth-input-wrap {
+            position: relative;
+        }
+
+        .auth-input {
+            width: 100%;
+            min-height: 51px;
+            padding: 12px 15px;
+            border: 1px solid #dce3ef;
+            border-radius: 12px;
+            outline: none;
+            background: #f8faff;
+            color: var(--auth-text);
+            font-size: 14px;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+
+        .auth-input::placeholder {
+            color: #9aa6b8;
+        }
+
+        .auth-input:focus {
+            border-color: var(--auth-purple);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(139,92,246,.12);
+        }
+
+        .auth-input.has-toggle {
+            padding-left: 49px;
+        }
+
+        .auth-password-toggle {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            width: 31px;
+            height: 31px;
+            display: grid;
+            place-items: center;
+            padding: 0;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .auth-password-toggle:hover {
+            background: #f0eaff;
+            color: var(--auth-purple-dark);
+        }
+
+        .auth-password-toggle svg {
+            width: 19px;
+            height: 19px;
+        }
+
+        .auth-submit {
+            width: 100%;
+            min-height: 52px;
+            margin-top: 5px;
+            border: 0;
+            border-radius: 13px;
+            background: linear-gradient(110deg, var(--auth-purple-dark), var(--auth-purple));
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 9px 22px rgba(109,40,217,.22);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .auth-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 27px rgba(109,40,217,.3);
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin: 24px 0 19px;
+            color: #9aa6b8;
+            font-size: 12px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: #e8edf5;
+        }
+
+        .auth-links {
+            display: grid;
+            gap: 13px;
+            text-align: center;
+        }
+
+        .auth-register {
+            color: #596579;
+            font-size: 13px;
+        }
+
+        .auth-register a {
+            color: var(--auth-purple-dark);
             font-weight: 900;
         }
 
-        .login-mobile-brand span {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            background: #111;
-            color: #d4af37;
-            font-size: 18px;
+        .auth-secondary-link {
+            display: block;
+            padding: 11px 12px;
+            border: 1px solid #e4e9f2;
+            border-radius: 11px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+            transition: .2s;
         }
 
-    }
-
-    @media (max-width: 480px) {
-
-        .login-form-side {
-            padding: 22px 14px;
+        .auth-secondary-link:hover {
+            border-color: #c4b5fd;
+            background: #faf8ff;
+            color: var(--auth-purple-dark);
         }
 
-        .login-top {
-            margin-bottom: 22px;
+        .auth-resend {
+            margin-top: 23px;
+            padding: 17px;
+            border: 1px solid #e8e4f5;
+            border-radius: 15px;
+            background: #faf9ff;
         }
 
-        .login-top h2 {
-            font-size: 27px;
+        .auth-resend-title {
+            margin: 0 0 5px;
+            color: #34415a;
+            font-size: 13px;
+            font-weight: 800;
         }
 
-        .login-card {
-            padding: 22px 18px;
-            border-radius: 18px;
+        .auth-resend-description {
+            margin: 0 0 13px;
+            color: var(--auth-muted);
+            font-size: 12px;
         }
 
-        .login-input,
-        .login-submit {
-            height: 50px;
+        .auth-resend .auth-form {
+            gap: 10px;
         }
 
-    }
+        .auth-resend .auth-input {
+            min-height: 45px;
+            background: #fff;
+        }
 
-.password-wrap{position:relative}
-.password-wrap .login-input{padding-left:52px}
-.password-toggle{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:transparent;color:#777;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.password-toggle svg{
-width:20px;
-height:20px;
-fill:none;
-stroke:currentColor;
-stroke-width:1.6;
-stroke-linecap:round;
-stroke-linejoin:round;
-}
-.password-toggle:hover{color:#111}\n</style>
+        .auth-resend .auth-submit {
+            min-height: 44px;
+            margin: 0;
+            font-size: 13px;
+            box-shadow: none;
+        }
 
-</head><body class="auth-page"><main class="login-page">
+        .auth-home {
+            display: block;
+            margin-top: 22px;
+            color: rgba(255,255,255,.78);
+            font-size: 13px;
+            text-align: center;
+            transition: color .2s;
+        }
 
-    <!-- =========================
-         BRAND
-    ========================== -->
+        .auth-home:hover {
+            color: var(--auth-cyan);
+        }
 
-    <section class="login-brand-side">
+        .auth-copyright {
+            margin-top: 17px;
+            color: rgba(255,255,255,.48);
+            font-size: 11px;
+            text-align: center;
+        }
 
-        <div></div>
+        @media (max-width: 480px) {
+            .auth-page {
+                padding: 22px 13px;
+            }
 
-        <div class="login-brand-content">
+            .auth-card {
+                padding: 29px 21px 24px;
+                border-radius: 21px;
+            }
 
-            <div class="login-brand-logo">
-                M
+            .auth-heading {
+                font-size: 24px;
+            }
+
+            .auth-description {
+                font-size: 13px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .auth-page *,
+            .auth-page *::before,
+            .auth-page *::after {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="auth-page">
+        <div class="auth-shell">
+
+            <div class="auth-brand">
+                <div class="auth-logo">M</div>
+                <div class="auth-brand-name">Menu Smart</div>
             </div>
 
-            <h1>
-                إدارة نشاطك<br>
-                <span>{{ t('smarter') }}</span>
-            </h1>
-
-            <p>
-                Menu Smart تساعدك على إنشاء منيو إلكتروني
-                احترافي وإدارة منتجاتك وطلبات عملائك
-                من مكان واحد.
-            </p>
-
-            <div class="login-features">
-
-                <div class="login-feature">
-                    <span class="login-feature-icon">✓</span>
-                    إدارة المنتجات والأقسام
-                </div>
-
-                <div class="login-feature">
-                    <span class="login-feature-icon">✓</span>
-                    منيو إلكتروني احترافي
-                </div>
-
-                <div class="login-feature">
-                    <span class="login-feature-icon">✓</span>
-                    متابعة طلبات العملاء
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="login-brand-footer">
-            © {{ current_year|default(2026) }} Menu Smart
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         LOGIN
-    ========================== -->
-
-    <section class="login-form-side">
-
-        <div class="login-form-wrapper">
-
-            <div class="login-mobile-brand">
-
-                <span>M</span>
-
-                Menu Smart
-
-            </div>
-
-
-            <div class="login-top">
-
-                <span class="login-top-label">
-                    تسجيل الدخول
-                </span>
-
-                <h2>
-                    أهلاً بك مرة أخرى
-                </h2>
-
-                <p>
+            <section class="auth-card">
+                <h1 class="auth-heading">تسجيل الدخول</h1>
+                <p class="auth-description">
+                    أهلاً بك مرة أخرى<br>
                     سجّل الدخول للوصول إلى لوحة تحكم نشاطك.
                 </p>
 
-            </div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="auth-messages">
+                            {% for category, message in messages %}
+                                <div class="auth-message {{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
 
-
-            {% with messages = get_flashed_messages(with_categories=true) %}
-
-                {% if messages %}
-
-                    <div class="login-messages">
-
-                        {% for category, message in messages %}
-
-                            <div class="login-message {{ category }}">
-                                {{ message }}
-                            </div>
-
-                        {% endfor %}
-
+                <form method="POST" action="{{ url_for('login') }}" class="auth-form">
+                    <div class="auth-field">
+                        <label class="auth-label" for="email">البريد الإلكتروني</label>
+                        <div class="auth-input-wrap">
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="auth-input"
+                                placeholder="example@email.com"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
                     </div>
 
-                {% endif %}
-
-            {% endwith %}
-
-
-            <div class="login-card">
-
-                <form
-                    method="POST"
-                    action="{{ url_for('login') }}"
-                    class="login-form"
-                >
-
-                    <div class="login-field">
-
-                        <label for="email">
-                            البريد الإلكتروني
-                        </label>
-
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            class="login-input"
-                            placeholder="example@email.com"
-                            autocomplete="email"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="login-field">
-
-                        <label for="password">
-                            كلمة المرور
-                        </label>
-
-                        <div class="password-wrap">
+                    <div class="auth-field">
+                        <label class="auth-label" for="password">كلمة المرور</label>
+                        <div class="auth-input-wrap">
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
-                                class="login-input"
+                                class="auth-input has-toggle"
                                 placeholder="أدخل كلمة المرور"
                                 autocomplete="current-password"
                                 required
                             >
-                            <button type="button" id="passwordToggle" class="password-toggle" aria-label="إظهار كلمة المرور">
-<svg viewBox="0 0 24 24" aria-hidden="true">
-<path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z"/>
-<circle cx="12" cy="12" r="2.5"/>
-</svg>
-</button>
+                            <button
+                                type="button"
+                                id="passwordToggle"
+                                class="auth-password-toggle"
+                                aria-label="إظهار كلمة المرور"
+                                aria-pressed="false"
+                            >
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
                         </div>
-
                     </div>
 
-
-                    <button
-                        type="submit"
-                        class="login-submit"
-                    >
-                        تسجيل الدخول
-                    </button>
-
+                    <button type="submit" class="auth-submit">تسجيل الدخول</button>
                 </form>
 
+                <div class="auth-divider">أو</div>
 
-                                <form method="POST"
-                    action="{{ url_for('resend_verification_email') }}"
-                    class="login-form">
-                    <div class="login-field">
-                        <label for="resend_email">إعادة إرسال تأكيد البريد الإلكتروني</label>
-                        <input type="email"
-                            id="resend_email"
-                            name="email"
-                            class="login-input"
-                            placeholder="example@email.com"
-                            autocomplete="email"
-                            required>
-                    </div>
-                    <button type="submit" class="login-submit">
-                        إعادة إرسال رابط التأكيد
-                    </button>
-                </form>
-
-                <div class="login-divider">
-                    أو
-                </div>
-
-
-                <div class="login-register">
-
-                    <span>
+                <div class="auth-links">
+                    <div class="auth-register">
                         ليس لديك حساب؟
-                    </span>
+                        <a href="{{ url_for('register') }}">إنشاء حساب جديد</a>
+                    </div>
 
-                    <a href="{{ url_for('register') }}">
-                        إنشاء حساب جديد
-                    </a>
-
-                    <a href="{{ url_for('employee_login') }}"
-                       class="login-employee-link">
+                    <a class="auth-secondary-link" href="{{ url_for('employee_login') }}">
                         دخول الموظفين
                     </a>
-
-
                 </div>
 
+                <section class="auth-resend">
+                    <h2 class="auth-resend-title">لم يصلك رابط تأكيد البريد الإلكتروني؟</h2>
+                    <p class="auth-resend-description">أدخل بريدك الإلكتروني لإعادة إرسال رابط التأكيد.</p>
+
+                    <form method="POST" action="{{ url_for('resend_verification_email') }}" class="auth-form">
+                        <div class="auth-field">
+                            <label class="auth-label" for="resend_email">البريد الإلكتروني</label>
+                            <input
+                                type="email"
+                                id="resend_email"
+                                name="email"
+                                class="auth-input"
+                                placeholder="example@email.com"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
+
+                        <button type="submit" class="auth-submit">إعادة إرسال رابط التأكيد</button>
+                    </form>
+                </section>
+            </section>
+
+            <a class="auth-home" href="{{ url_for('home') }}">← العودة إلى الرئيسية</a>
+
+            <div class="auth-copyright">
+                © {{ current_year|default(2026) }} Menu Smart
             </div>
-
-
-            <a
-                href="{{ url_for('home') }}"
-                class="login-back"
-            >
-                ← العودة إلى الرئيسية
-            </a>
-
         </div>
+    </main>
 
-    </section>
+    <script>
+        (function () {
+            const passwordInput = document.getElementById("password");
+            const toggleButton = document.getElementById("passwordToggle");
 
-</main>
+            if (!passwordInput || !toggleButton) return;
 
-<script>
-const passwordInput=document.getElementById("password");
-const passwordToggle=document.getElementById("passwordToggle");
-if(passwordInput && passwordToggle){
-passwordToggle.addEventListener("click",function(){
-const show=passwordInput.type==="password";
-passwordInput.type=show?"text":"password";
-passwordToggle.innerHTML=show?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.2A10.8 10.8 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-3.1 3.8M6.2 6.3C3.8 8 2.5 12 2.5 12s3.5 7 9.5 7c1.5 0 2.8-.4 4-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.5"/></svg>';
-});
-}
-</script>\n</body></html>
+            const eyeIcon = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>`;
+
+            const eyeOffIcon = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M3 3l18 18"></path>
+                    <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+                    <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a16 16 0 0 1-3.1 3.9"></path>
+                    <path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.2 0 2.3-.2 3.3-.6"></path>
+                </svg>`;
+
+            toggleButton.addEventListener("click", function () {
+                const isPassword = passwordInput.type === "password";
+
+                passwordInput.type = isPassword ? "text" : "password";
+                toggleButton.innerHTML = isPassword ? eyeOffIcon : eyeIcon;
+                toggleButton.setAttribute(
+                    "aria-label",
+                    isPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
+                );
+                toggleButton.setAttribute("aria-pressed", String(isPassword));
+            });
+        })();
+    </script>
+</body>
+</html>

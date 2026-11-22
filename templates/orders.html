@@ -40,195 +40,106 @@
     >
 
     <style>
-
-        /* =====================================================
-           NEW ORDER NOTIFICATION
-        ===================================================== */
-
-        #newOrderNotification {
-
-            position: fixed;
-
-            top: 20px;
-            right: 20px;
-
-            z-index: 999999;
-
-            width: min(390px, calc(100vw - 30px));
-
-            display: flex;
-            align-items: center;
-
-            gap: 13px;
-
-            padding: 16px;
-
-            background: #111;
-
-            color: #fff;
-
-            border: 1px solid rgba(212,175,55,.45);
-
-            border-radius: 16px;
-
-            box-shadow:
-                0 20px 50px rgba(0,0,0,.30);
-
-            animation:
-                newOrderSlideIn .35s ease;
-
-        }
-
-
-        .new-order-notification-icon {
-
-            width: 46px;
-            height: 46px;
-
-            flex-shrink: 0;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 13px;
-
-            background: #d4af37;
-
-            color: #111;
-
-            font-size: 21px;
-
-        }
-
-
-        .new-order-notification-content {
-
-            flex: 1;
-
-            min-width: 0;
-
-        }
-
-
-        .new-order-notification-content strong {
-
-            display: block;
-
-            margin-bottom: 4px;
-
-            color: #d4af37;
-
-            font-size: 14px;
-
-            font-weight: 950;
-
-        }
-
-
-        .new-order-notification-content span {
-
-            display: block;
-
-            margin-bottom: 4px;
-
-            color: #eee;
-
-            font-size: 11px;
-
-        }
-
-
-        .new-order-notification-content b {
-
-            display: block;
-
-            color: #fff;
-
-            font-size: 12px;
-
-        }
-
-
-        #newOrderNotification button {
-
-            width: 30px;
-            height: 30px;
-
-            flex-shrink: 0;
-
-            border: 0;
-
-            border-radius: 8px;
-
-            background: rgba(255,255,255,.08);
-
-            color: #fff;
-
-            cursor: pointer;
-
-            font-size: 20px;
-
-            line-height: 1;
-
-        }
-
-
-        #newOrderNotification button:hover {
-
-            background: rgba(255,255,255,.16);
-
-        }
-
-
-        @keyframes newOrderSlideIn {
-
-            from {
-
-                opacity: 0;
-
-                transform:
-                    translateY(-15px)
-                    translateX(20px);
-
-            }
-
-            to {
-
-                opacity: 1;
-
-                transform:
-                    translateY(0)
-                    translateX(0);
-
-            }
-
-        }
-
-
-        /* =====================================================
-           MOBILE
-        ===================================================== */
-
-        @media (max-width: 500px) {
-
-            #newOrderNotification {
-
-                top: 12px;
-                right: 12px;
-
-                width: calc(100vw - 24px);
-
-            }
-
-        }
-
-    </style>
+/* NEW ORDER NOTIFICATION — DARK PREMIUM */
+#newOrderNotification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999999;
+    width: min(390px, calc(100vw - 30px));
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 16px;
+    background: #111a2e;
+    color: #edf1ff;
+    border: 1px solid rgba(139, 92, 246, .45);
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+    animation: newOrderSlideIn .35s ease;
+    box-sizing: border-box;
+}
+
+.new-order-notification-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: #241b3d;
+    color: #a78bfa;
+    font-size: 21px;
+}
+
+.new-order-notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.new-order-notification-content strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #a78bfa;
+    font-size: 14px;
+    font-weight: 950;
+}
+
+.new-order-notification-content span {
+    display: block;
+    margin-bottom: 4px;
+    color: #a5afc5;
+    font-size: 11px;
+}
+
+.new-order-notification-content b {
+    display: block;
+    color: #22d3ee;
+    font-size: 12px;
+}
+
+#newOrderNotification button {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .08);
+    color: #edf1ff;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+}
+
+#newOrderNotification button:hover {
+    background: rgba(255, 255, 255, .16);
+}
+
+@keyframes newOrderSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px) translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) translateX(0);
+    }
+}
+
+@media (max-width: 500px) {
+    #newOrderNotification {
+        top: 12px;
+        right: 12px;
+        width: calc(100vw - 24px);
+    }
+}
+</style>
 
 </head>
 
 
-<body class="dashboard-page">
+<body class="dashboard-page orders-page" data-currency="{{ currency_label }}">
 
 
 <!-- =====================================================
@@ -458,7 +369,7 @@
         </span>
 
         <strong id="totalSales">
-            0 جنيه
+            0 {{ currency_label }}
         </strong>
 
     </div>
@@ -620,7 +531,7 @@
 
                     {{ order.total|default(0) }}
 
-                    جنيه
+                    {{ currency_label }}
 
                 </strong>
 
@@ -820,6 +731,7 @@
 
 
 <script>
+const currencyLabel = document.body.dataset.currency || "EGP";
 
 /* =========================================================
    EXISTING ORDERS
@@ -912,7 +824,7 @@ if (completedCount) {
 if (totalSales) {
 
     totalSales.textContent =
-        sales.toFixed(2) + " جنيه";
+        sales.toFixed(2) + " " + currencyLabel;
 
 }
 
@@ -1150,7 +1062,7 @@ function showNewOrderNotification(order) {
 
 
             <b>
-                ${orderTotal} جنيه
+                ${orderTotal} ${currencyLabel}
             </b>
 
         </div>

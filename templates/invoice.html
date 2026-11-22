@@ -24,7 +24,7 @@
             margin: 0;
             padding: 30px;
             background: #f1f3f5;
-            color: #171717;
+            color: #edf1ff;
             font-family:
                 Tahoma,
                 Arial,
@@ -38,7 +38,7 @@
         }
 
         .invoice {
-            background: #fff;
+            background: #111a2e;
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 18px 55px rgba(0,0,0,.10);
@@ -54,7 +54,7 @@
             justify-content: space-between;
             gap: 25px;
             padding-bottom: 25px;
-            border-bottom: 2px solid #111;
+            border-bottom: 2px solid #edf1ff;
         }
 
         .restaurant-brand {
@@ -69,7 +69,7 @@
             object-fit: contain;
             border-radius: 16px;
             border: 1px solid #eee;
-            background: #fff;
+            background: #111a2e;
         }
 
         .restaurant-logo-placeholder {
@@ -79,8 +79,8 @@
             align-items: center;
             justify-content: center;
             border-radius: 16px;
-            background: #111;
-            color: #d4af37;
+            background: #edf1ff;
+            color: #8b5cf6;
             font-size: 30px;
             font-weight: 900;
         }
@@ -93,7 +93,7 @@
 
         .restaurant-description {
             margin: 6px 0 0;
-            color: #777;
+            color: #a5afc5;
             font-size: 12px;
         }
 
@@ -110,7 +110,7 @@
 
         .invoice-number span {
             display: block;
-            color: #777;
+            color: #a5afc5;
             font-size: 12px;
             margin-bottom: 5px;
         }
@@ -134,13 +134,13 @@
             padding: 15px;
             border: 1px solid #e5e7eb;
             border-radius: 13px;
-            background: #fafafa;
+            background: #080d1b;
         }
 
         .info-box span {
             display: block;
             margin-bottom: 6px;
-            color: #777;
+            color: #a5afc5;
             font-size: 11px;
         }
 
@@ -170,8 +170,8 @@
 
         th {
             padding: 13px 10px;
-            background: #111;
-            color: #fff;
+            background: #edf1ff;
+            color: #111a2e;
             font-size: 12px;
             text-align: right;
         }
@@ -197,7 +197,7 @@
         .item-description {
             display: block;
             margin-top: 4px;
-            color: #777;
+            color: #a5afc5;
             font-size: 11px;
         }
 
@@ -224,7 +224,7 @@
         .total-row.final {
             margin-top: 8px;
             padding: 16px 0;
-            border-top: 2px solid #111;
+            border-top: 2px solid #edf1ff;
             border-bottom: 0;
             font-size: 19px;
             font-weight: 900;
@@ -277,7 +277,7 @@
         .invoice-footer span {
             display: block;
             margin-top: 7px;
-            color: #777;
+            color: #a5afc5;
             font-size: 11px;
         }
 
@@ -314,13 +314,13 @@
 
         .print-button {
             border: 0;
-            background: #111;
-            color: #fff;
+            background: #edf1ff;
+            color: #111a2e;
         }
 
         .back-button {
-            background: #fff;
-            color: #111;
+            background: #111a2e;
+            color: #edf1ff;
             border: 1px solid #d1d5db;
         }
 
@@ -388,7 +388,7 @@
     html, body {
         margin: 0 !important;
         padding: 0 !important;
-        background: #fff !important;
+        background: #111a2e !important;
         font-size: 10px !important;
     }
 
@@ -671,14 +671,14 @@
 
 
                             <td>
-                                {{ item.price|default(0) }} جنيه
+                                {{ item.price|default(0) }} {{ currency_label }}
                             </td>
 
 
                             <td>
                                 {{ item.total|default(
                                     item.price|default(0)
-                                ) }} جنيه
+                                ) }} {{ currency_label }}
                             </td>
 
                         </tr>
@@ -715,7 +715,7 @@
             <strong>
                 {{ order.subtotal|default(
                     order.total|default(0)
-                ) }} جنيه
+                ) }} {{ currency_label }}
             </strong>
 
         </div>
@@ -728,7 +728,7 @@
             </span>
 
             <strong>
-                {{ order.delivery_fee|default(0) }} جنيه
+                {{ order.delivery_fee|default(0) }} {{ currency_label }}
             </strong>
 
         </div>
@@ -741,7 +741,7 @@
             </span>
 
             <strong>
-                {{ order.total|default(0) }} جنيه
+                {{ order.total|default(0) }} {{ currency_label }}
             </strong>
 
         </div>

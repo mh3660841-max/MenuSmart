@@ -576,19 +576,19 @@
 
     <select id="currency" name="currency">
         <option value="EGP" {% if settings and settings.currency == "EGP" %}selected{% endif %}>
-            جنيه مصري
+            EGP
         </option>
 
         <option value="SAR" {% if settings and settings.currency == "SAR" %}selected{% endif %}>
-            ريال سعودي
+            SAR
         </option>
 
         <option value="AED" {% if settings and settings.currency == "AED" %}selected{% endif %}>
-            درهم إماراتي
+            AED
         </option>
 
         <option value="USD" {% if settings and settings.currency == "USD" %}selected{% endif %}>
-            دولار أمريكي
+            USD
         </option>
     </select>
 </div>
@@ -1412,8 +1412,8 @@ settingsForms.forEach(
     padding: 9px 10px;
     border: 1px solid #b8b8b8;
     border-radius: 8px;
-    background: #fff;
-    color: #171717;
+    background: #111a2e;
+    color: #edf1ff;
     direction: ltr;
     text-align: center;
     font-family: monospace;

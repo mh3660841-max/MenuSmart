@@ -7,7 +7,7 @@
 
 <meta
     name="theme-color"
-    content="#111111"
+    content="#101B30"
 >
 
 <title>
@@ -35,70 +35,461 @@
 >
 
 <style>
-/* PRODUCT SIZES */
 
-        .product-sizes-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+/* PRODUCT EDIT — MENU SMART PREMIUM */
+.product-edit-page {
+    --pe-navy: #101b30;
+    --pe-panel: #15223a;
+    --pe-panel-soft: #1a2943;
+    --pe-purple: #8b5cf6;
+    --pe-purple-dark: #6d28d9;
+    --pe-cyan: #38bdf8;
+    --pe-text: #edf2ff;
+    --pe-muted: #9aa9c2;
+    --pe-border: rgba(148, 163, 184, .18);
+    --pe-radius: 18px;
+}
 
-        .product-sizes-help {
-            color: #777;
-            font-size: 12px;
-            line-height: 1.7;
-        }
+.product-edit-page .dashboard-container {
+    max-width: 1240px;
+}
 
-        .product-size-row {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-            align-items: center;
-            gap: 10px;
-        }
+.product-edit-page .menu-page-header {
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 26px;
+}
 
-        .product-size-row input {
-            min-width: 0;
-        }
+.product-edit-page .menu-page-header h1 {
+    color: var(--pe-text);
+    font-weight: 900;
+    letter-spacing: -.5px;
+}
 
-        .product-size-remove {
-            min-height: 44px;
-            padding: 0 12px;
-            border: 1px solid #e5caca;
-            border-radius: 10px;
-            background: #fff5f5;
-            color: #b42318;
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+.product-edit-page .menu-page-header p {
+    color: var(--pe-muted);
+    line-height: 1.8;
+}
 
-        .product-size-add {
-            align-self: flex-start;
-            min-height: 42px;
-            padding: 0 16px;
-            border: 1px solid #d4af37;
-            border-radius: 10px;
-            background: #fffaf0;
-            color: #806515;
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-        }
+.product-edit-page .dashboard-label {
+    color: var(--pe-cyan);
+}
 
-        @media (max-width: 520px) {
-            .product-size-row {
-                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            }
+.product-edit-page .product-form-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(280px, .85fr);
+    align-items: start;
+    gap: 22px;
+    margin: 0 0 36px;
+}
 
-            .product-size-remove {
-                grid-column: 1 / -1;
-                justify-self: start;
-            }
-        }
+.product-edit-page .product-form-card {
+    min-width: 0;
+    padding: clamp(18px, 3vw, 30px);
+    overflow: hidden;
+    background: linear-gradient(145deg, #15223a, #101b30);
+    border: 1px solid var(--pe-border);
+    border-radius: 22px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, .16);
+}
+
+.product-edit-page .dashboard-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--pe-border);
+}
+
+.product-edit-page .dashboard-card-header h2,
+.product-edit-page .dashboard-card-header h3 {
+    color: var(--pe-text);
+    font-weight: 900;
+}
+
+.product-edit-page .dashboard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+}
+
+.product-edit-page .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
+
+.product-edit-page .form-group > label {
+    color: #dce6f8;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.product-edit-page .dashboard-form input:not([type="radio"]):not([type="checkbox"]),
+.product-edit-page .dashboard-form select,
+.product-edit-page .dashboard-form textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 12px 14px;
+    color: var(--pe-text);
+    background: #0d1729;
+    border: 1px solid var(--pe-border);
+    border-radius: 12px;
+    outline: none;
+    font: inherit;
+    font-size: 14px;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.product-edit-page .dashboard-form textarea {
+    min-height: 118px;
+    resize: vertical;
+    line-height: 1.8;
+}
+
+.product-edit-page .dashboard-form input:focus,
+.product-edit-page .dashboard-form select:focus,
+.product-edit-page .dashboard-form textarea:focus {
+    border-color: var(--pe-purple);
+    background: #111d33;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, .15);
+}
+
+.product-edit-page .dashboard-form input::placeholder,
+.product-edit-page .dashboard-form textarea::placeholder {
+    color: #71819b;
+}
+
+.product-edit-page .dashboard-form select option {
+    color: var(--pe-text);
+    background: var(--pe-navy);
+}
+
+.product-edit-page .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.product-edit-page .price-input {
+    min-width: 0;
+}
+
+.product-edit-page .product-sizes-section {
+    gap: 13px;
+    padding: 17px;
+    background: rgba(8, 16, 31, .42);
+    border: 1px solid var(--pe-border);
+    border-radius: 15px;
+}
+
+.product-edit-page .product-sizes-help {
+    color: var(--pe-muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.product-edit-page .product-size-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+}
+
+.product-edit-page .product-size-row input {
+    min-width: 0;
+}
+
+.product-edit-page .product-size-add,
+.product-edit-page .product-size-remove {
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.product-edit-page .product-size-add {
+    align-self: flex-start;
+    color: #e9ddff;
+    background: rgba(139, 92, 246, .15);
+    border: 1px solid rgba(139, 92, 246, .55);
+}
+
+.product-edit-page .product-size-add:hover {
+    background: var(--pe-purple-dark);
+    border-color: var(--pe-purple);
+}
+
+.product-edit-page .product-size-remove {
+    color: #fecaca;
+    background: rgba(239, 68, 68, .09);
+    border: 1px solid rgba(248, 113, 113, .28);
+}
+
+.product-edit-page .product-size-remove:hover {
+    background: rgba(239, 68, 68, .2);
+}
+
+.product-edit-page .status-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.product-edit-page .status-option {
+    min-width: 0;
+    padding: 13px;
+    color: var(--pe-text);
+    background: rgba(8, 16, 31, .45);
+    border: 1px solid var(--pe-border);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.product-edit-page .status-option:has(input:checked) {
+    background: rgba(139, 92, 246, .13);
+    border-color: var(--pe-purple);
+}
+
+.product-edit-page .upload-box {
+    padding: 22px;
+    color: var(--pe-text);
+    background: rgba(8, 16, 31, .4);
+    border: 1px dashed rgba(56, 189, 248, .48);
+    border-radius: 15px;
+    transition: .2s ease;
+}
+
+.product-edit-page .upload-box:hover {
+    background: rgba(56, 189, 248, .07);
+    border-color: var(--pe-cyan);
+}
+
+.product-edit-page .upload-content {
+    color: var(--pe-muted);
+    text-align: center;
+}
+
+.product-edit-page .upload-icon {
+    color: var(--pe-cyan);
+}
+
+.product-edit-page .current-image {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(8, 16, 31, .4);
+    border: 1px solid var(--pe-border);
+    border-radius: 14px;
+}
+
+.product-edit-page .current-image img {
+    display: block;
+    max-width: 100%;
+    max-height: 190px;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.product-edit-page .form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 20px;
+    margin-top: 5px;
+    border-top: 1px solid var(--pe-border);
+}
+
+.product-edit-page .form-actions > a,
+.product-edit-page .form-actions > button {
+    min-width: 145px;
+    min-height: 48px;
+    border-radius: 12px;
+}
+
+.product-edit-page .dashboard-primary-btn {
+    color: #fff;
+    background: linear-gradient(135deg, var(--pe-purple), var(--pe-purple-dark));
+    border: 1px solid var(--pe-purple);
+    box-shadow: 0 7px 20px rgba(109, 40, 217, .2);
+}
+
+.product-edit-page .dashboard-primary-btn:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+}
+
+.product-edit-page .product-preview-side {
+    position: sticky;
+    top: 18px;
+    min-width: 0;
+    padding: 19px;
+    background: linear-gradient(155deg, #172640, #101b30);
+    border: 1px solid var(--pe-border);
+    border-radius: 20px;
+    box-shadow: 0 16px 38px rgba(0, 0, 0, .15);
+}
+
+.product-edit-page .preview-label {
+    margin-bottom: 15px;
+    color: var(--pe-cyan);
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.product-edit-page .product-live-preview {
+    overflow: hidden;
+    background: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 16px;
+    color: #172033;
+}
+
+.product-edit-page .product-live-image {
+    display: grid;
+    place-items: center;
+    min-height: 190px;
+    overflow: hidden;
+    background: #e9eef6;
+}
+
+.product-edit-page .product-live-image img {
+    display: block;
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+}
+
+.product-edit-page .product-live-content {
+    padding: 17px;
+}
+
+.product-edit-page .product-live-category {
+    display: inline-flex;
+    padding: 5px 10px;
+    color: #6d28d9;
+    background: #eee7ff;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.product-edit-page .product-live-content h3 {
+    margin: 12px 0 7px;
+    color: #172033;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.product-edit-page #previewDescription {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.product-edit-page .product-live-price {
+    margin-top: 14px;
+    color: #6d28d9;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.product-edit-page #previewOldPrice {
+    color: #94a3b8;
+}
+
+.product-edit-page .preview-note {
+    margin-top: 13px;
+    color: var(--pe-muted);
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.product-edit-page .dashboard-messages {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+    .product-edit-page .product-form-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .product-edit-page .product-preview-side {
+        position: static;
+        max-width: 560px;
+        width: 100%;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .product-edit-page .menu-page-header {
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .product-edit-page .menu-page-header .back-dashboard {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .product-edit-page .product-form-card {
+        padding: 16px;
+        border-radius: 17px;
+    }
+
+    .product-edit-page .form-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .product-edit-page .product-size-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .product-edit-page .product-size-remove {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+    .product-edit-page .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .product-edit-page .form-actions > a,
+    .product-edit-page .form-actions > button {
+        width: 100%;
+    }
+
+    .product-edit-page .status-options {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+.product-edit-page .dashboard-form button:focus-visible,
+.product-edit-page .dashboard-form a:focus-visible,
+.product-edit-page .product-size-add:focus-visible,
+.product-edit-page .product-size-remove:focus-visible,
+.product-edit-page .status-option:focus-within {
+    outline: 3px solid var(--pe-cyan);
+    outline-offset: 3px;
+}
+
+.product-edit-page .upload-box:focus-within {
+    border-color: var(--pe-cyan);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, .13);
+}
+
 </style>
-</head><body class="dashboard-page menu-management-page">{% include 'shared_header.html' %}<main class="dashboard-main"><div class="dashboard-container">
+</head><body class="dashboard-page menu-management-page product-edit-page" data-currency="{{ currency_label }}">{% include 'shared_header.html' %}<main class="dashboard-main"><div class="dashboard-container">
 
 
     <section class="menu-page-header">
@@ -123,7 +514,7 @@
 
         <a
             href="{{ url_for('products') }}"
-            class="dashboard-secondary-btn"
+            class="back-dashboard"
         >
             ← العودة للمنتجات
         </a>
@@ -242,7 +633,7 @@
                             >
 
                             <span>
-                                جنيه
+                                {{ currency_label }}
                             </span>
 
                         </div>
@@ -651,7 +1042,7 @@
                         </strong>
 
                         <span>
-                            جنيه
+                            {{ currency_label }}
                         </span>
 
 
@@ -669,7 +1060,7 @@
                             {% if product and product.old_price %}
 
                                 {{ product.old_price }}
-                                جنيه
+                                {{ currency_label }}
 
                             {% endif %}
 
@@ -747,6 +1138,7 @@
 </div>
 
 </footer><script>
+const currencyLabel = document.body.dataset.currency || "EGP";
 
 const nameInput =
     document.getElementById("name");
@@ -843,7 +1235,7 @@ function updatePricePreview() {
     previewPrice.textContent = salePrice.toFixed(2);
 
     if (discount > 0) {
-        previewOldPrice.textContent = basePrice.toFixed(2) + " جنيه";
+        previewOldPrice.textContent = basePrice.toFixed(2) + " " + currencyLabel;
         previewOldPrice.style.display = "inline";
     } else {
         previewOldPrice.style.display = "none";

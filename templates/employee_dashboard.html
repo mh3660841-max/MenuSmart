@@ -8,15 +8,99 @@
 
 <body>
 
-<div style="
-    max-width:900px;
-    margin:50px auto;
-    padding:30px;
-    background:#fff;
-    border-radius:20px;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-    font-family:Arial;
-">
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 24px;
+    display: grid;
+    place-items: center;
+    color: #edf1ff;
+    background:
+        radial-gradient(ellipse at 10% 5%, rgba(139,92,246,.16), transparent 38%),
+        radial-gradient(ellipse at 90% 90%, rgba(56,189,248,.09), transparent 34%),
+        #080d1b;
+    font-family: Arial, sans-serif;
+}
+
+.employee-dashboard {
+    width: 100%;
+    max-width: 680px;
+    padding: 38px;
+    text-align: center;
+    background: linear-gradient(145deg, #111a2e, #0e1729);
+    border: 1px solid #27324b;
+    border-radius: 24px;
+    box-shadow: 0 20px 55px rgba(0,0,0,.28);
+}
+
+.employee-dashboard-icon {
+    display: grid;
+    place-items: center;
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 22px;
+    color: #c4b5fd;
+    background: linear-gradient(145deg, rgba(139,92,246,.22), rgba(56,189,248,.12));
+    border: 1px solid rgba(139,92,246,.28);
+    border-radius: 20px;
+    font-size: 30px;
+}
+
+.employee-dashboard h1 {
+    margin: 0 0 14px;
+    color: #edf1ff;
+    font-size: clamp(23px, 5vw, 30px);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.employee-dashboard p {
+    margin: 0;
+    color: #aab6cc;
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.employee-dashboard-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    padding: 9px 15px;
+    color: #67e8f9;
+    background: rgba(56,189,248,.09);
+    border: 1px solid rgba(56,189,248,.2);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.employee-dashboard-status span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #38bdf8;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+
+    .employee-dashboard {
+        padding: 27px 20px;
+        border-radius: 19px;
+    }
+}
+</style>
+
+<main class="employee-dashboard">
+    <div class="employee-dashboard-icon">✦</div>
 
     <h1>أهلاً {{ user["name"] }} 👋</h1>
 
@@ -24,7 +108,11 @@
         تم تسجيل دخولك كموظف بنجاح.
     </p>
 
-</div>
+    <div class="employee-dashboard-status">
+        <span></span>
+        تم تسجيل الدخول بنجاح
+    </div>
+</main>
 
 </body>
 </html>

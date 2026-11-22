@@ -29,7 +29,7 @@
     href="{{ url_for('static', filename='css/menu.css') }}"
 >
 
-</head><body class="product-details-page"><header class="public-menu-header"><div class="public-menu-header-inner">
+</head><body class="product-details-page" data-currency="{{ currency_label }}"><header class="public-menu-header"><div class="public-menu-header-inner">
 
     <a
         href="{{ url_for('home') }}"
@@ -134,7 +134,7 @@
                 </strong>
 
                 <span>
-                    جنيه
+                    {{ currency_label }}
                 </span>
 
             </div>

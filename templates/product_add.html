@@ -128,38 +128,9 @@
             font-size: 14px;
         }
 
-        .product-back-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
 
-            min-width: 150px;
 
-            padding: 12px 18px;
 
-            border-radius: 12px;
-
-            border:
-                1px solid
-                rgba(255,255,255,0.16);
-
-            background:
-                rgba(255,255,255,0.06);
-
-            color: #fff;
-
-            text-decoration: none;
-
-            font-weight: 800;
-
-            transition: 0.2s ease;
-        }
-
-        .product-back-btn:hover {
-            background: #d4af37;
-            color: #111;
-            transform: translateY(-2px);
-        }
 
 
         /* LAYOUT */
@@ -895,7 +866,7 @@
                 padding: 24px;
             }
 
-            .product-back-btn {
+            .back-dashboard {
                 width: 100%;
             }
 
@@ -961,9 +932,9 @@
 
             <a
                 href="{{ url_for('products') }}"
-                class="product-back-btn"
+                class="back-dashboard"
             >
-                ← العودة للمنتجات
+                العودة للمنتجات
             </a>
 
         </section>
@@ -1076,7 +1047,7 @@
                                 >
 
                                 <span class="price-currency">
-                                    جنيه
+                                    {{ currency_label }}
                                 </span>
 
                             </div>
@@ -1103,7 +1074,7 @@
                                 >
 
                                 <span class="price-currency">
-                                    جنيه
+                                    {{ currency_label }}
                                 </span>
 
                             </div>
@@ -1490,7 +1461,7 @@
                             </strong>
 
                             <span>
-                                جنيه
+                                {{ currency_label }}
                             </span>
 
                         </div>

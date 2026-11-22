@@ -10,23 +10,23 @@
 ========================================================= */
 
 :root {
-    --ms-black: #111111;
-    --ms-dark: #181818;
-    --ms-dark-2: #242424;
+    --ms-black: #080d1b;
+    --ms-dark: #111a2e;
+    --ms-dark-2: #17223a;
 
-    --ms-gold: #d4af37;
-    --ms-gold-dark: #9b7d1e;
-    --ms-gold-light: #faf4d9;
+    --ms-primary: #8b5cf6;
+    --ms-primary-dark: #6d28d9;
+    --ms-primary-soft: #241b3d;
 
-    --ms-bg: #f6f6f4;
-    --ms-white: #ffffff;
+    --ms-bg: #080d1b;
+    --ms-white: #111a2e;
 
-    --ms-text: #171717;
-    --ms-muted: #777777;
-    --ms-light-muted: #999999;
+    --ms-text: #edf1ff;
+    --ms-muted: #a5afc5;
+    --ms-light-muted: #a5afc5;
 
-    --ms-border: #e9e9e6;
-    --ms-border-light: #f0f0ed;
+    --ms-border: #27324b;
+    --ms-border-light: #27324b;
 
     --ms-success: #1f9d61;
     --ms-danger: #d93636;
@@ -152,7 +152,7 @@ select {
 }
 
 .menu-restaurant-card:hover {
-    border-color: rgba(212, 175, 55, .25);
+    border-color: rgba(139, 92, 246, .25);
     box-shadow: var(--ms-shadow-hover);
 }
 
@@ -179,12 +179,12 @@ select {
     background:
         radial-gradient(
             circle at 30% 20%,
-            rgba(212, 175, 55, .18),
+            rgba(34, 211, 238, .18),
             transparent 35%
         ),
         linear-gradient(135deg, #111, #292929);
 
-    color: var(--ms-gold);
+    color: var(--ms-primary);
     font-size: 30px;
     font-weight: 900;
 
@@ -231,7 +231,7 @@ select {
 }
 
 .dashboard-section-header span {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
     font-size: 11px;
     font-weight: 900;
 }
@@ -253,7 +253,7 @@ select {
 }
 
 .section-link:hover {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
 }
 
 
@@ -284,7 +284,7 @@ select {
 
 .menu-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(212, 175, 55, .35);
+    border-color: rgba(139, 92, 246, .35);
     box-shadow: 0 18px 40px rgba(0, 0, 0, .08);
 }
 
@@ -294,7 +294,7 @@ select {
     background:
         radial-gradient(
             circle at 20% 20%,
-            rgba(212, 175, 55, .16),
+            rgba(34, 211, 238, .16),
             transparent 35%
         ),
         linear-gradient(135deg, #111, #252525);
@@ -308,7 +308,7 @@ select {
     align-items: center;
     justify-content: center;
 
-    color: var(--ms-gold);
+    color: var(--ms-primary);
     font-size: 34px;
 }
 
@@ -366,7 +366,7 @@ select {
 
 .menu-action.edit {
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 }
 
 .menu-action.view {
@@ -413,7 +413,7 @@ select {
 
 .menu-tool-card:hover {
     transform: translateY(-3px);
-    border-color: rgba(212, 175, 55, .4);
+    border-color: rgba(139, 92, 246, .4);
     box-shadow: 0 12px 30px rgba(0, 0, 0, .07);
 }
 
@@ -454,7 +454,7 @@ select {
 }
 
 .menu-tool-card strong {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
     font-size: 12px;
 }
 
@@ -465,7 +465,7 @@ select {
 }
 
 .menu-tool-card:hover > span {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
     transform: translateX(-3px);
 }
 
@@ -495,8 +495,8 @@ select {
     justify-content: center;
 
     border-radius: 20px;
-    background: var(--ms-gold-light);
-    color: var(--ms-gold-dark);
+    background: var(--ms-primary-soft);
+    color: var(--ms-primary-dark);
 
     font-size: 30px;
 }
@@ -539,7 +539,7 @@ select {
     background:
         radial-gradient(
             circle at 90% 20%,
-            rgba(212, 175, 55, .13),
+            rgba(34, 211, 238, .13),
             transparent 30%
         ),
         linear-gradient(135deg, #111, #202020);
@@ -554,7 +554,7 @@ select {
 }
 
 .getting-started-content > span {
-    color: var(--ms-gold);
+    color: var(--ms-primary);
     font-size: 11px;
     font-weight: 900;
 }
@@ -594,10 +594,10 @@ select {
     align-items: center;
     justify-content: center;
 
-    border: 2px solid rgba(212, 175, 55, .5);
+    border: 2px solid rgba(139, 92, 246, .5);
     border-radius: 50%;
 
-    color: var(--ms-gold);
+    color: var(--ms-primary);
     font-size: 35px;
     font-weight: 900;
 }
@@ -785,7 +785,7 @@ select {
 
     background: linear-gradient(135deg, #111, #242424);
 
-    color: var(--ms-gold);
+    color: var(--ms-primary);
     font-size: 34px;
     font-weight: 900;
 }
@@ -971,7 +971,7 @@ select {
 
 .menu-category-link.active {
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 
     box-shadow: 0 6px 18px rgba(0, 0, 0, .14);
 }
@@ -1024,7 +1024,7 @@ select {
 .menu-categories .menu-category:hover,
 .menu-categories .menu-category.active {
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
     border-color: var(--ms-black);
 }
 
@@ -1077,7 +1077,7 @@ select {
     height: 3px;
 
     border-radius: 10px;
-    background: var(--ms-gold);
+    background: var(--ms-primary);
 }
 
 .menu-category-description {
@@ -1203,7 +1203,7 @@ select {
 
     background: rgba(17, 17, 17, .88);
 
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 
     font-size: 10px;
     font-weight: 900;
@@ -1259,7 +1259,7 @@ select {
 
 .menu-product-price,
 .public-product-price {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
 
     font-size: 16px;
     font-weight: 900;
@@ -1317,7 +1317,7 @@ select {
 }
 
 .menu-product-details:hover {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
 }
 
 .menu-product-add,
@@ -1325,7 +1325,7 @@ select {
     border: none;
 
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 
     font-family: inherit;
     font-weight: 900;
@@ -1358,7 +1358,7 @@ select {
 
 .menu-product-add:hover,
 .add-product-btn:hover:not(:disabled) {
-    background: var(--ms-gold);
+    background: var(--ms-primary);
     color: var(--ms-black);
 
     transform: translateY(-1px);
@@ -1455,8 +1455,8 @@ select {
 
     border-radius: 23px;
 
-    background: var(--ms-gold-light);
-    color: var(--ms-gold-dark);
+    background: var(--ms-primary-soft);
+    color: var(--ms-primary-dark);
 
     font-size: 33px;
 }
@@ -1566,7 +1566,7 @@ select {
 .product-details-price {
     margin: 17px 0;
 
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
 
     font-size: 26px;
     font-weight: 900;
@@ -1620,7 +1620,7 @@ select {
 
 .product-details-quantity button:hover {
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 }
 
 .product-details-quantity span {
@@ -1657,7 +1657,7 @@ select {
     border-radius: 17px;
 
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 
     font-weight: 900;
 
@@ -1671,7 +1671,7 @@ select {
 .menu-cart-button:hover {
     transform: translateY(-3px);
 
-    background: var(--ms-gold);
+    background: var(--ms-primary);
     color: var(--ms-black);
 }
 
@@ -1729,7 +1729,7 @@ select {
 }
 
 .cart-header span {
-    color: var(--ms-gold);
+    color: var(--ms-primary);
     font-size: 12px;
 }
 
@@ -1752,7 +1752,7 @@ select {
 
 .cart-close-btn:hover {
     background: rgba(212, 175, 55, .18);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 }
 
 .cart-items {
@@ -1774,7 +1774,7 @@ select {
 }
 
 .cart-item-info span {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
     font-weight: 800;
 }
 
@@ -1800,11 +1800,11 @@ select {
 
 .cart-item-actions button:hover {
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 }
 
 .cart-item-total {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
     font-weight: 900;
 }
 
@@ -1826,7 +1826,7 @@ select {
 }
 
 .cart-total-row strong {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
     font-size: 19px;
 }
 
@@ -1838,7 +1838,7 @@ select {
     border-radius: 14px;
 
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 
     font-family: inherit;
     font-weight: 900;
@@ -1849,7 +1849,7 @@ select {
 }
 
 .checkout-button:not(:disabled):hover {
-    background: var(--ms-gold);
+    background: var(--ms-primary);
     color: var(--ms-black);
 }
 
@@ -1973,7 +1973,7 @@ select {
 .cart-item-price {
     margin-top: 7px;
 
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
 
     font-weight: 900;
 }
@@ -2003,7 +2003,7 @@ select {
 
 .cart-quantity button:hover {
     background: var(--ms-black);
-    color: var(--ms-gold);
+    color: var(--ms-primary);
 }
 
 .cart-quantity span {
@@ -2069,7 +2069,7 @@ select {
 }
 
 .cart-summary-total strong {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
 }
 
 
@@ -2137,7 +2137,7 @@ select {
 .checkout-form-group input:focus,
 .checkout-form-group textarea:focus,
 .checkout-form-group select:focus {
-    border-color: var(--ms-gold);
+    border-color: var(--ms-primary);
 
     box-shadow: 0 0 0 4px rgba(212, 175, 55, .1);
 }
@@ -2188,7 +2188,7 @@ select {
 }
 
 .checkout-summary-total strong {
-    color: var(--ms-gold-dark);
+    color: var(--ms-primary-dark);
 }
 
 
@@ -2267,7 +2267,7 @@ select {
 
     border-radius: 10px;
 
-    background: var(--ms-gold-light);
+    background: var(--ms-primary-soft);
     color: #8b7118;
 
     font-weight: 900;

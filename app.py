@@ -781,16 +781,8 @@ def current_restaurant():
 
 
 def _currency_label(currency):
-    currency_labels = {
-        "EGP": "جنيه مصري",
-        "SAR": "ريال سعودي",
-        "AED": "درهم إماراتي",
-        "USD": "دولار أمريكي",
-    }
-    return currency_labels.get(
-        str(currency or "EGP").upper(),
-        "جنيه مصري"
-    )
+    code = str(currency or "EGP").upper()
+    return code if code in {"EGP", "SAR", "AED", "USD"} else "EGP"
 
 
 # =========================================================
@@ -3320,6 +3312,20 @@ def category_edit(category_id):
 
     restaurant = accessible_restaurant()
 
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
     category = query_db(
         """
         SELECT *
@@ -3404,7 +3410,8 @@ def category_edit(category_id):
             return render_template(
                 "category_edit.html",
                 restaurant=restaurant,
-                category=category
+                category=category,
+            currency_label=currency_label
             )
 
         image_name = category["image"]
@@ -3425,7 +3432,8 @@ def category_edit(category_id):
                 return render_template(
                     "category_edit.html",
                     restaurant=restaurant,
-                    category=category
+                    category=category,
+            currency_label=currency_label
                 )
 
             image_name = new_image
@@ -3470,7 +3478,8 @@ def category_edit(category_id):
     return render_template(
         "category_edit.html",
         restaurant=restaurant,
-        category=category
+        category=category,
+            currency_label=currency_label
     )
 
 # =========================================================
@@ -3561,6 +3570,20 @@ def products():
 
     restaurant = accessible_restaurant()
 
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
     print("PRODUCTS RESTAURANT:", restaurant)
 
     products_list = query_db(
@@ -3596,6 +3619,7 @@ def products():
         restaurant=restaurant,
         categories=categories_list,
         products=products_list,
+        currency_label=currency_label,
     )
 
 
@@ -3611,6 +3635,21 @@ def products():
 def product_add():
 
     restaurant = accessible_restaurant()
+
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
 
     categories_list = query_db(
         """
@@ -3652,7 +3691,8 @@ def product_add():
             return render_template(
                 "product_add.html",
                 restaurant=restaurant,
-                categories=categories_list
+                categories=categories_list,
+                currency_label=currency_label
             )
 
         category_id = request.form.get(
@@ -3667,7 +3707,8 @@ def product_add():
                 return render_template(
                     "product_add.html",
                     restaurant=restaurant,
-                    categories=categories_list
+                    categories=categories_list,
+                    currency_label=currency_label
                 )
 
             category = query_db(
@@ -3684,7 +3725,8 @@ def product_add():
                 return render_template(
                     "product_add.html",
                     restaurant=restaurant,
-                    categories=categories_list
+                    categories=categories_list,
+                    currency_label=currency_label
                 )
         else:
             category_id = None
@@ -3709,7 +3751,8 @@ def product_add():
             return render_template(
                 "product_add.html",
                 restaurant=restaurant,
-                categories=categories_list
+                categories=categories_list,
+                currency_label=currency_label
             )
 
         image_name = None
@@ -3730,7 +3773,8 @@ def product_add():
                 return render_template(
                     "product_add.html",
                     restaurant=restaurant,
-                    categories=categories_list
+                    categories=categories_list,
+                    currency_label=currency_label
                 )
 
         try:
@@ -3752,7 +3796,8 @@ def product_add():
             return render_template(
                 "product_add.html",
                 restaurant=restaurant,
-                categories=categories_list
+                categories=categories_list,
+                currency_label=currency_label
             )
 
         if not (0 <= price_value < float("inf")):
@@ -3760,7 +3805,8 @@ def product_add():
             return render_template(
                 "product_add.html",
                 restaurant=restaurant,
-                categories=categories_list
+                categories=categories_list,
+                currency_label=currency_label
             )
 
         old_price_value = None
@@ -3772,7 +3818,8 @@ def product_add():
                 return render_template(
                     "product_add.html",
                     restaurant=restaurant,
-                    categories=categories_list
+                    categories=categories_list,
+                    currency_label=currency_label
                 )
 
             if not (0 <= old_price_value < float("inf")) or old_price_value <= price_value:
@@ -3783,7 +3830,8 @@ def product_add():
                 return render_template(
                     "product_add.html",
                     restaurant=restaurant,
-                    categories=categories_list
+                    categories=categories_list,
+                    currency_label=currency_label
                 )
 
         db = get_db()
@@ -3858,7 +3906,8 @@ def product_add():
     return render_template(
         "product_add.html",
         restaurant=restaurant,
-        categories=categories_list
+        categories=categories_list,
+        currency_label=currency_label
     )
 
 # =========================================================
@@ -3873,6 +3922,21 @@ def product_add():
 def product_edit(product_id):
 
     restaurant = accessible_restaurant()
+
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
 
     product = query_db(
         """
@@ -3936,7 +4000,8 @@ def product_edit(product_id):
                 restaurant=restaurant,
                 product=product,
                 categories=categories_list,
-                product_sizes=product_sizes
+                product_sizes=product_sizes,
+                                  currency_label=currency_label
             )
 
         if category_id:
@@ -3949,7 +4014,8 @@ def product_edit(product_id):
                     restaurant=restaurant,
                     product=product,
                     categories=categories_list,
-                    product_sizes=product_sizes
+                    product_sizes=product_sizes,
+                                  currency_label=currency_label
                 )
 
             category = query_db(
@@ -3969,7 +4035,8 @@ def product_edit(product_id):
                     restaurant=restaurant,
                     product=product,
                     categories=categories_list,
-                    product_sizes=product_sizes
+                    product_sizes=product_sizes,
+                                  currency_label=currency_label
                 )
         else:
             category_id = None
@@ -3984,7 +4051,8 @@ def product_edit(product_id):
                 restaurant=restaurant,
                 product=product,
                 categories=categories_list,
-                product_sizes=product_sizes
+                product_sizes=product_sizes,
+                                  currency_label=currency_label
             )
 
         try:
@@ -4019,7 +4087,8 @@ def product_edit(product_id):
                 restaurant=restaurant,
                 product=product,
                 categories=categories_list,
-                product_sizes=product_sizes
+                product_sizes=product_sizes,
+                                  currency_label=currency_label
             )
 
         original_price_value = (
@@ -4038,7 +4107,8 @@ def product_edit(product_id):
                     restaurant=restaurant,
                     product=product,
                     categories=categories_list,
-                    product_sizes=product_sizes
+                    product_sizes=product_sizes,
+                                  currency_label=currency_label
                 )
 
             image_name = new_image
@@ -4116,7 +4186,8 @@ def product_edit(product_id):
         restaurant=restaurant,
         product=product,
         categories=categories_list,
-        product_sizes=product_sizes
+        product_sizes=product_sizes,
+                                  currency_label=currency_label
     )
 
 
@@ -4204,6 +4275,20 @@ def dashboard():
         flash("أكمل بيانات المطعم أولاً.", "warning")
         return redirect(url_for("profile"))
 
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
     stats = query_db(
         """
         SELECT
@@ -4249,7 +4334,8 @@ def dashboard():
         products_count=products_count,
         orders_count=orders_count,
         customers_count=customers_count,
-        recent_orders=recent_orders
+        recent_orders=recent_orders,
+        currency_label=currency_label
     )
 
 
@@ -4262,6 +4348,20 @@ def dashboard():
 def menu():
 
     restaurant = current_restaurant()
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
 
     categories_count = query_db(
         """
@@ -4292,6 +4392,7 @@ def menu():
         restaurant=restaurant,
         categories_count=categories_count,
         products_count=products_count,
+        currency_label=currency_label,
     )
 
 
@@ -4322,6 +4423,14 @@ def public_menu(slug):
 
     if not restaurant["is_active"]:
         return render_template("restaurant_paused.html"), 200
+
+    try:
+        execute_db(
+            "INSERT INTO menu_views (restaurant_id) VALUES (%s)",
+            [restaurant["id"]]
+        )
+    except Exception:
+        app.logger.exception("Failed to record public menu view")
 
     categories_list, products_list = get_public_menu_cached_data(restaurant["id"])
 
@@ -4398,6 +4507,22 @@ def public_product(
 
         return "المطعم غير موجود", 404
 
+    currency_row = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+
+    currency_label = _currency_label(
+        currency_row["currency"] if currency_row else "EGP"
+    )
+
+
     product = query_db(
         """
         SELECT
@@ -4423,7 +4548,8 @@ AND products.restaurant_id = %s
     return render_template(
         "product_details.html",
         restaurant=restaurant,
-        product=product
+        product=product,
+        currency_label=currency_label
     )
 
 # =========================================================
@@ -5200,6 +5326,20 @@ def order_success(order_id):
             url_for("home")
         )
 
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [order["restaurant_id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
     if (
         session.get("last_order_id") != order_id
         or session.get("last_order_restaurant") != order["restaurant_slug"]
@@ -5236,7 +5376,8 @@ def order_success(order_id):
         order_id=order_id,
         items=items,
         restaurant=order,
-        restaurant_id=order["restaurant_id"]
+        restaurant_id=order["restaurant_id"],
+        currency_label=currency_label
     )
 
 
@@ -5249,6 +5390,22 @@ def order_success(order_id):
 def orders():
 
     restaurant = accessible_restaurant()
+
+    currency_row = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+
+    currency_label = _currency_label(
+        currency_row["currency"] if currency_row else "EGP"
+    )
+
 
     orders_list = query_db(
         """
@@ -5265,7 +5422,8 @@ def orders():
     return render_template(
         "orders.html",
         restaurant=restaurant,
-        orders=orders_list
+        orders=orders_list,
+        currency_label=currency_label
     )
 
 # =========================================================
@@ -5310,6 +5468,20 @@ def order_details(order_id):
 
     restaurant = accessible_restaurant()
 
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
     order = query_db(
         """
         SELECT *
@@ -5351,7 +5523,8 @@ def order_details(order_id):
         "order_details.html",
         restaurant=restaurant,
         order=order,
-        order_items=order_items
+        order_items=order_items,
+        currency_label=currency_label
     )
 
 
@@ -5376,6 +5549,20 @@ def track_order():
 def order_invoice(order_id):
 
     restaurant = accessible_restaurant()
+
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
     order = query_db(
         """
         SELECT *
@@ -5417,7 +5604,8 @@ def order_invoice(order_id):
         "invoice.html",
         restaurant=restaurant,
         order=order,
-        order_items=order_items
+        order_items=order_items,
+        currency_label=currency_label
     )
 
 
@@ -5501,6 +5689,20 @@ def customers():
 
     restaurant = accessible_restaurant()
 
+    currency_settings = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    )
+    currency_label = _currency_label(
+        currency_settings["currency"] if currency_settings else "EGP"
+    )
+
     customers_list = query_db(
         """
         SELECT *
@@ -5516,7 +5718,8 @@ def customers():
     return render_template(
         "customers.html",
         restaurant=restaurant,
-        customers=customers_list
+        customers=customers_list,
+        currency_label=currency_label
     )
 
 
@@ -5527,310 +5730,277 @@ def customers():
 @app.route("/analytics")
 @restaurant_required
 def analytics():
-
     restaurant = current_restaurant()
     restaurant_id = restaurant["id"]
 
-    # =====================================================
-    # الإحصائيات الأساسية
-    # =====================================================
+    try:
+        period = int(request.args.get("period", 30))
+    except (TypeError, ValueError):
+        period = 30
 
-    total_orders = query_db(
-        """
-        SELECT COUNT(*) AS count
+    if period not in (7, 30, 90):
+        period = 30
+
+    aggregate_sql = """
+        SELECT
+            COUNT(*) AS total_orders,
+            COUNT(DISTINCT customer_id) AS total_customers,
+            COALESCE(SUM(CASE WHEN status = 'completed' THEN total ELSE 0 END), 0) AS total_sales,
+            COALESCE(AVG(CASE WHEN status = 'completed' THEN total END), 0) AS average_order,
+            SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_orders,
+            SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) AS confirmed_orders,
+            SUM(CASE WHEN status = 'preparing' THEN 1 ELSE 0 END) AS preparing_orders,
+            SUM(CASE WHEN status = 'ready' THEN 1 ELSE 0 END) AS ready_orders,
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending_orders,
+            SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled_orders
         FROM orders
         WHERE restaurant_id = %s
-        """,
-        [restaurant_id],
-        one=True
-    )["count"]
+          AND created_at >= CURRENT_DATE - (%s::integer - 1) * INTERVAL '1 day'
+          AND created_at < CURRENT_DATE + INTERVAL '1 day'
+    """
 
-    total_sales = query_db(
+    current = query_db(
+        aggregate_sql,
+        [restaurant_id, period],
+        one=True
+    ) or {}
+
+    previous = query_db(
         """
-        SELECT COALESCE(SUM(total), 0) AS total
+        SELECT
+            COUNT(*) AS total_orders,
+            COUNT(DISTINCT customer_id) AS total_customers,
+            COALESCE(SUM(CASE WHEN status = 'completed' THEN total ELSE 0 END), 0) AS total_sales,
+            COALESCE(AVG(CASE WHEN status = 'completed' THEN total END), 0) AS average_order
         FROM orders
         WHERE restaurant_id = %s
-        AND status = 'completed'
+          AND created_at >= CURRENT_DATE - (%s::integer * 2 - 1) * INTERVAL '1 day'
+          AND created_at < CURRENT_DATE - (%s::integer - 1) * INTERVAL '1 day'
         """,
-        [restaurant_id],
+        [restaurant_id, period, period],
         one=True
-    )["total"]
+    ) or {}
 
-    total_customers = query_db(
-        """
-        SELECT COUNT(DISTINCT customer_id) AS count
-        FROM orders
-        WHERE restaurant_id = %s
-        AND customer_id IS NOT NULL
-        """,
-        [restaurant_id],
-        one=True
-    )["count"]
+    def period_change(current_value, previous_value):
+        current_value = float(current_value or 0)
+        previous_value = float(previous_value or 0)
 
-    average_order = query_db(
-        """
-        SELECT COALESCE(AVG(total), 0) AS average
-        FROM orders
-        WHERE restaurant_id = %s
-        AND status = 'completed'
-        """,
-        [restaurant_id],
-        one=True
-    )["average"]
+        if previous_value == 0:
+            return 0.0 if current_value == 0 else None
 
-    # =====================================================
-    # حالات الطلبات
-    # =====================================================
-
-    completed_orders = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM orders
-        WHERE restaurant_id = %s
-        AND status = 'completed'
-        """,
-        [restaurant_id],
-        one=True
-    )["count"]
-
-    confirmed_orders = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM orders
-        WHERE restaurant_id = %s
-        AND status = 'confirmed'
-        """,
-        [restaurant_id],
-        one=True
-    )["count"]
-
-    pending_orders = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM orders
-        WHERE restaurant_id = %s
-        AND status = 'pending'
-        """,
-        [restaurant_id],
-        one=True
-    )["count"]
-
-    cancelled_orders = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM orders
-        WHERE restaurant_id = %s
-        AND status = 'cancelled'
-        """,
-        [restaurant_id],
-        one=True
-    )["count"]
-
-    # =====================================================
-    # نسب حالات الطلبات
-    # =====================================================
-
-    if total_orders > 0:
-
-        completed_percentage = round(
-            (completed_orders / total_orders) * 100,
+        return round(
+            ((current_value - previous_value) / previous_value) * 100,
             1
         )
 
-        confirmed_percentage = round(
-            (confirmed_orders / total_orders) * 100,
-            1
-        )
+    total_orders = int(current.get("total_orders") or 0)
+    total_customers = int(current.get("total_customers") or 0)
+    total_sales = float(current.get("total_sales") or 0)
+    average_order = float(current.get("average_order") or 0)
 
-        pending_percentage = round(
-            (pending_orders / total_orders) * 100,
-            1
-        )
+    completed_orders = int(current.get("completed_orders") or 0)
+    confirmed_orders = int(current.get("confirmed_orders") or 0)
+    preparing_orders = int(current.get("preparing_orders") or 0)
+    ready_orders = int(current.get("ready_orders") or 0)
+    pending_orders = int(current.get("pending_orders") or 0)
+    cancelled_orders = int(current.get("cancelled_orders") or 0)
 
-        cancelled_percentage = round(
-            (cancelled_orders / total_orders) * 100,
-            1
-        )
+    sales_change = period_change(total_sales, previous.get("total_sales"))
+    orders_change = period_change(total_orders, previous.get("total_orders"))
+    customers_change = period_change(total_customers, previous.get("total_customers"))
+    average_order_change = period_change(
+        average_order,
+        previous.get("average_order")
+    )
 
-    else:
+    def status_percentage(count):
+        return round((count / total_orders) * 100, 1) if total_orders else 0
 
-        completed_percentage = 0
-        confirmed_percentage = 0
-        pending_percentage = 0
-        cancelled_percentage = 0
+    completed_percentage = status_percentage(completed_orders)
+    confirmed_percentage = status_percentage(confirmed_orders)
+    preparing_percentage = status_percentage(preparing_orders)
+    ready_percentage = status_percentage(ready_orders)
+    pending_percentage = status_percentage(pending_orders)
+    cancelled_percentage = status_percentage(cancelled_orders)
 
-    # =====================================================
-    # الرسم البياني - آخر 7 أيام
-    # =====================================================
-
-    daily_analytics = query_db(
+    daily_rows = query_db(
         """
         SELECT
             d::date AS day,
             COUNT(o.id) AS orders_count,
             COALESCE(
-                SUM(
-                    CASE
-                        WHEN o.status = 'completed'
-                        THEN o.total
-                        ELSE 0
-                    END
-                ),
+                SUM(CASE WHEN o.status = 'completed' THEN o.total ELSE 0 END),
                 0
             ) AS sales
         FROM generate_series(
-            CURRENT_DATE - INTERVAL '6 days',
+            CURRENT_DATE - (%s::integer - 1) * INTERVAL '1 day',
             CURRENT_DATE,
             INTERVAL '1 day'
         ) AS d
         LEFT JOIN orders o
             ON o.restaurant_id = %s
-            AND o.created_at::date = d::date
+           AND o.created_at >= d::date
+           AND o.created_at < d::date + INTERVAL '1 day'
         GROUP BY d
         ORDER BY d
         """,
-        [restaurant_id]
-    )
+        [period, restaurant_id]
+    ) or []
 
-    # =====================================================
-    # تجهيز بيانات الرسم للـ HTML
-    # =====================================================
+    weekday_names = [
+        "الاثنين", "الثلاثاء", "الأربعاء",
+        "الخميس", "الجمعة", "السبت", "الأحد"
+    ]
 
     daily_labels = []
     daily_orders = []
     daily_sales = []
 
-    arabic_days = {
-        0: "الإثنين",
-        1: "الثلاثاء",
-        2: "الأربعاء",
-        3: "الخميس",
-        4: "الجمعة",
-        5: "السبت",
-        6: "الأحد"
-    }
-
-    for row in daily_analytics:
-
+    for row in daily_rows:
         day = row["day"]
 
-        daily_labels.append(
-            arabic_days.get(day.weekday(), "")
-        )
+        if hasattr(day, "weekday") and period == 7:
+            daily_labels.append(weekday_names[day.weekday()])
+        elif hasattr(day, "strftime"):
+            daily_labels.append(day.strftime("%d/%m"))
+        else:
+            daily_labels.append(str(day))
 
-        daily_orders.append(
-            int(row["orders_count"] or 0)
-        )
-
-        daily_sales.append(
-            float(row["sales"] or 0)
-        )
-
-    # =====================================================
-    # أكثر المنتجات طلبًا
-    # =====================================================
+        daily_orders.append(int(row.get("orders_count") or 0))
+        daily_sales.append(float(row.get("sales") or 0))
 
     top_products = query_db(
         """
         SELECT
-            product_name AS name,
-            SUM(quantity) AS orders_count,
-            COALESCE(SUM(total), 0) AS total_sales
-        FROM order_items
-        WHERE order_id IN (
-            SELECT id
-            FROM orders
-            WHERE restaurant_id = %s
-            AND status = 'completed'
-        )
-        GROUP BY product_name
-        ORDER BY orders_count DESC
+            oi.product_name AS name,
+            COALESCE(SUM(oi.quantity), 0) AS units_sold,
+            COUNT(DISTINCT oi.order_id) AS order_count,
+            COALESCE(SUM(oi.total), 0) AS total_sales,
+            p.image AS image
+        FROM order_items oi
+        JOIN orders o ON o.id = oi.order_id
+        LEFT JOIN products p
+            ON p.id = oi.product_id
+           AND p.restaurant_id = o.restaurant_id
+        WHERE o.restaurant_id = %s
+          AND o.status = 'completed'
+          AND o.created_at >= CURRENT_DATE - (%s::integer - 1) * INTERVAL '1 day'
+          AND o.created_at < CURRENT_DATE + INTERVAL '1 day'
+        GROUP BY oi.product_id, oi.product_name, p.image
+        ORDER BY units_sold DESC, total_sales DESC
         LIMIT 5
         """,
-        [restaurant_id]
-    )
+        [restaurant_id, period]
+    ) or []
 
-    # =====================================================
-    # عدد المنتجات
-    # =====================================================
-
-    total_products = query_db(
-        """
-        SELECT COUNT(*) AS count
-        FROM products
-        WHERE restaurant_id = %s
-        """,
+    products_row = query_db(
+        "SELECT COUNT(*) AS count FROM products WHERE restaurant_id = %s",
         [restaurant_id],
         one=True
-    )["count"]
+    ) or {}
+    total_products = int(products_row.get("count") or 0)
 
-    # =====================================================
-    # مشاهدات المنيو
-    # =====================================================
-
-    menu_views = query_db(
+    views_row = query_db(
         """
         SELECT COUNT(*) AS count
         FROM menu_views
         WHERE restaurant_id = %s
+          AND viewed_at >= CURRENT_DATE - (%s::integer - 1) * INTERVAL '1 day'
+          AND viewed_at < CURRENT_DATE + INTERVAL '1 day'
+        """,
+        [restaurant_id, period],
+        one=True
+    ) or {}
+    menu_views = int(views_row.get("count") or 0)
+
+    non_cancelled_orders = total_orders - cancelled_orders
+    conversion_rate = round(
+        (non_cancelled_orders / menu_views) * 100,
+        1
+    ) if menu_views else 0
+
+    settings_row = query_db(
+        """
+        SELECT currency
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
         """,
         [restaurant_id],
         one=True
-    )["count"]
+    )
+    currency = settings_row["currency"] if settings_row else "EGP"
+    currency_label = _currency_label(currency)
 
-    # =====================================================
-    # معدل التحويل
-    # الطلبات ÷ مشاهدات المنيو
-    # =====================================================
+    analytics_insights = []
 
-    if menu_views > 0:
+    if total_orders == 0:
+        analytics_insights.append({
+            "icon": "inbox",
+            "title": "لا توجد طلبات خلال الفترة",
+            "description": "لم يتم تسجيل طلبات في الفترة المحددة."
+        })
 
-        conversion_rate = round(
-            (total_orders / menu_views) * 100,
-            1
-        )
+    if menu_views == 0:
+        analytics_insights.append({
+            "icon": "eye",
+            "title": "لا توجد مشاهدات مسجلة",
+            "description": "لم يتم تسجيل زيارات للمنيو خلال الفترة المحددة."
+        })
 
-    else:
+    if top_products:
+        analytics_insights.append({
+            "icon": "trending-up",
+            "title": "المنتج الأكثر مبيعًا",
+            "description": (
+                f"{top_products[0]['name']} "
+                f"بإجمالي {int(top_products[0].get('units_sold') or 0)} وحدة مباعة."
+            )
+        })
 
-        conversion_rate = 0
-
-    # =====================================================
-    # إرسال البيانات للصفحة
-    # =====================================================
+    if completed_orders > 0:
+        analytics_insights.append({
+            "icon": "receipt",
+            "title": "متوسط قيمة الطلب المكتمل",
+            "description": f"{average_order:,.2f} {currency_label}."
+        })
 
     return render_template(
         "analytics.html",
-
         restaurant=restaurant,
-
-        total_sales=float(total_sales or 0),
+        period=period,
+        currency=currency,
+        currency_label=currency_label,
+        total_sales=total_sales,
         total_orders=total_orders,
         total_customers=total_customers,
-        average_order=float(average_order or 0),
+        average_order=average_order,
+        sales_change=sales_change,
+        orders_change=orders_change,
+        customers_change=customers_change,
+        average_order_change=average_order_change,
         total_products=total_products,
-
         completed_orders=completed_orders,
         confirmed_orders=confirmed_orders,
+        preparing_orders=preparing_orders,
+        ready_orders=ready_orders,
         pending_orders=pending_orders,
         cancelled_orders=cancelled_orders,
-
         completed_percentage=completed_percentage,
         confirmed_percentage=confirmed_percentage,
+        preparing_percentage=preparing_percentage,
+        ready_percentage=ready_percentage,
         pending_percentage=pending_percentage,
         cancelled_percentage=cancelled_percentage,
-
         top_products=top_products,
-
         menu_views=menu_views,
         conversion_rate=conversion_rate,
-
         daily_labels=daily_labels,
         daily_orders=daily_orders,
-        daily_sales=daily_sales
+        daily_sales=daily_sales,
+        analytics_insights=analytics_insights
     )
-# =========================================================
-# QR Code
-# =========================================================
+
 
 @app.route("/qr-code")
 @restaurant_required

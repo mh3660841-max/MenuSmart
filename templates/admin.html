@@ -7,681 +7,541 @@
 
     <title>لوحة الإدارة | Menu Smart</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --primary: #d4af37;
-            --dark: #111827;
-            --dark-2: #1f2937;
-            --bg: #f4f6f9;
-            --white: #ffffff;
-            --text: #1f2937;
-            --muted: #6b7280;
-            --border: #e5e7eb;
-            --green: #16a34a;
-            --red: #dc2626;
-            --orange: #f59e0b;
-            --blue: #2563eb;
-            --purple: #7c3aed;
-        }
-
-        body {
-            font-family: Tahoma, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        button,
-        input {
-            font-family: inherit;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        /* =========================
-           TOP BAR
-        ========================= */
-
-        .topbar {
-            background: linear-gradient(135deg, #111827, #1f2937);
-            color: #fff;
-            min-height: 74px;
-            padding: 0 5%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, .12);
-        }
-
-        .brand {
-            font-size: 23px;
-            font-weight: 800;
-            letter-spacing: .3px;
-        }
-
-        .brand span {
-            color: var(--primary);
-        }
-
-        .admin-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-size: 14px;
-        }
-
-        .admin-name {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .admin-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(212, 175, 55, .15);
-            border: 1px solid rgba(212, 175, 55, .4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        .logout {
-            background: var(--red);
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 9px;
-            font-weight: 600;
-            transition: .2s;
-        }
-
-        .logout:hover {
-            opacity: .88;
-            transform: translateY(-1px);
-        }
-
-        /* =========================
-           CONTAINER
-        ========================= */
-
-        .container {
-            width: min(1250px, 92%);
-            margin: 32px auto 50px;
-        }
-
-        /* =========================
-           WELCOME
-        ========================= */
-
-        .welcome {
-            background: linear-gradient(135deg, #ffffff, #fafafa);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 28px;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, .05);
-        }
-
-        .welcome h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-            color: var(--dark);
-        }
-
-        .welcome p {
-            color: var(--muted);
-            font-size: 15px;
-        }
-
-        /* =========================
-           FLASH MESSAGES
-        ========================= */
-
-        .flash-container {
-            margin-bottom: 20px;
-        }
-
-        .flash {
-            padding: 14px 18px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .flash.success {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
-
-        .flash.danger {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        .flash.warning {
-            background: #fef3c7;
-            color: #92400e;
-            border: 1px solid #fde68a;
-        }
-
-        /* =========================
-           STATS
-        ========================= */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 28px;
-        }
-
-        .stat {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 17px;
-            padding: 21px;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, .05);
-            position: relative;
-            overflow: hidden;
-            transition: .2s;
-        }
-
-        .stat:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 28px rgba(0, 0, 0, .08);
-        }
-
-        .stat::before {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--primary);
-        }
-
-        .stat-title {
-            color: var(--muted);
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--dark);
-        }
-
-        /* =========================
-           SECTIONS
-        ========================= */
-
-        .section {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 25px;
-            box-shadow: 0 7px 28px rgba(0, 0, 0, .05);
-            overflow-x: auto;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            background: #f3f4f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .section-header h2 {
-            font-size: 20px;
-            color: var(--dark);
-        }
-
-        /* =========================
-           TABLE
-        ========================= */
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            min-width: 1100px;
-            overflow: hidden;
-        }
-
-        th,
-        td {
-            padding: 15px 12px;
-            text-align: right;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            background: #f8fafc;
-            color: #374151;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        td {
-            font-size: 13px;
-            color: #374151;
-        }
-
-        tbody tr {
-            transition: .15s;
-        }
-
-        tbody tr:hover {
-            background: #fafafa;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* =========================
-           BADGES
-        ========================= */
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 11px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .approved,
-        .active {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .pending {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .rejected,
-        .suspended {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .admin {
-            background: #e0e7ff;
-            color: #3730a3;
-        }
-
-        .restaurant {
-            background: #f3f4f6;
-            color: #374151;
-        }
-
-        /* =========================
-           ACTIONS
-        ========================= */
-
-        .actions {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            flex-wrap: wrap;
-        }
-
-        .action-form {
-            display: inline-block;
-            margin: 0;
-        }
-
-        .action-btn {
-            border: none;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 700;
-            color: #fff;
-            transition: .18s;
-            white-space: nowrap;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-1px);
-            filter: brightness(.94);
-        }
-
-        .approve-btn {
-            background: var(--green);
-        }
-
-        .reject-btn {
-            background: var(--red);
-        }
-
-        .suspend-btn {
-            background: var(--orange);
-        }
-
-        .activate-btn {
-            background: var(--blue);
-        }
-
-        .reset-btn {
-            background: var(--purple);
-        }
-
-        .no-action {
-            color: #9ca3af;
-            font-size: 13px;
-        }
-
-        /* =========================
-           RESET PASSWORD BOX
-        ========================= */
-
-        .reset-box {
-            display: none;
-            margin-top: 12px;
-            padding: 12px;
-            background: #f9fafb;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-        }
-
-        .reset-box.show {
-            display: block;
-        }
-
-        .reset-form {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            flex-wrap: wrap;
-        }
-
-        .reset-input {
-            width: 170px;
-            padding: 8px 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            outline: none;
-            font-size: 12px;
-            background: #fff;
-        }
-
-        .reset-input:focus {
-            border-color: var(--purple);
-            box-shadow: 0 0 0 2px rgba(124, 58, 237, .1);
-        }
-
-        .save-password-btn {
-            border: none;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            background: var(--purple);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .cancel-reset-btn {
-            border: none;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            background: #6b7280;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .password-note {
-            color: var(--muted);
-            font-size: 11px;
-            margin-top: 7px;
-        }
-
-        /* =========================
-           EMPTY
-        ========================= */
-
-        .empty {
-            text-align: center;
-            padding: 45px 20px;
-            color: #9ca3af;
-        }
-
-        .empty-icon {
-            font-size: 35px;
-            margin-bottom: 10px;
-        }
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 950px) {
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 650px) {
-
-            .topbar {
-                padding: 13px 4%;
-                min-height: auto;
-            }
-
-            .brand {
-                font-size: 19px;
-            }
-
-            .admin-info {
-                gap: 8px;
-            }
-
-            .admin-name span {
-                display: none;
-            }
-
-            .admin-avatar {
-                width: 34px;
-                height: 34px;
-            }
-
-            .logout {
-                padding: 9px 11px;
-                font-size: 12px;
-            }
-
-            .container {
-                width: 94%;
-                margin: 20px auto 35px;
-            }
-
-            .welcome {
-                padding: 22px;
-                border-radius: 16px;
-            }
-
-            .welcome h1 {
-                font-size: 23px;
-            }
-
-            .welcome p {
-                font-size: 13px;
-                line-height: 1.7;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .stat {
-                padding: 18px;
-            }
-
-            .stat-value {
-                font-size: 28px;
-            }
-
-            .section {
-                padding: 16px;
-                border-radius: 16px;
-            }
-
-            .section-header h2 {
-                font-size: 18px;
-            }
-
-            .section-title-icon {
-                width: 34px;
-                height: 34px;
-            }
-
-            table {
-                min-width: 1050px;
-            }
-
-            .actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .action-form {
-                width: 100%;
-            }
-
-            .action-btn {
-                width: 100%;
-            }
-
-            .reset-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .reset-input,
-            .save-password-btn,
-            .cancel-reset-btn {
-                width: 100%;
-            }
-        }
-    </style>
 
 <style>
-
-/* ==============================
-   ADMIN DASHBOARD CARDS
-============================== */
-
-.dashboard-cards-section {
-    margin-top: 28px;
+:root {
+    --primary: #8b5cf6;
+    --primary-dark: #6d28d9;
+    --primary-soft: rgba(139,92,246,.15);
+    --cyan: #38bdf8;
+    --dark: #080d1b;
+    --dark-2: #111a2e;
+    --bg: #080d1b;
+    --white: #111a2e;
+    --text: #edf1ff;
+    --muted: #9aa8c0;
+    --border: rgba(148,163,184,.16);
+    --green: #22c55e;
+    --red: #f87171;
+    --orange: #f59e0b;
+    --blue: #38bdf8;
+    --purple: #8b5cf6;
 }
 
-.admin-users-grid {
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Tahoma, Arial, sans-serif;
+    background:
+        radial-gradient(ellipse at 85% 0%, rgba(139,92,246,.10), transparent 35%),
+        radial-gradient(ellipse at 5% 30%, rgba(56,189,248,.06), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button, input {
+    font-family: inherit;
+}
+
+a {
+    text-decoration: none;
+}
+
+.topbar {
+    background: linear-gradient(120deg,#0d1528,#17223a);
+    color: #fff;
+    min-height: 76px;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 8px 30px rgba(0,0,0,.25);
+}
+
+.brand {
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: .3px;
+}
+
+.brand span {
+    color: #a78bfa;
+}
+
+.admin-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+}
+
+.admin-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    background: rgba(139,92,246,.17);
+    border: 1px solid rgba(139,92,246,.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c4b5fd;
+    font-weight: bold;
+}
+
+.logout {
+    background: rgba(248,113,113,.14);
+    color: #fca5a5;
+    border: 1px solid rgba(248,113,113,.25);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.logout:hover {
+    background: #dc2626;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.container {
+    width: min(1320px, 92%);
+    margin: 32px auto 55px;
+}
+
+.welcome {
+    background: linear-gradient(135deg,#17223a,#111a2e);
+    border: 1px solid rgba(139,92,246,.23);
+    border-radius: 22px;
+    padding: 30px;
+    margin-bottom: 26px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome::after {
+    content: "";
+    position: absolute;
+    left: -35px;
+    top: -65px;
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    background: rgba(139,92,246,.09);
+    pointer-events: none;
+}
+
+.welcome h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #f4f5ff;
+}
+
+.welcome p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.flash-container {
+    margin-bottom: 20px;
+}
+
+.flash {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.flash.success {
+    background: rgba(34,197,94,.12);
+    color: #86efac;
+    border: 1px solid rgba(34,197,94,.25);
+}
+
+.flash.danger {
+    background: rgba(248,113,113,.12);
+    color: #fca5a5;
+    border: 1px solid rgba(248,113,113,.25);
+}
+
+.flash.warning {
+    background: rgba(245,158,11,.12);
+    color: #fcd34d;
+    border: 1px solid rgba(245,158,11,.25);
+}
+
+.stats {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.stat,
+.stat-card {
+    background: linear-gradient(145deg,#17223a,#111a2e);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.2);
+    position: relative;
+    overflow: hidden;
+    transition: .22s ease;
+}
+
+.stat:hover,
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139,92,246,.45);
+    box-shadow: 0 14px 32px rgba(0,0,0,.3);
+}
+
+.stat::before,
+.stat-card::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg,#8b5cf6,#38bdf8);
+}
+
+.stat-title {
+    color: #a5b1c8;
+    font-size: 13px;
+    margin-bottom: 11px;
+}
+
+.stat-value,
+.stat-content strong {
+    font-size: 30px;
+    font-weight: 800;
+    color: #f4f5ff;
+}
+
+.stat-icon {
+    background: rgba(139,92,246,.16);
+    color: #c4b5fd;
+    border-radius: 12px;
+}
+
+.stat-arrow {
+    color: #67e8f9;
+    background: rgba(56,189,248,.12);
+}
+
+.section {
+    background: linear-gradient(145deg,#111a2e,#10192b);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.18);
+    overflow-x: auto;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.section-title-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(139,92,246,.16);
+    border: 1px solid rgba(139,92,246,.2);
+    color: #c4b5fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.section-header h2 {
+    font-size: 19px;
+    color: #f4f5ff;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 900px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: #1a2740;
+    color: #c4b5fd;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+td {
+    font-size: 13px;
+    color: #d5dced;
+}
+
+tbody tr {
+    transition: background .15s;
+}
+
+tbody tr:hover {
+    background: rgba(139,92,246,.07);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.approved, .active {
+    background: rgba(34,197,94,.13);
+    color: #86efac;
+}
+
+.pending {
+    background: rgba(245,158,11,.13);
+    color: #fcd34d;
+}
+
+.rejected, .suspended {
+    background: rgba(248,113,113,.13);
+    color: #fca5a5;
+}
+
+.admin {
+    background: rgba(139,92,246,.16);
+    color: #c4b5fd;
+}
+
+.restaurant {
+    background: rgba(56,189,248,.12);
+    color: #7dd3fc;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.action-form {
+    display: inline-block;
+    margin: 0;
+}
+
+.action-btn {
+    border: none;
+    cursor: pointer;
+    padding: 9px 13px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    transition: .18s;
+    white-space: nowrap;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+.approve-btn { background: #16a34a; }
+.reject-btn { background: #dc2626; }
+.suspend-btn { background: #b7791f; }
+.activate-btn { background: #0284c7; }
+.reset-btn { background: #7c3aed; }
+
+.no-action {
+    color: #8492aa;
+    font-size: 13px;
+}
+
+.reset-box {
+    display: none;
+    margin-top: 12px;
+    padding: 13px;
+    background: #0c1528;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+}
+
+.reset-box.show { display: block; }
+
+.reset-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.reset-input {
+    width: 170px;
+    padding: 9px 11px;
+    border: 1px solid #35435e;
+    border-radius: 9px;
+    outline: none;
+    font-size: 12px;
+    background: #0b1426;
+    color: #edf1ff;
+}
+
+.reset-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139,92,246,.14);
+}
+
+.save-password-btn,
+.cancel-reset-btn {
+    border: none;
+    cursor: pointer;
+    padding: 9px 13px;
+    border-radius: 9px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.save-password-btn { background: #7c3aed; }
+.cancel-reset-btn { background: #475569; }
+
+.password-note {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 7px;
+}
+
+.empty, .empty-dashboard {
+    text-align: center;
+    padding: 42px 20px;
+    color: #9aa8c0;
+    background: rgba(148,163,184,.04);
+    border: 1px dashed rgba(148,163,184,.2);
+    border-radius: 15px;
+    line-height: 1.8;
+}
+
+.empty-icon {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.dashboard-cards-section { margin-top: 28px; }
+
+.admin-users-grid,
+.restaurants-grid {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
     gap: 18px;
 }
 
-.admin-user-card {
-    background: #ffffff;
-    border: 1px solid #e7eaf0;
+.admin-user-card,
+.restaurant-card,
+.pending-account-card {
+    min-width: 0;
+    background: linear-gradient(145deg,#17223a,#111a2e);
+    border: 1px solid var(--border);
     border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-    transition: transform .2s ease, box-shadow .2s ease;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    transition: transform .2s ease,border-color .2s ease,box-shadow .2s ease;
 }
 
-.admin-user-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.10);
+.admin-user-card { padding: 20px; }
+
+.admin-user-card:hover,
+.restaurant-card:hover,
+.pending-account-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139,92,246,.45);
+    box-shadow: 0 14px 32px rgba(0,0,0,.3);
 }
 
-.admin-user-top {
+.admin-user-top,
+.pending-account-header {
     display: flex;
     align-items: center;
     gap: 13px;
     min-width: 0;
 }
 
-.admin-user-avatar {
+.admin-user-avatar,
+.pending-account-icon {
     width: 48px;
     height: 48px;
     flex: 0 0 48px;
     border-radius: 14px;
-    background: #f4f1e5;
-    color: #9b7b16;
+    background: rgba(139,92,246,.17);
+    color: #c4b5fd;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 800;
 }
 
-.admin-user-main {
-    min-width: 0;
-    flex: 1;
-}
-
-.admin-user-main h3 {
-    margin: 0 0 5px;
+.admin-user-main { min-width: 0; flex: 1; }
+.admin-user-main h3,
+.pending-account-title h3 {
+    margin: 0 0 6px;
     font-size: 16px;
-    color: #111827;
+    color: #f4f5ff;
 }
 
 .admin-user-main p {
     margin: 0;
-    color: #6b7280;
+    color: #9aa8c0;
     font-size: 12px;
     white-space: nowrap;
     overflow: hidden;
@@ -699,240 +559,118 @@
 }
 
 .user-status.active {
-    background: #ecfdf3;
-    color: #15803d;
+    background: rgba(34,197,94,.13);
+    color: #86efac;
 }
 
 .user-status.inactive {
-    background: #fef2f2;
-    color: #b91c1c;
+    background: rgba(248,113,113,.13);
+    color: #fca5a5;
 }
 
 .admin-user-details {
     margin-top: 18px;
     padding-top: 16px;
-    border-top: 1px solid #eef0f3;
+    border-top: 1px solid var(--border);
     display: grid;
     gap: 12px;
 }
 
-.admin-user-detail {
+.admin-user-detail,
+.pending-account-info-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    padding-bottom: 11px;
+    border-bottom: 1px solid var(--border);
 }
 
-.admin-user-detail span {
-    color: #8a919e;
+.admin-user-detail span,
+.pending-account-info-row span,
+.restaurant-card-info span {
+    color: #9aa8c0;
     font-size: 12px;
 }
 
-.admin-user-detail strong {
-    color: #293241;
+.admin-user-detail strong,
+.pending-account-info-row strong,
+.restaurant-card-info strong {
+    color: #e2e8f5;
     font-size: 13px;
-    text-align: left;
+    overflow-wrap: anywhere;
 }
-
-/* ==============================
-   RESTAURANT CARDS
-============================== */
-
-.restaurants-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-}
-
-.restaurant-card {
-    background: #ffffff !important;
-    border: 1px solid #e7eaf0 !important;
-    border-radius: 18px !important;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
-}
-
-.restaurant-card:hover {
-    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.10) !important;
-}
-
-.restaurant-card-icon {
-    background: #f4f1e5 !important;
-    color: #9b7b16 !important;
-}
-
-.restaurant-card-footer {
-    border-top: 1px solid #eef0f3 !important;
-}
-
-.restaurant-profile-btn {
-    border-radius: 10px;
-    padding: 10px 16px;
-    text-decoration: none;
-    background: #111827;
-    color: #ffffff;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* ==============================
-   STATISTICS
-============================== */
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-}
-
-.stat {
-    background: #ffffff !important;
-    border: 1px solid #e7eaf0 !important;
-    border-radius: 18px !important;
-    padding: 22px !important;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
-}
-
-.stat-title {
-    color: #6b7280 !important;
-}
-
-.stat-value {
-    color: #111827 !important;
-    font-size: 30px !important;
-    font-weight: 800;
-}
-
-/* ==============================
-   RESPONSIVE
-============================== */
-
-@media (max-width: 1100px) {
-    .admin-users-grid,
-    .restaurants-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 700px) {
-    .stats,
-    .admin-users-grid,
-    .restaurants-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-</style>
-
-
-<style>
-
-/* =========================================
-   PROFESSIONAL RESTAURANT CARDS
-========================================= */
-
-.restaurants-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 20px !important;
-    align-items: stretch;
-}
-
-.restaurant-card {
-    background: #ffffff !important;
-    border: 1px solid #e8ebf0 !important;
-    border-radius: 20px !important;
-    padding: 0 !important;
-    overflow: hidden;
-    box-shadow: 0 7px 22px rgba(15, 23, 42, .06) !important;
-    transition: .2s ease;
-}
-
-.restaurant-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 34px rgba(15, 23, 42, .11) !important;
-}
-
-/* Header */
 
 .restaurant-card-header {
-    padding: 20px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 14px !important;
-    background: #ffffff !important;
-    border-bottom: 1px solid #eef0f3;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,.015);
+    border-bottom: 1px solid var(--border);
 }
 
 .restaurant-card-icon {
-    width: 52px !important;
-    height: 52px !important;
-    min-width: 52px !important;
-    border-radius: 15px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: #f8f5ea !important;
-    color: #a17f18 !important;
-    font-size: 0 !important;
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(139,92,246,.17);
+    color: #c4b5fd;
+    font-size: 0;
 }
 
-/* أيقونة بسيطة بدل الإيموجي */
 .restaurant-card-icon::before {
     content: "▦";
     font-size: 25px;
     font-weight: 700;
 }
 
-.restaurant-card-title {
-    min-width: 0;
-    flex: 1;
-}
+.restaurant-card-title { min-width: 0; flex: 1; }
 
 .restaurant-card-title h3 {
-    margin: 0 0 7px !important;
-    color: #111827 !important;
-    font-size: 17px !important;
-    font-weight: 800 !important;
+    margin: 0 0 8px;
+    color: #f4f5ff;
+    font-size: 17px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
 }
 
-/* Status */
-
 .restaurant-card-title .badge {
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center;
-    padding: 5px 10px !important;
-    border-radius: 999px !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .restaurant-card-title .badge.active {
-    background: #ecfdf3 !important;
-    color: #15803d !important;
+    background: rgba(34,197,94,.13);
+    color: #86efac;
 }
 
 .restaurant-card-title .badge.suspended {
-    background: #fef2f2 !important;
-    color: #b91c1c !important;
+    background: rgba(248,113,113,.13);
+    color: #fca5a5;
 }
 
-/* Information */
-
 .restaurant-card-info {
-    padding: 18px 20px !important;
-    display: grid !important;
-    gap: 14px !important;
+    padding: 18px 20px;
+    display: grid;
+    gap: 13px;
 }
 
 .restaurant-card-info > div {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    gap: 15px !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #f0f1f3;
+    border-bottom: 1px solid var(--border);
 }
 
 .restaurant-card-info > div:last-child {
@@ -940,109 +678,233 @@
     border-bottom: 0;
 }
 
-.restaurant-card-info span {
-    color: #8a919e !important;
-    font-size: 12px !important;
-}
-
-.restaurant-card-info strong {
-    color: #293241 !important;
-    font-size: 13px !important;
-}
-
-/* Statistics */
-
 .restaurant-card-stats {
-    margin: 0 20px !important;
-    padding: 15px 0 !important;
-    border-top: 1px solid #eef0f3 !important;
-    border-bottom: 1px solid #eef0f3 !important;
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
+    margin: 0 20px;
+    padding: 15px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 8px;
 }
 
 .restaurant-card-stats > div {
-    text-align: center !important;
-    padding: 5px !important;
+    text-align: center;
+    padding: 5px;
 }
 
 .restaurant-card-stats strong {
-    display: block !important;
-    color: #111827 !important;
-    font-size: 19px !important;
-    font-weight: 800 !important;
-    margin-bottom: 4px;
+    display: block;
+    color: #f4f5ff;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 5px;
 }
 
 .restaurant-card-stats span {
-    color: #8a919e !important;
-    font-size: 10px !important;
+    color: #9aa8c0;
+    font-size: 10px;
 }
-
-/* Footer */
 
 .restaurant-card-footer {
-    padding: 17px 20px !important;
-    display: flex !important;
-    gap: 10px !important;
-    background: #fafbfc !important;
-    border-top: 0 !important;
+    padding: 16px 20px;
+    display: flex;
+    gap: 10px;
+    background: rgba(8,13,27,.38);
 }
 
-.restaurant-profile-btn {
-    width: 100% !important;
+.restaurant-profile-btn,
+.restaurant-menu-link {
+    flex: 1;
+    min-width: 0;
     min-height: 42px;
-    border-radius: 11px !important;
-    background: #111827 !important;
-    color: #ffffff !important;
-    text-decoration: none !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
     transition: .2s ease;
 }
 
-.restaurant-profile-btn:hover {
-    background: #1f2937 !important;
-    transform: translateY(-1px);
+.restaurant-profile-btn {
+    background: linear-gradient(135deg,#7c3aed,#6d28d9);
+    color: #fff;
 }
 
-/* =========================================
-   MOBILE
-========================================= */
+.restaurant-menu-link {
+    background: rgba(56,189,248,.12);
+    border: 1px solid rgba(56,189,248,.25);
+    color: #7dd3fc;
+}
+
+.restaurant-profile-btn:hover,
+.restaurant-menu-link:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.12);
+}
+
+.pending-account-card { padding: 20px; }
+
+.pending-account-title { min-width: 0; flex: 1; }
+
+.pending-account-badge {
+    display: inline-flex;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(245,158,11,.13);
+    color: #fcd34d;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.pending-account-info-row { margin-top: 16px; }
+
+.pending-account-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.pending-account-actions form { flex: 1; min-width: 0; }
+
+.pending-approve,
+.pending-reject {
+    width: 100%;
+    min-height: 42px;
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.pending-approve { background: #15803d; }
+.pending-reject { background: #b91c1c; }
+
+.pending-approve:hover,
+.pending-reject:hover {
+    filter: brightness(1.12);
+    transform: translateY(-2px);
+}
 
 @media (max-width: 1100px) {
+    .admin-users-grid,
     .restaurants-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(2,minmax(0,1fr));
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 950px) {
+    .stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 650px) {
+    .topbar {
+        padding: 13px 4%;
+        min-height: auto;
+    }
+
+    .brand { font-size: 19px; }
+    .admin-info { gap: 8px; }
+    .admin-name span { display: none; }
+
+    .admin-avatar {
+        width: 34px;
+        height: 34px;
+    }
+
+    .logout {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+
+    .container {
+        width: 94%;
+        margin: 20px auto 35px;
+    }
+
+    .welcome {
+        padding: 22px;
+        border-radius: 17px;
+    }
+
+    .welcome h1 { font-size: 23px; }
+    .welcome p { font-size: 13px; }
+
+    .stats,
+    .admin-users-grid,
     .restaurants-grid {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
 
-    .restaurant-card-header {
-        padding: 17px !important;
+    .stat,
+    .stat-card { padding: 18px; }
+
+    .stat-value,
+    .stat-content strong { font-size: 26px; }
+
+    .section {
+        padding: 16px;
+        border-radius: 16px;
     }
 
-    .restaurant-card-info {
-        padding: 16px 17px !important;
+    .section-header h2 { font-size: 17px; }
+
+    .section-title-icon {
+        width: 35px;
+        height: 35px;
     }
 
-    .restaurant-card-stats {
-        margin: 0 17px !important;
+    table { min-width: 850px; }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .restaurant-card-footer {
-        padding: 15px 17px !important;
+    .action-form,
+    .action-btn { width: 100%; }
+
+    .reset-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .reset-input,
+    .save-password-btn,
+    .cancel-reset-btn { width: 100%; }
+
+    .restaurant-card-footer { padding: 14px; }
+}
+
+@media (max-width: 380px) {
+    .restaurant-card-footer,
+    .pending-account-actions {
+        flex-direction: column;
+    }
+
+    .restaurant-profile-btn,
+    .restaurant-menu-link {
+        width: 100%;
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
 </style>
+
 
 </head>
 
@@ -1132,10 +994,10 @@
                     text-decoration:none;
                     background:#111827;
                     color:#ffffff;
-                    border:1px solid rgba(212,175,55,.35);
+                    border:1px solid rgba(139,92,246,.38);
                     font-weight:700;
                ">
-                <span style="color:#d4af37;">⚙</span>
+                <span style="color:#c4b5fd;">⚙</span>
                 إعدادات حسابي
             </a>
         </div>
@@ -1449,11 +1311,9 @@
 
                     <div class="restaurant-card-footer">
 
-                        <a
-                            href="/menu/{{ restaurant['slug'] }}"
-                            target="_blank"
-                            class="restaurant-menu-link"
-                        >
+                        <a href="/menu/{{ restaurant['slug'] }}" target="_blank" rel="noopener" class="restaurant-menu-link">
+                            عرض المنيو
+                        </a>
                         <a href="/admin/restaurant/{{ restaurant["id"] }}" class="restaurant-profile-btn">
                             ملف النشاط
                         </a>

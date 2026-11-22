@@ -12,107 +12,177 @@
     <title>{{ t('employee_dashboard') }} - MenuSmart</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #222;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .employee-page {
-            min-height: 100vh;
-            padding: 30px 16px;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #edf1ff;
+    background:
+        radial-gradient(ellipse at 85% 5%, rgba(139, 92, 246, .18), transparent 42%),
+        radial-gradient(ellipse at 10% 90%, rgba(56, 189, 248, .12), transparent 40%),
+        #080d1b;
+}
 
-        .employee-container {
-            width: 100%;
-            max-width: 900px;
-            margin: auto;
-        }
+.employee-page {
+    min-height: 100vh;
+    padding: 48px 18px;
+}
 
-        .employee-header {
-            background: #111;
-            color: white;
-            border-radius: 18px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
+.employee-container {
+    width: 100%;
+    max-width: 760px;
+    margin: auto;
+}
 
-        .employee-header h1 {
-            margin: 0 0 8px;
-            font-size: 26px;
-        }
+.employee-header {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(125deg, #17223a, #101b30 65%, #241b42);
+    color: #fff;
+    border: 1px solid rgba(139, 92, 246, .28);
+    border-radius: 22px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .2);
+}
 
-        .employee-header p {
-            margin: 0;
-            opacity: 0.8;
-        }
+.employee-header::after {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    left: -55px;
+    top: -75px;
+    border-radius: 50%;
+    background: rgba(56, 189, 248, .10);
+    pointer-events: none;
+}
 
-        .employee-card {
-            background: white;
-            border-radius: 18px;
-            padding: 25px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-        }
+.employee-header h1 {
+    margin: 0 0 10px;
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.5;
+}
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 16px 0;
-            border-bottom: 1px solid #eee;
-        }
+.employee-header p {
+    margin: 0;
+    color: #b8c5dc;
+    font-size: 15px;
+    line-height: 1.7;
+}
 
-        .info-row:last-child {
-            border-bottom: 0;
-        }
+.employee-card {
+    background: linear-gradient(145deg, #17223a, #111a2e);
+    border: 1px solid rgba(148, 163, 184, .16);
+    border-radius: 22px;
+    padding: 12px 26px 26px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, .22);
+}
 
-        .info-label {
-            color: #777;
-        }
+.info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 4px;
+    border-bottom: 1px solid rgba(148, 163, 184, .13);
+}
 
-        .info-value {
-            font-weight: bold;
-        }
+.info-row:last-of-type {
+    border-bottom: 0;
+}
 
-        .role-badge {
-            display: inline-block;
-            padding: 7px 14px;
-            border-radius: 20px;
-            background: #f0f0f0;
-        }
+.info-label {
+    color: #9aa8c0;
+    font-size: 14px;
+}
 
-        .logout-btn {
-            display: block;
-            margin-top: 20px;
-            text-align: center;
-            text-decoration: none;
-            background: #c62828;
-            color: white;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: bold;
-        }
+.info-value {
+    color: #edf1ff;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
 
-        @media (max-width: 600px) {
+.role-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid rgba(139, 92, 246, .35);
+    border-radius: 30px;
+    background: rgba(139, 92, 246, .15);
+    color: #c4b5fd;
+}
 
-            .employee-page {
-                padding: 20px 12px;
-            }
+.logout-btn {
+    display: block;
+    margin-top: 24px;
+    padding: 14px 18px;
+    border: 1px solid rgba(248, 113, 113, .3);
+    border-radius: 13px;
+    background: rgba(185, 28, 28, .16);
+    color: #fca5a5;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
 
-            .employee-header {
-                padding: 20px;
-            }
+.logout-btn:hover {
+    background: rgba(185, 28, 28, .28);
+    border-color: rgba(248, 113, 113, .55);
+    transform: translateY(-1px);
+}
 
-            .info-row {
-                flex-direction: column;
-                gap: 6px;
-            }
-        }
+.logout-btn:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .employee-page {
+        padding: 24px 13px;
+    }
+
+    .employee-header {
+        padding: 23px 20px;
+        border-radius: 18px;
+    }
+
+    .employee-header h1 {
+        font-size: 23px;
+    }
+
+    .employee-card {
+        padding: 8px 18px 20px;
+        border-radius: 18px;
+    }
+
+    .info-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        padding: 17px 2px;
+    }
+
+    .info-value {
+        text-align: right;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logout-btn {
+        transition: none;
+    }
+}
+
     </style>
 </head>
 

@@ -13,300 +13,569 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/dashboard.css') }}">
 
-<style>
-body{background:#f5f7fa!important}
-.admin-restaurant-page{max-width:1180px;margin:auto;padding:25px 18px}
-.admin-page-header,.admin-main-card,.admin-section{
-background:#fff!important;
-border:1px solid #e7eaf0!important;
-border-radius:20px!important;
-box-shadow:0 8px 25px rgba(15,23,42,.06)!important;
-margin-bottom:20px;
-overflow:hidden
-}
-.admin-page-header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between}
-.admin-main-card-top{padding:22px 24px;border-bottom:1px solid #eef0f3}
-.admin-restaurant-logo,.admin-svg-icon,.admin-info-icon,.admin-section-icon,.admin-restaurant-employee-icon{
-background:#f8f5ea!important;color:#a17f18!important
-}
-.admin-main-actions{display:flex;gap:10px;align-items:center}
-.admin-primary-btn,.admin-danger-btn,.admin-success-btn{
-border-radius:11px!important;padding:11px 15px!important;font-weight:700!important
-}
-.admin-info-grid{
-padding:20px 24px;
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:14px
-}
-.admin-info-item{
-background:#fafbfc!important;
-border:1px solid #e8ebf0!important;
-border-radius:15px!important;
-padding:15px!important
-}
-.admin-section-heading{
-padding:20px 24px;
-border-bottom:1px solid #eef0f3
-}
-.admin-restaurant-employees{
-padding:20px 24px;
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:14px
-}
-.admin-restaurant-employee{
-background:#fafbfc!important;
-border:1px solid #e8ebf0!important;
-border-radius:16px!important;
-padding:17px!important
-}
-.admin-section input,
-.admin-section textarea,
-.admin-section select{
-background:#fff!important;
-color:#1f2937!important;
-border:1px solid #dfe3e8!important;
-border-radius:11px!important;
-}
-.admin-section input:focus,
-.admin-section textarea:focus,
-.admin-section select:focus{
-border-color:#c6a532!important;
-box-shadow:0 0 0 3px rgba(198,165,50,.1)!important
-}
-.admin-menu-link{color:#a17f18!important;font-weight:700}
-@media(max-width:900px){
-.admin-info-grid{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:650px){
-.admin-page-header{flex-direction:column;align-items:flex-start}
-.admin-info-grid,.admin-restaurant-employees{grid-template-columns:1fr}
-.admin-main-actions{width:100%;flex-direction:column}
-.admin-main-actions>*{width:100%}
-}
-</style>
+
+
+
 
 <style>
-/* ===== ADMIN RESTAURANT - PROFESSIONAL UI ===== */
+* { box-sizing: border-box; }
 
-.admin-restaurant-page{
-    max-width:1180px;
-    margin:0 auto;
-    padding:28px 16px 60px;
-    background:#f6f7f9;
+body {
+    margin: 0 !important;
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse at 10% 5%, rgba(139,92,246,.13), transparent 34%),
+        radial-gradient(ellipse at 90% 90%, rgba(56,189,248,.08), transparent 32%),
+        #080d1b !important;
+    color: #edf1ff !important;
 }
 
-/* كل قسم ملف مستقل */
-.admin-restaurant-page > section{
-    background:#fff !important;
-    border:1px solid #e5e7eb !important;
-    border-radius:20px !important;
-    box-shadow:0 8px 24px rgba(15,23,42,.06) !important;
-    overflow:hidden !important;
-    margin-bottom:22px !important;
+.admin-restaurant-page {
+    width: min(1180px, 100%);
+    max-width: 1180px !important;
+    margin: 0 auto !important;
+    padding: 28px 18px 55px !important;
+    background: transparent !important;
 }
 
-/* رأس الصفحة */
-.admin-page-header{
-    display:flex !important;
-    align-items:center !important;
-    justify-content:space-between !important;
-    gap:20px !important;
-    padding:20px 22px !important;
+.admin-restaurant-page > section {
+    background: linear-gradient(150deg, #111a2e, #0e1729) !important;
+    border: 1px solid #27324b !important;
+    border-radius: 20px !important;
+    box-shadow: 0 14px 35px rgba(0,0,0,.2) !important;
+    overflow: hidden !important;
+    margin-bottom: 20px !important;
 }
 
-/* كارت النشاط */
-.admin-main-card-top{
-    padding:24px !important;
-    display:flex !important;
-    align-items:center !important;
-    justify-content:space-between !important;
-    gap:20px !important;
+.admin-page-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+    padding: 21px 24px !important;
 }
 
-.admin-restaurant-identity{
-    display:flex !important;
-    align-items:center !important;
-    gap:15px !important;
+.admin-page-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-.admin-restaurant-logo{
-    width:58px !important;
-    height:58px !important;
-    min-width:58px !important;
-    display:grid !important;
-    place-items:center !important;
-    border-radius:16px !important;
-    background:#f8fafc !important;
-    border:1px solid #e5e7eb !important;
+.admin-page-heading h1,
+.admin-restaurant-page h2,
+.admin-restaurant-page h3 {
+    color: #edf1ff !important;
 }
 
-.admin-restaurant-identity h2{
-    margin:0 0 8px !important;
-    color:#111827 !important;
+.admin-page-heading h1 {
+    margin: 0 0 7px;
+    font-size: 23px;
+    font-weight: 800;
 }
 
-/* بيانات النشاط */
-.admin-info-grid{
-    display:grid !important;
-    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-    gap:14px !important;
-    padding:20px 24px 24px !important;
+.admin-page-heading p,
+.admin-section-heading p {
+    margin: 0;
+    color: #9aa8c0 !important;
+    font-size: 13px;
+    line-height: 1.7;
 }
 
-.admin-info-item{
-    display:flex !important;
-    align-items:center !important;
-    gap:12px !important;
-    min-width:0 !important;
-    padding:16px !important;
-    background:#f8fafc !important;
-    border:1px solid #e5e7eb !important;
-    border-radius:15px !important;
+.admin-svg-icon,
+.admin-restaurant-logo,
+.admin-info-icon,
+.admin-section-icon,
+.admin-empty-icon,
+.admin-employee-avatar {
+    display: grid !important;
+    place-items: center !important;
+    background: linear-gradient(145deg, rgba(139,92,246,.2), rgba(56,189,248,.1)) !important;
+    border: 1px solid rgba(139,92,246,.25) !important;
+    color: #c4b5fd !important;
+}
+
+.admin-svg-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    border-radius: 14px;
+}
+
+.admin-restaurant-page svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.admin-secondary-btn,
+.admin-primary-btn,
+.admin-danger-btn,
+.admin-success-btn,
+.admin-small-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    min-height: 42px;
+    padding: 10px 15px !important;
+    border-radius: 11px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.admin-secondary-btn {
+    color: #dce3f3 !important;
+    background: rgba(255,255,255,.045) !important;
+    border: 1px solid #34415c !important;
+}
+
+.admin-primary-btn {
+    color: #fff !important;
+    background: linear-gradient(110deg, #6d28d9, #8b5cf6) !important;
+    border: 1px solid rgba(196,181,253,.2) !important;
+}
+
+.admin-danger-btn {
+    color: #fecaca !important;
+    background: rgba(248,113,113,.1) !important;
+    border: 1px solid rgba(248,113,113,.28) !important;
+}
+
+.admin-success-btn {
+    color: #bae6fd !important;
+    background: rgba(56,189,248,.1) !important;
+    border: 1px solid rgba(56,189,248,.28) !important;
+}
+
+.admin-secondary-btn:hover,
+.admin-primary-btn:hover,
+.admin-danger-btn:hover,
+.admin-success-btn:hover,
+.admin-small-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.admin-main-card-top {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+    padding: 23px 24px !important;
+    border-bottom: 1px solid rgba(165,175,197,.13) !important;
+}
+
+.admin-restaurant-identity {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    min-width: 0;
+}
+
+.admin-restaurant-logo {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    border-radius: 16px !important;
+}
+
+.admin-restaurant-identity h2 {
+    margin: 0 0 10px !important;
+    font-size: 20px;
+    overflow-wrap: anywhere;
+}
+
+.admin-main-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: wrap;
+}
+
+.admin-main-actions form {
+    margin: 0;
+}
+
+.admin-info-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0,1fr)) !important;
+    gap: 13px !important;
+    padding: 21px 24px 24px !important;
+}
+
+.admin-info-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 11px !important;
+    min-width: 0 !important;
+    padding: 15px !important;
+    background: #0b1528 !important;
+    border: 1px solid #273650 !important;
+    border-radius: 15px !important;
+}
+
+.admin-info-icon {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+}
+
+.admin-info-item > div:last-child {
+    min-width: 0;
+}
+
+.admin-info-item span {
+    display: block;
+    color: #9aa8c0 !important;
+    font-size: 12px;
 }
 
 .admin-info-item strong,
-.admin-info-item a{
-    display:block !important;
-    margin-top:5px !important;
-    overflow-wrap:anywhere !important;
+.admin-info-item a {
+    display: block !important;
+    margin-top: 6px !important;
+    color: #edf1ff !important;
+    font-size: 13px;
+    overflow-wrap: anywhere !important;
 }
 
-/* أقسام صاحب النشاط والموظفين */
-.admin-section-heading{
-    display:flex !important;
-    align-items:center !important;
-    gap:12px !important;
-    padding:20px 24px !important;
-    background:#fff !important;
-    border-bottom:1px solid #edf0f2 !important;
+.admin-info-item .admin-menu-link {
+    color: #c4b5fd !important;
+    font-weight: 800;
+    text-decoration: none;
 }
 
-.admin-section-icon{
-    width:42px !important;
-    height:42px !important;
-    display:grid !important;
-    place-items:center !important;
-    border-radius:12px !important;
-    background:#f8fafc !important;
-    border:1px solid #e5e7eb !important;
+.admin-menu-link:hover {
+    color: #38bdf8 !important;
 }
 
-/* محتوى الأقسام */
-.admin-section > form,
-.admin-section > .admin-owner-card,
-.admin-section > .admin-employees,
-.admin-section > .employees-grid{
-    margin:20px 24px !important;
+.admin-status {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    padding: 5px 10px !important;
+    border-radius: 999px !important;
+    font-size: 12px !important;
+    font-weight: 700;
 }
 
-/* حقول الإدخال */
+.admin-status > span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.admin-status.active {
+    color: #67e8f9 !important;
+    background: rgba(56,189,248,.1) !important;
+}
+
+.admin-status.inactive {
+    color: #fca5a5 !important;
+    background: rgba(248,113,113,.1) !important;
+}
+
+.admin-section-heading {
+    display: flex !important;
+    align-items: center !important;
+    gap: 13px !important;
+    padding: 20px 24px !important;
+    border-bottom: 1px solid rgba(165,175,197,.13) !important;
+}
+
+.admin-section-heading h2 {
+    margin: 0 0 5px;
+    font-size: 18px;
+}
+
+.admin-section-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 13px;
+}
+
+.admin-employees-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 15px !important;
+    padding: 21px 24px 24px;
+}
+
+.admin-employee-card {
+    min-width: 0;
+    padding: 18px !important;
+    background: #0b1528 !important;
+    border: 1px solid #2a3852 !important;
+    border-radius: 17px !important;
+    box-shadow: 0 5px 16px rgba(0,0,0,.12) !important;
+}
+
+.admin-employee-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.admin-employee-avatar {
+    width: 45px;
+    height: 45px;
+    flex: 0 0 45px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.admin-employee-title {
+    min-width: 0;
+}
+
+.admin-employee-title h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.admin-employee-data {
+    display: grid;
+    gap: 10px;
+    margin-top: 17px;
+    padding: 13px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(165,175,197,.1);
+    border-radius: 12px;
+}
+
+.admin-employee-data span {
+    display: block;
+    margin-bottom: 5px;
+    color: #9aa8c0 !important;
+    font-size: 12px;
+}
+
+.admin-employee-data strong {
+    display: block;
+    color: #e2e8f5 !important;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.admin-employee-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 15px;
+}
+
+.admin-employee-actions form {
+    margin: 0;
+}
+
+.admin-small-btn {
+    min-height: 37px;
+    padding: 8px 12px !important;
+    color: #dce3f3 !important;
+    background: #17243b !important;
+    border: 1px solid #34415c !important;
+}
+
+.admin-small-btn.danger {
+    color: #fecaca !important;
+    background: rgba(248,113,113,.09) !important;
+    border-color: rgba(248,113,113,.25) !important;
+}
+
+.admin-small-btn.success {
+    color: #bae6fd !important;
+    background: rgba(56,189,248,.09) !important;
+    border-color: rgba(56,189,248,.25) !important;
+}
+
+.admin-password-box {
+    display: none;
+    margin-top: 14px;
+    padding: 14px;
+    background: rgba(139,92,246,.06);
+    border: 1px solid rgba(139,92,246,.2);
+    border-radius: 13px;
+}
+
+.admin-password-box form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.admin-password-box input {
+    flex: 1 1 180px;
+    min-width: 0;
+}
+
 .admin-restaurant-page input,
 .admin-restaurant-page select,
-.admin-restaurant-page textarea{
-    width:100% !important;
-    background:#fff !important;
-    color:#1f2937 !important;
-    border:1px solid #d1d5db !important;
-    border-radius:11px !important;
-    padding:11px 13px !important;
-    outline:none !important;
+.admin-restaurant-page textarea {
+    width: 100%;
+    min-height: 43px;
+    padding: 11px 13px;
+    color: #edf1ff !important;
+    background: #0a1324 !important;
+    border: 1px solid #34415c !important;
+    border-radius: 11px !important;
+    outline: none !important;
 }
 
 .admin-restaurant-page input:focus,
 .admin-restaurant-page select:focus,
-.admin-restaurant-page textarea:focus{
-    border-color:#d4af37 !important;
-    box-shadow:0 0 0 3px rgba(212,175,55,.12) !important;
+.admin-restaurant-page textarea:focus {
+    border-color: #8b5cf6 !important;
+    box-shadow: 0 0 0 3px rgba(139,92,246,.15) !important;
 }
 
-/* أزرار */
-.admin-restaurant-page button,
-.admin-restaurant-page .admin-primary-btn,
-.admin-restaurant-page .admin-danger-btn,
-.admin-restaurant-page .admin-success-btn,
-.admin-restaurant-page .admin-secondary-btn{
-    border-radius:11px !important;
+.admin-restaurant-page input::placeholder,
+.admin-restaurant-page textarea::placeholder {
+    color: #718096 !important;
 }
 
-/* الموظفين: كل موظف كارت */
-.admin-restaurant-page .admin-employee-card,
-.admin-restaurant-page .employee-card,
-.admin-restaurant-page .admin-restaurant-employee{
-    background:#f8fafc !important;
-    border:1px solid #e5e7eb !important;
-    border-radius:16px !important;
-    padding:18px !important;
-    box-shadow:0 3px 10px rgba(15,23,42,.04) !important;
+.admin-empty-state {
+    padding: 35px 20px;
+    text-align: center;
 }
 
-/* شبكة الموظفين */
-.admin-restaurant-page .employees-grid,
-.admin-restaurant-page .admin-employees{
-    display:grid !important;
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:16px !important;
+.admin-empty-icon {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 13px;
+    border-radius: 16px;
 }
 
-/* الحالة */
-.admin-status{
-    display:inline-flex !important;
-    align-items:center !important;
-    gap:6px !important;
-    border-radius:999px !important;
-    padding:5px 10px !important;
+.admin-empty-state h3 {
+    margin: 0 0 8px;
 }
 
-/* موبايل */
-@media(max-width:850px){
-    .admin-info-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    }
+.admin-empty-state p {
+    margin: 0;
+    color: #9aa8c0 !important;
+    font-size: 13px;
+    line-height: 1.8;
+}
 
-    .admin-main-card-top{
-        flex-direction:column !important;
-        align-items:stretch !important;
-    }
+.admin-footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 17px 20px;
+}
 
-    .admin-main-actions{
-        width:100% !important;
+.admin-footer-actions > a {
+    min-width: 150px;
+}
+
+.admin-restaurant-page button:focus-visible,
+.admin-restaurant-page a:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+    .admin-info-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr)) !important;
     }
 }
 
-@media(max-width:560px){
-    .admin-restaurant-page{
-        padding:14px 10px 40px;
+@media (max-width: 700px) {
+    .admin-restaurant-page {
+        padding: 19px 13px 35px !important;
     }
 
-    .admin-page-header{
-        flex-direction:column !important;
-        align-items:stretch !important;
+    .admin-page-header,
+    .admin-main-card-top {
+        flex-direction: column !important;
+        align-items: stretch !important;
     }
 
-    .admin-info-grid{
-        grid-template-columns:1fr !important;
-        padding:14px !important;
+    .admin-main-actions {
+        width: 100%;
+        flex-direction: column;
     }
 
-    .admin-section-heading{
-        padding:16px !important;
+    .admin-main-actions > *,
+    .admin-main-actions form,
+    .admin-main-actions form button {
+        width: 100%;
     }
 
-    .admin-section > form,
-    .admin-section > .admin-owner-card,
-    .admin-section > .admin-employees,
-    .admin-section > .employees-grid{
-        margin:14px !important;
+    .admin-employees-grid {
+        grid-template-columns: 1fr !important;
+        padding: 16px;
     }
 
-    .admin-restaurant-page .employees-grid,
-    .admin-restaurant-page .admin-employees{
-        grid-template-columns:1fr !important;
+    .admin-info-grid {
+        padding: 16px !important;
+    }
+
+    .admin-footer-actions {
+        flex-direction: column;
+    }
+
+    .admin-footer-actions > a {
+        width: 100%;
+    }
+}
+
+@media (max-width: 430px) {
+    .admin-restaurant-page {
+        padding: 14px 10px 28px !important;
+    }
+
+    .admin-page-header,
+    .admin-main-card-top {
+        padding: 17px !important;
+    }
+
+    .admin-info-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .admin-section-heading {
+        padding: 16px !important;
+    }
+
+    .admin-employee-card {
+        padding: 15px !important;
+    }
+
+    .admin-employee-actions {
+        flex-direction: column;
+    }
+
+    .admin-employee-actions > *,
+    .admin-employee-actions form,
+    .admin-employee-actions button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-restaurant-page *,
+    .admin-restaurant-page *::before,
+    .admin-restaurant-page *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
     }
 }
 </style>
-
 </head>
 
 <body>

@@ -1019,7 +1019,7 @@
 </head>
 
 
-<body class="customer-menu-page">
+<body class="customer-menu-page" data-currency="{{ currency_label }}">
 
 
     <!-- =====================================================
@@ -1281,7 +1281,7 @@
 
                                                 {{ product.price }}
 
-                                                جنيه
+                                                {{ currency_label }}
 
                                             </strong>
 
@@ -1409,7 +1409,7 @@
                                 <div class="product-bottom">
 
                                     <strong class="product-price">
-                                        {{ product.price }} جنيه
+                                        {{ product.price }} {{ currency_label }}
                                     </strong>
 
                                     <button
@@ -1500,7 +1500,7 @@
             class="cart-bar-total"
             id="cartBarTotal"
         >
-            0.00 جنيه
+            0.00 {{ currency_label }}
         </strong>
 
 
@@ -1662,7 +1662,7 @@
             if (barTotal) {
 
                 barTotal.textContent =
-                    total.toFixed(2) + " جنيه";
+                    total.toFixed(2) + " " + {{ currency_label|tojson }};
 
             }
 

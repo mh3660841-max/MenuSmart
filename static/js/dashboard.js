@@ -4,6 +4,7 @@
 ========================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
+    const currencyLabel = document.body.dataset.currency || "EGP";
 
     /* =========================================
        DASHBOARD SIDEBAR
@@ -871,11 +872,9 @@ function initOrderNotifications() {
     const isDashboard =
         window.location.pathname === "/dashboard";
 
-    const isOrders =
-        window.location.pathname === "/orders";
 
 
-    if (!isDashboard && !isOrders) {
+    if (!isDashboard) {
         return;
     }
 
@@ -1286,7 +1285,7 @@ function createBrowserNotification(
                         customerName +
                         "\nالإجمالي: " +
                         total +
-                        " جنيه",
+                        " " + currencyLabel,
 
                     icon:
                         "/static/images/logo.png",
@@ -1633,7 +1632,7 @@ function showNewOrderAlert(
                 الإجمالي:
                 <strong>
                     ${escapeOrderText(total)}
-                    جنيه
+                    ${escapeOrderText(currencyLabel)}
                 </strong>
             </div>
 

@@ -12,7 +12,7 @@
 
     <meta
         name="theme-color"
-        content="#0f172a"
+        content="#080d1b"
     >
 
     <title>{{ t('dashboard') }} | Menu Smart</title>
@@ -33,238 +33,164 @@
     >
 
   <style>
+/* DASHBOARD HOME — INVITE BUSINESS */
 
-    /* =====================================================
-       أزرار التحكم في التنقل
-    ===================================================== */
+.dashboard-home-page .invite-business-card {
+    margin: 28px 0;
+}
 
-    .navigation-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
+.dashboard-home-page .invite-restaurant-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-height: 88px;
+    padding: 16px 20px;
+    box-sizing: border-box;
+    border: 1px solid rgba(139, 92, 246, .28);
+    border-radius: 20px;
+    background: linear-gradient(120deg, #101b30, #171d3b 60%, #28204d);
+    color: #edf1ff;
+    cursor: pointer;
+    text-align: right;
+    font-family: inherit;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.dashboard-home-page .invite-restaurant-button:hover {
+    transform: translateY(-3px);
+    border-color: #8b5cf6;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .34), 0 0 20px rgba(139, 92, 246, .13);
+}
+
+.dashboard-home-page .invite-restaurant-button:active {
+    transform: translateY(-1px);
+}
+
+.dashboard-home-page .invite-restaurant-button:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 4px;
+}
+
+.dashboard-home-page .invite-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    border: 1px solid rgba(196, 181, 253, .25);
+    border-radius: 17px;
+    background: linear-gradient(145deg, #35245b, #211b3d);
+    color: #c4b5fd;
+    box-shadow: inset 0 0 14px rgba(167, 139, 250, .08);
+}
+
+.dashboard-home-page .invite-icon svg {
+    display: block;
+    width: 27px;
+    height: 27px;
+}
+
+.dashboard-home-page .invite-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.dashboard-home-page .invite-content strong {
+    color: #f4f5ff;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.dashboard-home-page .invite-content small {
+    color: #a5b1ca;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.dashboard-home-page .invite-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border: 1px solid rgba(56, 189, 248, .2);
+    border-radius: 12px;
+    background: rgba(56, 189, 248, .1);
+    color: #7dd3fc;
+    font-size: 21px;
+    transition: transform .22s ease, background .22s ease, color .22s ease;
+}
+
+.dashboard-home-page .invite-restaurant-button:hover .invite-arrow {
+    transform: translateX(-4px);
+    background: #6d28d9;
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .dashboard-home-page .invite-business-card {
+        margin: 22px 0;
     }
 
-
-    .history-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        min-height: 40px;
-        padding: 0 14px;
-        border: 1px solid rgba(15, 23, 42, 0.12);
-        border-radius: 10px;
-        background: #ffffff;
-        color: #0f172a;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
-
-
-    .history-button:hover {
-        transform: translateY(-1px);
-        background: #f8fafc;
-    }
-
-
-    .history-button:active {
-        transform: translateY(0);
-    }
-
-
-    .logout-button {
-        border: 0;
-        cursor: pointer;
-        font: inherit;
-    }
-
-
-    /* =====================================================
-       زر {{ t('invite_business') }}
-    ===================================================== */
-
-    .invite-restaurant-button {
-        position: relative;
-        display: flex;
-        align-items: center;
+    .dashboard-home-page .invite-restaurant-button {
+        min-height: 76px;
         gap: 12px;
-        width: 100%;
-        min-height: 64px;
-        padding: 10px 14px;
-        border: 1px solid rgba(15, 23, 42, 0.10);
-        border-radius: 16px;
-        background: #ffffff;
-        color: #0f172a;
-        cursor: pointer;
-        text-align: right;
-        font-family: inherit;
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-        transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease,
-            border-color 0.2s ease;
+        padding: 12px;
+        border-radius: 17px;
     }
 
-
-    .invite-restaurant-button:hover {
-        transform: translateY(-2px);
-        border-color: rgba(15, 23, 42, 0.18);
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.10);
+    .dashboard-home-page .invite-icon {
+        width: 48px;
+        height: 48px;
+        flex-basis: 48px;
+        border-radius: 14px;
     }
 
-
-    .invite-restaurant-button:active {
-        transform: translateY(0);
+    .dashboard-home-page .invite-icon svg {
+        width: 23px;
+        height: 23px;
     }
 
-
-    .invite-icon {
-        width: 44px;
-        height: 44px;
-        flex: 0 0 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 13px;
-        background: #f8fafc;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-    }
-
-    .invite-icon svg {
-        width: 21px;
-        height: 21px;
-        display: block;
-    }
-
-
-    .invite-content {
-        min-width: 0;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-    }
-
-
-    .invite-content strong {
-        color: #0f172a;
+    .dashboard-home-page .invite-content strong {
         font-size: 14px;
-        font-weight: 800;
     }
 
-
-    .invite-content small {
-        color: #64748b;
+    .dashboard-home-page .invite-content small {
         font-size: 11px;
-        line-height: 1.5;
     }
 
+    .dashboard-home-page .invite-arrow {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+}
 
-    .invite-arrow {
-        width: 32px;
-        height: 32px;
-        flex: 0 0 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 9px;
-        background: #f8fafc;
-        color: #475569;
-        font-size: 16px;
-        transition: transform 0.2s ease;
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-home-page .invite-restaurant-button,
+    .dashboard-home-page .invite-arrow {
+        transition: none;
     }
 
-
-    .invite-restaurant-button:hover .invite-arrow {
-        transform: translateX(-3px);
+    .dashboard-home-page .invite-restaurant-button:hover,
+    .dashboard-home-page .invite-restaurant-button:hover .invite-arrow {
+        transform: none;
     }
-
-
-    @media (max-width: 768px) {
-
-        .navigation-actions {
-            gap: 5px;
-        }
-
-
-        .history-button {
-            min-width: 40px;
-            width: 40px;
-            padding: 0;
-        }
-
-
-        .history-button .history-text {
-            display: none;
-        }
-
-    }
-
-
-    @media (max-width: 600px) {
-
-        .invite-restaurant-button {
-            min-height: 60px;
-            padding: 9px 12px;
-        }
-
-
-        .invite-icon {
-            width: 40px;
-            height: 40px;
-            flex-basis: 40px;
-        }
-
-
-        .invite-content strong {
-            font-size: 13px;
-        }
-
-
-        .invite-content small {
-            font-size: 10px;
-        }
-
-    }
-
-
-    /* =====================================================
-       ANALYTICS SVG ICONS — GOLD
-    ===================================================== */
-
-    .analytics-page .analytics-stat-icon {
-        color: #a98516;
-    }
-
-
-    .analytics-page .analytics-stat-icon svg {
-        width: 21px;
-        height: 21px;
-        display: block;
-        fill: none !important;
-        stroke: #a98516 !important;
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-
-    .analytics-page .analytics-stat-icon svg path,
-    .analytics-page .analytics-stat-icon svg circle {
-        fill: none !important;
-        stroke: #a98516 !important;
-    }
-
-
+}
 </style>
 
-<style id="quick-actions-premium">.dashboard-page .quick-actions{display:flex;flex-direction:column;gap:14px}.dashboard-page .quick-action{display:flex;align-items:center;gap:16px;width:100%;min-height:88px;padding:14px 18px;background:#fff;border:1px solid #e5e7eb;border-radius:18px;box-shadow:0 5px 18px rgba(0,0,0,.06);box-sizing:border-box;text-decoration:none;transition:.2s ease}.dashboard-page .quick-action:hover{transform:translateY(-2px);box-shadow:0 9px 24px rgba(0,0,0,.09)}.dashboard-page .quick-action-icon{width:68px;height:68px;min-width:68px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:#f7f7f8!important;color:#6b7280!important;border:1px solid #e3e5e8!important;box-shadow:0 4px 12px rgba(0,0,0,.04)!important}.dashboard-page .quick-action-icon svg{width:35px!important;height:35px!important;stroke:currentColor!important;fill:none!important;stroke-width:1.7!important}.dashboard-page .quick-action-content{flex:1}.dashboard-page .quick-action-content strong{display:block;font-size:16px;font-weight:900;color:#1f2937;margin-bottom:5px}.dashboard-page .quick-action-content p{margin:0;font-size:12px;color:#6b7280}.dashboard-page .quick-arrow{font-size:20px;color:#9ca3af}</style></head>
+</head>
 
 
-<body class="dashboard-page">
+<body class="dashboard-page dashboard-home-page" data-currency="{{ currency_label }}">
 
 
 <!-- =====================================================
@@ -287,7 +213,7 @@
              WELCOME
         ================================================== -->
 
-             
+
 
 
         <!-- =================================================
@@ -323,7 +249,7 @@
 
                 {% if restaurant %}
 
-                    <a href=\"{{ url_for('public_menu', slug=restaurant.slug) }}\" class=\"dashboard-primary-btn\"
+                    <a href="{{ url_for('public_menu', slug=restaurant.slug) }}" class="dashboard-primary-btn"
                     >
                         {{ t('view_menu') }}
                         <span>↗</span>
@@ -915,40 +841,34 @@
              MENU PREVIEW
         ================================================== -->
 
-        <section class="dashboard-section">
+        <section class="dashboard-section dashboard-menu-preview-section">
+    {% if restaurant %}
+    <a
+        href="{{ url_for('public_menu', slug=restaurant.slug) }}"
+        class="dashboard-menu-preview-card"
+        aria-label="{{ t('view_menu') }}"
+    >
+        <span class="menu-preview-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <path d="M14 14h3v3h-3zM20 14v2M20 19v2M14 20h3"/>
+            </svg>
+        </span>
 
-            <div class="dashboard-section-header">
+        <span class="menu-preview-content">
+            <span class="menu-preview-label">{{ t('menu') }} الإلكتروني</span>
+            <strong>Menu Smart</strong>
+            <span class="menu-preview-action">{{ t('view_menu') }}</span>
+        </span>
 
-                <div>
-
-                    <span>
-                        {{ t('menu') }} الإلكتروني
-                    </span>
-
-
-                    <h2>
-          Menu Smart
-                    </h2>
-
-                </div>
-
-
-                {% if restaurant %}
-
-                    <a
-                        href="{{ url_for(
-                            'public_menu',
-                            slug=restaurant.slug
-                        ) }}"
-                        class="section-link"
-                    >
-                    </a>
-
-                {% endif %}
-
-            </div>
-
-
+        <span class="menu-preview-arrow" aria-hidden="true">←</span>
+    </a>
+    {% endif %}
+</section>
 
 <section class="dashboard-section">
 
@@ -968,8 +888,7 @@
                 </div>
 
 
-                <a
-                </a>
+
 
             </div>
 
@@ -1026,7 +945,7 @@
 
 
                                 <span>
-                                    {{ t('currency_egp') }}
+                                    {{ currency_label }}
                                 </span>
 
                             </div>
@@ -1183,7 +1102,7 @@
             </a>
 
 
-            
+
 
 
             <a href="{{ url_for('settings') }}">

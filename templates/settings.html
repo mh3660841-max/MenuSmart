@@ -576,6 +576,7 @@
             <option value="vertical" {% if not settings or not settings.product_layout or settings.product_layout == "vertical" %}selected{% endif %}>صورة بالأعلى</option>
             <option value="horizontal" {% if settings and settings.product_layout == "horizontal" %}selected{% endif %}>صورة جانبية</option>
             <option value="compact" {% if settings and settings.product_layout == "compact" %}selected{% endif %}>شبكة صغيرة</option>
+    <option value="carousel" {% if settings and settings.product_layout == "carousel" %}selected{% endif %}>شريط متحرك</option>
         </select>
     </div>
 

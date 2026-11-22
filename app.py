@@ -2925,7 +2925,7 @@ def settings():
         if card_style not in ("modern", "classic", "rounded"):
             card_style = "modern"
         product_layout = request.form.get("product_layout", "vertical").strip()
-        if product_layout not in ("vertical", "horizontal", "compact"):
+        if product_layout not in ("vertical", "horizontal", "compact", "carousel"):
             product_layout = "vertical"
 
         currency = request.form.get(

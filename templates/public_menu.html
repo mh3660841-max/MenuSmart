@@ -28,7 +28,7 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 {% set card_color = settings.card_color if settings and settings.card_color else '#FFFFFF' %}
 {% set price_color = settings.price_color if settings and settings.price_color else '#8A6508' %}
 {% set card_style = settings.card_style if settings and settings.card_style in ['modern', 'classic', 'rounded'] else 'modern' %}
-{% set product_layout = settings.product_layout if settings and settings.product_layout in ['vertical', 'horizontal', 'compact'] else 'vertical' %}
+{% set product_layout = settings.product_layout if settings and settings.product_layout in ['vertical', 'horizontal', 'compact', 'carousel'] else 'vertical' %}
 {% set start_screen_bg = settings.start_screen_bg if settings and settings.start_screen_bg else '#F5F6F8' %}
 {% set start_card_bg = settings.start_card_bg if settings and settings.start_card_bg else '#FFFFFF' %}
 {% set start_card_border_color = settings.start_card_border_color if settings and settings.start_card_border_color else '#D4AF37' %}
@@ -1248,6 +1248,40 @@ body.public-menu-page {
 .menu-products.product-layout-compact .public-product-info {
     min-width: 0;
     padding: 12px;
+}
+
+/* CAROUSEL */
+.menu-products.product-layout-carousel {
+    display: flex;
+    flex-wrap: nowrap;
+    direction: rtl;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 10px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    align-items: stretch;
+}
+
+.menu-products.product-layout-carousel .public-product-card {
+    flex: 0 0 min(32%, 340px);
+    min-width: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+@media (max-width: 900px) {
+    .menu-products.product-layout-carousel .public-product-card {
+        flex-basis: 46%;
+    }
+}
+
+@media (max-width: 600px) {
+    .menu-products.product-layout-carousel .public-product-card {
+        flex-basis: 78%;
+    }
 }
 
 /* MEDIUM SCREENS */

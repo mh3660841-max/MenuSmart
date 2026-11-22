@@ -2924,6 +2924,9 @@ def settings():
         card_style = request.form.get("card_style", "modern")
         if card_style not in ("modern", "classic", "rounded"):
             card_style = "modern"
+        product_layout = request.form.get("product_layout", "vertical").strip()
+        if product_layout not in ("vertical", "horizontal", "compact"):
+            product_layout = "vertical"
 
         currency = request.form.get(
             "currency",
@@ -2999,6 +3002,7 @@ def settings():
                     contact_icon_bg_color = %s,
                     contact_icon_border_color = %s,
                     card_style = %s,
+                    product_layout = %s,
                     currency = %s,
                     language = %s,
                     allow_orders = %s,
@@ -3031,6 +3035,7 @@ def settings():
                     contact_icon_bg_color,
                     contact_icon_border_color,
                     card_style,
+                    product_layout,
                     currency,
                     language,
                     allow_orders,
@@ -3071,15 +3076,15 @@ def settings():
                     contact_icon_border_color,
                     hero_background_image,
                     card_style,
+                    product_layout,
                     currency,
                     language,
                     allow_orders,
                     allow_delivery,
                     delivery_fee,
                     wallet_number,
-                    instapay_address
-                )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    instapay_address)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     restaurant["id"],
@@ -3105,6 +3110,7 @@ def settings():
                     contact_icon_border_color,
                     hero_background_image,
                     card_style,
+                    product_layout,
                     currency,
                     language,
                     allow_orders,
@@ -4442,6 +4448,7 @@ def public_menu(slug):
             background_color,
             card_color,
             card_style,
+            product_layout,
             contact_icon_bg_color,
             contact_icon_border_color,
             contact_text_color,

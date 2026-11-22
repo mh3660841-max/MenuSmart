@@ -602,6 +602,12 @@ def init_db():
             "card_style",
             "TEXT DEFAULT 'modern'"
         )
+        add_column_if_missing(
+            cursor,
+            "restaurant_settings",
+            "product_layout",
+            "TEXT DEFAULT 'vertical'"
+        )
 
         add_column_if_missing(
             cursor,

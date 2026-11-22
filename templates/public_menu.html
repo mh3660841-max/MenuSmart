@@ -28,6 +28,7 @@ content="{{ restaurant.description|default('المنيو الإلكتروني ل
 {% set card_color = settings.card_color if settings and settings.card_color else '#FFFFFF' %}
 {% set price_color = settings.price_color if settings and settings.price_color else '#8A6508' %}
 {% set card_style = settings.card_style if settings and settings.card_style in ['modern', 'classic', 'rounded'] else 'modern' %}
+{% set product_layout = settings.product_layout if settings and settings.product_layout in ['vertical', 'horizontal', 'compact'] else 'vertical' %}
 {% set start_screen_bg = settings.start_screen_bg if settings and settings.start_screen_bg else '#F5F6F8' %}
 {% set start_card_bg = settings.start_card_bg if settings and settings.start_card_bg else '#FFFFFF' %}
 {% set start_card_border_color = settings.start_card_border_color if settings and settings.start_card_border_color else '#D4AF37' %}
@@ -1185,6 +1186,114 @@ body.public-menu-page {
     .public-product-description { font-size: 10px; }
     .public-product-price { font-size: 13px; }
 }
+
+
+/* =========================================
+   PRODUCT LAYOUTS
+   Vertical keeps the existing design unchanged
+========================================= */
+
+/* HORIZONTAL */
+.menu-products.product-layout-horizontal {
+    grid-template-columns: 1fr;
+}
+
+.menu-products.product-layout-horizontal .public-product-card {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.menu-products.product-layout-horizontal .public-product-image {
+    flex: 0 0 36%;
+    width: 36%;
+    height: auto;
+    min-height: 160px;
+}
+
+.menu-products.product-layout-horizontal .public-product-image img,
+.menu-products.product-layout-horizontal .product-image-placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.menu-products.product-layout-horizontal .public-product-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* COMPACT */
+.menu-products.product-layout-compact {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.menu-products.product-layout-compact .public-product-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.menu-products.product-layout-compact .public-product-image {
+    width: 100%;
+    height: 145px;
+    min-height: 0;
+}
+
+.menu-products.product-layout-compact .public-product-info {
+    min-width: 0;
+    padding: 12px;
+}
+
+/* MEDIUM SCREENS */
+@media (max-width: 900px) {
+    .menu-products.product-layout-compact {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .menu-products.product-layout-horizontal {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-products.product-layout-horizontal .public-product-image {
+        flex-basis: 36%;
+        width: 36%;
+        min-height: 135px;
+    }
+
+    .menu-products.product-layout-compact {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .menu-products.product-layout-compact .public-product-image {
+        height: 110px;
+    }
+
+    .menu-products.product-layout-compact .public-product-info {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .menu-products.product-layout-horizontal .public-product-image {
+        flex-basis: 34%;
+        width: 34%;
+        min-height: 125px;
+    }
+
+    .menu-products.product-layout-compact .public-product-image {
+        height: 100px;
+    }
+}
+
 </style><style>
 .customer-start-screen{
 flex-direction:column;
@@ -1503,7 +1612,7 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
 }
 </style>
 
-</head><body class="public-menu-page card-style-{{ card_style }}"><!-- =========================
+</head><body class="public-menu-page card-style-{{ card_style }} product-layout-{{ product_layout }}"><!-- =========================
      CLIENT HEADER
 ========================= --><header class="public-menu-header">
 <div class="public-menu-header-inner">
@@ -1698,7 +1807,7 @@ transform:translateX(1px);
     <!-- المنتجات -->
 
     <div
-        class="menu-products"
+        class="menu-products product-layout-{{ product_layout }}"
         id="menuProducts"
     >
 

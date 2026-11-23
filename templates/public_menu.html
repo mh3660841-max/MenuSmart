@@ -1189,6 +1189,11 @@ body.public-menu-page {
    Vertical keeps the existing design unchanged
 ========================================= */
 
+/* VERTICAL */
+.menu-products.product-layout-vertical {
+    grid-template-columns: minmax(0, 1fr);
+}
+
 /* HORIZONTAL */
 .menu-products.product-layout-horizontal {
     grid-template-columns: 1fr;
@@ -1913,6 +1918,9 @@ transform:translateX(1px);
                             {% endif %}
 
                         </div>
+{% if product.description %}
+    <p class="public-product-description" dir="auto">{{ product.description }}</p>
+{% endif %}
 
 
 

@@ -77,6 +77,51 @@ body.public-menu-page.card-style-rounded .public-product-card{
 }
 
 
+/* LANGUAGE CONTROLS */
+.menu-language-control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    padding: 0 11px;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+.menu-language-icon {
+    font-size: 17px;
+    line-height: 1;
+}
+.menu-language-select {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    min-width: 27px;
+    padding: 0;
+}
+.menu-language-select option {
+    color: #171717;
+    background: #ffffff;
+}
+.header-language-control {
+    color: #edf1ff;
+    background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.18);
+}
+.start-language-control {
+    color: inherit;
+    background: rgba(127,127,127,.08);
+    border: 1px solid rgba(127,127,127,.22);
+    margin: 0 auto 18px;
+}
+
 /* =========================
    HEADER
 ========================= */
@@ -1656,10 +1701,13 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
 <span>{{ restaurant.name|default('Menu Smart') }}</span>
 </a>
 
+<label class="menu-language-control header-language-control">
+<span class="menu-language-icon" aria-hidden="true">🌐</span>
 <select id="languageSelectHeader" class="menu-language-select" aria-label="Language">
-<option value="ar">العربية</option>
-<option value="en">English</option>
+<option value="ar">AR</option>
+<option value="en">EN</option>
 </select>
+</label>
 
 <button type="button" id="openCartBtn" class="menu-cart-button" aria-label="فتح سلة الطلبات">
 🛒 <b id="cartCount">0</b>
@@ -1670,10 +1718,13 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
 <section id="customerStartScreen" class="customer-start-screen">
 
 <div class="customer-start-card">
+<label class="menu-language-control start-language-control">
+<span class="menu-language-icon" aria-hidden="true">🌐</span>
 <select id="languageSelectStart" class="menu-language-select" aria-label="Language">
-<option value="ar">العربية</option>
-<option value="en">English</option>
+<option value="ar">AR</option>
+<option value="en">EN</option>
 </select>
+</label>
 
 
 <div class="customer-start-logo">

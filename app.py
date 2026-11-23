@@ -19,6 +19,7 @@ from functools import wraps
 
 import os
 import requests
+from deep_translator import GoogleTranslator
 import time
 import threading
 import secrets
@@ -203,7 +204,6 @@ def translate_menu_texts(source_texts):
     if not texts:
         return {}, True
 
-    api_key = os.environ.get("GOOGLE_TRANSLATE_API_KEY")
     source_language = "ar"
     target_language = "en"
 
@@ -250,50 +250,39 @@ def translate_menu_texts(source_texts):
         if text not in translations
     ]
 
-    # لا توجد حاجة للاتصال بالخدمة إذا كانت جميع الترجمات محفوظة
-    if not missing or not api_key:
-        result = {
-            text: translations.get(text, text)
-            for text in texts
-        }
-        complete = all(text in translations for text in texts)
-        return result, complete
+    if not missing:
+        return (
+            {text: translations.get(text, text) for text in texts},
+            all(text in translations for text in texts)
+        )
 
     # ترجمة النصوص غير الموجودة في الكاش
     for start in range(0, len(missing), 128):
         batch = missing[start:start + 128]
 
         try:
-            response = requests.post(
-                "https://translation.googleapis.com/language/translate/v2",
-                params={"key": api_key},
-                json={
-                    "q": batch,
-                    "source": source_language,
-                    "target": target_language,
-                    "format": "text"
-                },
-                timeout=(5, 20)
-            )
-            response.raise_for_status()
+            translated_batch = GoogleTranslator(
+                source=source_language,
+                target=target_language
+            ).translate_batch(batch)
 
-            result = response.json()
-            items = result.get("data", {}).get("translations", [])
-
-            if len(items) != len(batch):
+            if not isinstance(translated_batch, list):
                 raise ValueError("Unexpected translation response.")
 
             translated_batch = [
-                str(item.get("translatedText", "")).strip()
-                for item in items
+                str(item).strip() if item is not None else ""
+                for item in translated_batch
             ]
 
-            if any(not text for text in translated_batch):
-                raise ValueError("Empty translation received.")
+            if (
+                len(translated_batch) != len(batch)
+                or any(not item for item in translated_batch)
+            ):
+                raise ValueError("Invalid translation response.")
 
-        except (requests.RequestException, ValueError, KeyError, TypeError) as exc:
+        except Exception as exc:
             app.logger.warning(
-                "Google Translate request failed: %s",
+                "Translation request failed: %s",
                 type(exc).__name__
             )
             continue
@@ -345,8 +334,6 @@ def translate_menu_texts(source_texts):
     }
     complete = all(text in translations for text in texts)
     return result, complete
-
-
 def parse_product_sizes_form():
     names = request.form.getlist("size_name")
     prices = request.form.getlist("size_price")

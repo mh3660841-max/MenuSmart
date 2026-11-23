@@ -1665,6 +1665,12 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
 <section id="customerStartScreen" class="customer-start-screen">
 
 <div class="customer-start-card">
+<select id="languageSelectStart" class="menu-language-select" aria-label="Language">
+<option value="ar">العربية</option>
+<option value="en">English</option>
+</select>
+
+
 <div class="customer-start-logo">
 {% if restaurant.logo %}
 <img src="{{ restaurant.logo }}" alt="{{ restaurant.name }}">
@@ -1679,10 +1685,7 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
     <p>{{ start_description_text }}</p>
 </div>
 
-<select id="languageSelectStart" class="menu-language-select" aria-label="Language">
-<option value="ar">العربية</option>
-<option value="en">English</option>
-</select>
+
 
 <div class="customer-start-buttons">
 <button type="button" id="startMenuBtn" class="customer-start-option">
@@ -2845,7 +2848,6 @@ body.public-menu-page .menu-categories .menu-category.active {
     if (!selectors.length) return;
 
     var translations = {};
-    var translationAvailable = false;
     var currentLanguage = "ar";
     var originalTexts = new WeakMap();
     var originalAttributes = new WeakMap();
@@ -2990,13 +2992,7 @@ body.public-menu-page .menu-categories .menu-category.active {
         select.addEventListener("change", function () {
             var language = select.value === "en" ? "en" : "ar";
 
-            if (language === "en" && !translationAvailable) {
-                alert("English translation is currently unavailable. Please try again later.");
-                applyLanguage("ar");
-                return;
-            }
-
-            applyLanguage(language);
+applyLanguage(language);
         });
     });
 
@@ -3007,14 +3003,13 @@ body.public-menu-page .menu-categories .menu-category.active {
         })
         .then(function (data) {
             translations = data && data.translations ? data.translations : {};
-            translationAvailable = data && data.available === true;
 
             var savedLanguage = "ar";
             try {
                 savedLanguage = localStorage.getItem(languageStorageKey) || "ar";
             } catch (e) {}
 
-            if (savedLanguage === "en" && translationAvailable) {
+            if (savedLanguage === "en") {
                 applyLanguage("en");
             } else {
                 applyLanguage("ar");

@@ -19,7 +19,7 @@ from functools import wraps
 
 import os
 import requests
-from deep_translator import GoogleTranslator
+from deep_translator import MyMemoryTranslator
 import time
 import threading
 import secrets
@@ -207,6 +207,49 @@ def translate_menu_texts(source_texts):
     source_language = "ar"
     target_language = "en"
 
+    fixed_translations = {
+        "سلة الطلبات": "Your Cart",
+        "الإجمالي": "Total",
+        "متابعة الطلب": "Track Order",
+        "مدعوم بواسطة Menu Smart": "Powered by Menu Smart",
+        "السلة فارغة": "Your cart is empty",
+        "أضف المنتجات التي تريد طلبها.": "Add the products you want to order.",
+        "التنقل السريع": "Quick Navigation",
+        "الأقسام": "Categories",
+        "بحث": "Search",
+        "تفاصيل المنتج": "Product Details",
+        "إغلاق التفاصيل": "Close Details",
+        "صورة المنتج": "Product Image",
+        "السلة": "Cart",
+        "المنيو متاحة للطلب": "Menu Available for Ordering",
+        "● المنيو متاحة للطلب": "● Menu Available for Ordering",
+        "الكمية": "Quantity",
+        "السعر": "Price",
+        "حذف": "Remove",
+        "إغلاق": "Close",
+        "تأكيد": "Confirm",
+        "إلغاء": "Cancel",
+        "جاري التحميل...": "Loading...",
+        "حدث خطأ، حاول مرة أخرى.": "Something went wrong. Please try again.",
+        "لا توجد نتائج": "No results found",
+        "العودة إلى الصفحة السابقة": "Go Back",
+        "تتبع الطلب": "Track Order",
+        "أدخل رقم طلبك لمعرفة حالته": "Enter your order number to check its status",
+        "رقم الطلب": "Order Number",
+        "حالة الطلب": "Order Status",
+        "قيد الانتظار": "Pending",
+        "تم تأكيد الطلب": "Order Confirmed",
+        "قيد التجهيز": "Preparing",
+        "جاهز": "Ready",
+        "مكتمل": "Completed",
+        "تم إلغاء الطلب": "Order Cancelled",
+        "استلام الطلب": "Order Pickup",
+        "تأكيد الطلب": "Confirm Order",
+        "التجهيز": "Preparing",
+        "مراحل الطلب": "Order Progress",
+        "رقم الطلب غير موجود": "Order number not found",
+    }
+
     def make_hash(text):
         value = f"{source_language}\\0{target_language}\\0{text}"
         return hashlib.sha256(value.encode("utf-8")).hexdigest()
@@ -245,6 +288,8 @@ def translate_menu_texts(source_texts):
         )
         translations = {}
 
+    translations.update({text: fixed_translations[text] for text in texts if text in fixed_translations})
+
     missing = [
         text for text in texts
         if text not in translations
@@ -257,14 +302,14 @@ def translate_menu_texts(source_texts):
         )
 
     # ترجمة النصوص غير الموجودة في الكاش
-    for start in range(0, len(missing), 128):
-        batch = missing[start:start + 128]
+    for start in range(0, len(missing), 10):
+        batch = missing[start:start + 10]
 
         try:
-            translated_batch = GoogleTranslator(
-                source=source_language,
-                target=target_language
-            ).translate_batch(batch)
+            translated_batch = MyMemoryTranslator(
+                    source="ar-SA",
+                    target="en-GB"
+                ).translate_batch(batch)
 
             if not isinstance(translated_batch, list):
                 raise ValueError("Unexpected translation response.")

@@ -18,6 +18,7 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 
 import os
+import requests
 import time
 import threading
 import secrets
@@ -122,10 +123,12 @@ def get_public_menu_cached_data(restaurant_id):
             id,
             category_id,
             name,
+
             image,
             featured AS is_popular,
             available,
             description,
+
             price,
             old_price
         FROM products
@@ -183,6 +186,165 @@ def get_public_menu_cached_data(restaurant_id):
 
 
 
+
+
+
+# =========================================================
+# الترجمة التلقائية للمنيو العامة
+# =========================================================
+
+def translate_menu_texts(source_texts):
+    texts = list(dict.fromkeys(
+        str(text).strip()
+        for text in source_texts
+        if text is not None and str(text).strip()
+    ))
+
+    if not texts:
+        return {}, True
+
+    api_key = os.environ.get("GOOGLE_TRANSLATE_API_KEY")
+    source_language = "ar"
+    target_language = "en"
+
+    def make_hash(text):
+        value = f"{source_language}\\0{target_language}\\0{text}"
+        return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+    hashes = {text: make_hash(text) for text in texts}
+    translations = {}
+
+    # استرجاع الترجمات المحفوظة
+    try:
+        for start in range(0, len(texts), 200):
+            batch = texts[start:start + 200]
+            batch_hashes = [hashes[text] for text in batch]
+            placeholders = ", ".join(["%s"] * len(batch_hashes))
+
+            rows = query_db(
+                f"""
+                SELECT source_hash, source_text, translated_text
+                FROM translation_cache
+                WHERE source_hash IN ({placeholders})
+                """,
+                batch_hashes
+            )
+
+            for row in rows:
+                translations[row["source_text"]] = row["translated_text"]
+
+    except Exception as exc:
+        try:
+            get_db().rollback()
+        except Exception:
+            pass
+
+        app.logger.warning(
+            "Translation cache read failed: %s",
+            type(exc).__name__
+        )
+        translations = {}
+
+    missing = [
+        text for text in texts
+        if text not in translations
+    ]
+
+    # لا توجد حاجة للاتصال بالخدمة إذا كانت جميع الترجمات محفوظة
+    if not missing or not api_key:
+        result = {
+            text: translations.get(text, text)
+            for text in texts
+        }
+        complete = all(text in translations for text in texts)
+        return result, complete
+
+    # ترجمة النصوص غير الموجودة في الكاش
+    for start in range(0, len(missing), 128):
+        batch = missing[start:start + 128]
+
+        try:
+            response = requests.post(
+                "https://translation.googleapis.com/language/translate/v2",
+                params={"key": api_key},
+                json={
+                    "q": batch,
+                    "source": source_language,
+                    "target": target_language,
+                    "format": "text"
+                },
+                timeout=(5, 20)
+            )
+            response.raise_for_status()
+
+            result = response.json()
+            items = result.get("data", {}).get("translations", [])
+
+            if len(items) != len(batch):
+                raise ValueError("Unexpected translation response.")
+
+            translated_batch = [
+                str(item.get("translatedText", "")).strip()
+                for item in items
+            ]
+
+            if any(not text for text in translated_batch):
+                raise ValueError("Empty translation received.")
+
+        except (requests.RequestException, ValueError, KeyError, TypeError) as exc:
+            app.logger.warning(
+                "Google Translate request failed: %s",
+                type(exc).__name__
+            )
+            continue
+
+        for original, translated in zip(batch, translated_batch):
+            translations[original] = translated
+
+        # حفظ الدفعة في قاعدة البيانات
+        values = []
+        args = []
+
+        for original, translated in zip(batch, translated_batch):
+            values.append("(%s, %s, %s, %s, %s)")
+            args.extend([
+                hashes[original],
+                original,
+                translated,
+                source_language,
+                target_language
+            ])
+
+        try:
+            execute_db(
+                """
+                INSERT INTO translation_cache (
+                    source_hash,
+                    source_text,
+                    translated_text,
+                    source_language,
+                    target_language
+                )
+                VALUES
+                """ + ", ".join(values) + """
+                ON CONFLICT (source_hash)
+                DO UPDATE SET
+                    translated_text = EXCLUDED.translated_text,
+                    updated_at = CURRENT_TIMESTAMP
+                """,
+                args
+            )
+        except Exception:
+            app.logger.exception(
+                "Failed to save public menu translations."
+            )
+
+    result = {
+        text: translations.get(text, text)
+        for text in texts
+    }
+    complete = all(text in translations for text in texts)
+    return result, complete
 
 
 def parse_product_sizes_form():
@@ -3676,10 +3838,12 @@ def product_add():
             ""
         ).strip()
 
+
         description = request.form.get(
             "description",
             ""
         ).strip()
+
 
         price = request.form.get(
             "price",
@@ -3851,7 +4015,9 @@ def product_add():
                     restaurant_id,
                     category_id,
                     name,
+
                     description,
+
                     price,
                     old_price,
                     image,
@@ -3864,7 +4030,9 @@ def product_add():
                     restaurant["id"],
                     category_id if category_id else None,
                     name,
+
                     description,
+
                     price_value,
                     old_price_value,
                     image_name,
@@ -3989,7 +4157,9 @@ def product_edit(product_id):
     if request.method == "POST":
 
         name = request.form.get("name", "").strip()
+
         description = request.form.get("description", "").strip()
+
         price = request.form.get("price", "0").strip()
         discount_percent = request.form.get(
             "discount_percent", "0"
@@ -4129,7 +4299,9 @@ def product_edit(product_id):
                 SET
                     category_id = %s,
                     name = %s,
+
                     description = %s,
+
                     price = %s,
                     old_price = %s,
                     image = %s,
@@ -4141,7 +4313,9 @@ def product_edit(product_id):
                 [
                     category_id if category_id else None,
                     name,
+
                     description,
+
                     sale_price_value,
                     original_price_value,
                     image_name,
@@ -4484,6 +4658,151 @@ def public_menu(slug):
         settings=settings_data
     )
 
+
+
+
+# =========================================================
+# ترجمة نصوص المنيو العامة
+# =========================================================
+
+@app.route("/menu/<slug>/translations", methods=["GET"])
+def public_menu_translations(slug):
+    restaurant = query_db(
+        """
+        SELECT id, name, description, address, is_active
+        FROM restaurants
+        WHERE slug = %s
+        LIMIT 1
+        """,
+        [slug],
+        one=True
+    )
+
+    if restaurant is None:
+        return jsonify({"error": "menu_not_found"}), 404
+
+    if not restaurant["is_active"]:
+        return jsonify({"error": "menu_unavailable"}), 403
+
+    categories, products = get_public_menu_cached_data(
+        restaurant["id"]
+    )
+
+    settings_data = query_db(
+        """
+        SELECT start_welcome_text, start_description_text
+        FROM restaurant_settings
+        WHERE restaurant_id = %s
+        LIMIT 1
+        """,
+        [restaurant["id"]],
+        one=True
+    ) or {}
+
+    source_texts = [
+        restaurant.get("name"),
+        restaurant.get("description"),
+        restaurant.get("address"),
+        settings_data.get("start_welcome_text"),
+        settings_data.get("start_description_text"),
+        "كل اللي بتحبه… في مكان واحد",
+        "اكتشف المنيو، اختار المفضّل ليك، واطلب بكل سهولة.",
+        "المنيو",
+        "المنيو الإلكتروني للنشاط",
+    ]
+
+    for category in categories:
+        source_texts.append(category.get("name"))
+
+    for product in products:
+        source_texts.extend([
+            product.get("name"),
+            product.get("description"),
+        ])
+
+        for size in product.get("sizes", []):
+            source_texts.append(size.get("name"))
+
+    # عبارات واجهة العميل الثابتة
+    source_texts.extend([
+        "فتح سلة الطلبات",
+        "MENU",
+        "عرض المنيو",
+        "أون لاين",
+        "تصفح المنيو واطلب الآن",
+        "تتبع",
+        "تابع حالة طلبك",
+        "اتصل بنا",
+        "العنوان",
+        "تواصل معنا",
+        "واتساب",
+        "المنيو متاحة للطلب",
+        "رجوع",
+        "ابحث عن منتج...",
+        "الكل",
+        "⭐ الأكثر طلبًا",
+        "غير متاح",
+        "خصم",
+        "أحجام المنتج",
+        "إضافة",
+        "المنيو غير متوفر حاليًا",
+        "لم تتم إضافة منتجات إلى المنيو بعد.",
+        "لم نجد ما تبحث عنه",
+        "جرّب البحث باسم منتج مختلف.",
+        "طلبك",
+        "سلة الطلبات",
+        "الإجمالي",
+        "متابعة الطلب",
+        "مدعوم بواسطة Menu Smart",
+        "السلة فارغة",
+        "أضف المنتجات التي تريد طلبها.",
+        "التنقل السريع",
+        "الأقسام",
+        "بحث",
+        "تفاصيل المنتج",
+        "إغلاق التفاصيل",
+        "صورة المنتج",
+        "السلة",
+        "السلة فارغة",
+        "أضف المنتجات التي تريد طلبها.",
+        "● المنيو متاحة للطلب",
+        "المنيو متاحة للطلب",
+        "السلة فارغة",
+        "أضف المنتجات التي تريد طلبها.",
+        "الكمية",
+        "السعر",
+        "حذف",
+        "إغلاق",
+        "تأكيد",
+        "إلغاء",
+        "جاري التحميل...",
+        "حدث خطأ، حاول مرة أخرى.",
+        "لا توجد نتائج",
+        "العودة إلى الصفحة السابقة",
+        "تتبع الطلب",
+        "أدخل رقم طلبك لمعرفة حالته",
+        "رقم الطلب",
+        "حالة الطلب",
+        "قيد الانتظار",
+        "تم تأكيد الطلب",
+        "قيد التجهيز",
+        "جاهز",
+        "مكتمل",
+        "تم إلغاء الطلب",
+        "استلام الطلب",
+        "تأكيد الطلب",
+        "التجهيز",
+        "مراحل الطلب",
+        "رقم الطلب غير موجود",
+    ])
+
+    translations, translation_available = translate_menu_texts(source_texts)
+
+    return jsonify({
+        "language": "en",
+        "available": translation_available,
+        "translations": translations
+    })
 
 # =========================================================
 # تفاصيل المنتج
@@ -5374,6 +5693,41 @@ def order_success(order_id):
     )
 
     # =====================================================
+    # ترجمة نصوص صفحة نجاح الطلب
+    # =====================================================
+
+    success_texts = [
+        "تم استلام طلبك",
+        "تم استلام طلبك بنجاح من Menu Smart.",
+        "العودة إلى المنيو",
+        "العودة للمنيو",
+        "تم بنجاح",
+        "تم استلام طلبك 🎉",
+        "شكرًا لطلبك. تم إرسال بيانات الطلب بنجاح، ويمكنك متابعة حالة طلبك من هنا.",
+        "رقم التتبع",
+        "تتبع طلبك",
+        "حالة الطلب الحالية",
+        "قيد الانتظار",
+        "تم تأكيد الطلب",
+        "قيد التجهيز",
+        "الطلب جاهز",
+        "تم إكمال الطلب",
+        "تم إلغاء الطلب",
+        "إذا تغيّر نشاط حالة الطلب، حدّث الصفحة لرؤية الحالة الجديدة.",
+        "العميل",
+        "الإجمالي",
+        "طريقة الدفع",
+        "الدفع عند الاستلام",
+        "الدفع الإلكتروني",
+        "بيانات طلبك تستخدم فقط لمعالجة الطلب والتواصل معك بخصوصه.",
+        "منصة المنيو الإلكتروني والطلبات الرقمية."
+    ]
+
+    success_translations, success_translation_available = translate_menu_texts(
+        success_texts
+    )
+
+    # =====================================================
     # عرض صفحة نجاح الطلب
     # =====================================================
 
@@ -5384,7 +5738,9 @@ def order_success(order_id):
         items=items,
         restaurant=order,
         restaurant_id=order["restaurant_id"],
-        currency_label=currency_label
+        currency_label=currency_label,
+        translations=success_translations,
+        translation_available=success_translation_available
     )
 
 
@@ -5549,7 +5905,35 @@ def track_order():
         restaurant = query_db("SELECT id, name, logo FROM restaurants WHERE slug = %s AND is_active = 1", [slug], one=True)
     if order_id and restaurant:
         order = query_db("SELECT id, status, created_at FROM orders WHERE id = %s AND restaurant_id = %s", [order_id, restaurant["id"]], one=True)
-    return render_template("track_order.html", order=order, restaurant=restaurant, slug=slug)
+    track_texts = [
+        "العودة إلى الصفحة السابقة",
+        "تتبع الطلب",
+        "أدخل رقم طلبك لمعرفة حالته",
+        "رقم الطلب",
+        "حالة الطلب",
+        "قيد الانتظار",
+        "تم تأكيد الطلب",
+        "قيد التجهيز",
+        "جاهز",
+        "مكتمل",
+        "تم إلغاء الطلب",
+        "تم إلغاء هذا الطلب",
+        "استلام الطلب",
+        "تأكيد الطلب",
+        "التجهيز",
+        "مراحل الطلب",
+        "رقم الطلب غير موجود",
+    ]
+    track_translations, track_translation_available = translate_menu_texts(track_texts)
+
+    return render_template(
+        "track_order.html",
+        order=order,
+        restaurant=restaurant,
+        slug=slug,
+        translations=track_translations,
+        translation_available=track_translation_available
+    )
 
 @app.route("/orders/<int:order_id>/invoice")
 @restaurant_or_orders_required

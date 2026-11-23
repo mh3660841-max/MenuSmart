@@ -7,11 +7,7 @@
 {% set currency_label = currency_labels.get(settings.currency if settings and settings.currency else 'EGP', 'EGP') %}
 <!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#111111"><title>
     {{ restaurant.name|default('Menu Smart') }} | المنيو
-</title><meta
-name="description"
-content="{{ restaurant.description|default('المنيو الإلكتروني للنشاط') }}"
-
-«»
+</title><meta name="description" content="{{ restaurant.description|default('المنيو الإلكتروني للنشاط') }}">
 
 <link
     rel="stylesheet"
@@ -922,7 +918,7 @@ body.public-menu-page.card-style-rounded .public-product-card{
         height:100px;
 
         border-radius:0;
-    
+
     border: 0;
     background: transparent;
     box-shadow: none;}
@@ -1654,6 +1650,12 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
 <span class="brand-icon">M</span>
 <span>{{ restaurant.name|default('Menu Smart') }}</span>
 </a>
+
+<select id="languageSelectHeader" class="menu-language-select" aria-label="Language">
+<option value="ar">العربية</option>
+<option value="en">English</option>
+</select>
+
 <button type="button" id="openCartBtn" class="menu-cart-button" aria-label="فتح سلة الطلبات">
 🛒 <b id="cartCount">0</b>
 </button>
@@ -1676,6 +1678,11 @@ body.public-menu-page .public-product-image img{transition:transform .38s cubic-
     <h2>{{ start_welcome_text }}</h2>
     <p>{{ start_description_text }}</p>
 </div>
+
+<select id="languageSelectStart" class="menu-language-select" aria-label="Language">
+<option value="ar">العربية</option>
+<option value="en">English</option>
+</select>
 
 <div class="customer-start-buttons">
 <button type="button" id="startMenuBtn" class="customer-start-option">
@@ -1891,9 +1898,7 @@ transform:translateX(1px);
 
                         <div class="public-product-title-row">
 
-                            <h2>
-                                {{ product.name }}
-                            </h2>
+                            <h2 dir="auto">{{ product.name }}</h2>
 
 
                             {% if product.available is defined and not product.available %}
@@ -1907,13 +1912,7 @@ transform:translateX(1px);
                         </div>
 
 
-                        {% if product.description %}
 
-                        <p class="public-product-description">
-                            {{ product.description }}
-                        </p>
-
-                        {% endif %}
 
                     </div>
 
@@ -1929,7 +1928,7 @@ transform:translateX(1px);
                             </span>
 
                             <span class="public-product-discount">
-                                خصم {{ ((product.old_price - product.price) / product.old_price * 100)|round(0)|int }}%
+                                <span>خصم</span> {{ ((product.old_price - product.price) / product.old_price * 100)|round(0)|int }}%
                             </span>
 
                             {% endif %}
@@ -2145,7 +2144,6 @@ const search =
 const products =
     document.querySelectorAll(".public-product-card");
 
-
 /* حفظ السلة */
 
 function saveCart(){
@@ -2232,7 +2230,7 @@ function updateCart(){
                     <div class="cart-item-info">
 
                         <strong>
-                            ${item.name}
+                            ${window.translateMenuValue ? window.translateMenuValue(item.name) : item.name}
                         </strong>
 
                         <span>
@@ -2474,8 +2472,8 @@ function filterProducts(){
 
     products.forEach(product => {
 
-        const name =
-            product.dataset.name || "";
+        const nameAr = product.dataset.name || "";
+        const nameEn = product.dataset.nameEn || "";
 
         const category =
             product.dataset.category || "";
@@ -2488,7 +2486,8 @@ function filterProducts(){
 
         const okSearch =
             !text ||
-            name.includes(text);
+            nameAr.includes(text) ||
+            nameEn.includes(text);
 
 
         if(okCategory && okSearch){
@@ -2833,5 +2832,226 @@ body.public-menu-page .menu-categories .menu-category.active {
     body.public-menu-page .menu-categories .menu-category { padding: 8px 12px; font-size: 12px; }
 }
 </style>
+
+<script>
+(function () {
+    "use strict";
+
+    var selectors = [
+        document.getElementById("languageSelectStart"),
+        document.getElementById("languageSelectHeader")
+    ].filter(Boolean);
+
+    if (!selectors.length) return;
+
+    var translations = {};
+    var translationAvailable = false;
+    var currentLanguage = "ar";
+    var originalTexts = new WeakMap();
+    var originalAttributes = new WeakMap();
+    var translating = false;
+
+    window.translateMenuValue = function (value) {
+        var original = String(value == null ? "" : value);
+        return currentLanguage === "en"
+            ? (translations[original.trim()] || original)
+            : original;
+    };
+
+    var endpoint = "{{ url_for('public_menu_translations', slug=restaurant.slug) }}";
+    var languageStorageKey = "menusmart_menu_language_{{ restaurant.id }}";
+
+    function rememberText(node) {
+        if (!originalTexts.has(node)) {
+            originalTexts.set(node, node.nodeValue);
+        }
+        return originalTexts.get(node);
+    }
+
+    function translateTextNode(node) {
+        if (!node || !node.parentElement) return;
+
+        var parentTag = node.parentElement.tagName;
+        if (parentTag === "SCRIPT" || parentTag === "STYLE") return;
+
+        var original = rememberText(node);
+        var trimmed = original.trim();
+        if (!trimmed) return;
+
+        var translated = currentLanguage === "en"
+            ? (translations[trimmed] || trimmed)
+            : original;
+
+        if (node.nodeValue !== translated) {
+            node.nodeValue = translated;
+        }
+    }
+
+    function translateAttribute(element, attribute) {
+        if (!element.hasAttribute(attribute)) return;
+
+        var saved = originalAttributes.get(element);
+        if (!saved) {
+            saved = {};
+            originalAttributes.set(element, saved);
+        }
+
+        if (!(attribute in saved)) {
+            saved[attribute] = element.getAttribute(attribute);
+        }
+
+        var original = saved[attribute];
+        var key = original.trim();
+
+        if (!key) return;
+
+        var translated = currentLanguage === "en"
+            ? (translations[key] || original)
+            : original;
+
+        if (element.getAttribute(attribute) !== translated) {
+            element.setAttribute(attribute, translated);
+        }
+    }
+
+    function translateElement(element) {
+        if (!element || element.nodeType !== 1) return;
+
+        ["placeholder", "aria-label", "alt", "title"].forEach(function (attr) {
+            translateAttribute(element, attr);
+        });
+
+        if (element.matches(".public-product-card")) {
+            var title = element.querySelector(".public-product-title-row h2");
+            if (title) {
+                var arabicName = rememberText(title.firstChild || title);
+                var key = String(arabicName || "").trim();
+                element.dataset.nameEn = (translations[key] || "").toLowerCase();
+            }
+        }
+
+        var walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT
+        );
+
+        var nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(translateTextNode);
+    }
+
+    function updateProductEnglishNames() {
+        document.querySelectorAll(".public-product-card").forEach(function (card) {
+            var title = card.querySelector(".public-product-title-row h2");
+            var originalName = title ? rememberText(title.firstChild || title) : "";
+            var key = String(originalName || "").trim();
+            card.dataset.nameEn = (translations[key] || "").toLowerCase();
+        });
+    }
+
+    function applyLanguage(language) {
+        currentLanguage = language === "en" ? "en" : "ar";
+
+        document.documentElement.lang = currentLanguage;
+        document.documentElement.dir = currentLanguage === "en" ? "ltr" : "rtl";
+
+        var originalRestaurantName = {{ restaurant.name|default('Menu Smart')|tojson }};
+        var originalPageDescription = {{ restaurant.description|default('المنيو الإلكتروني للنشاط')|tojson }};
+
+        document.title = currentLanguage === "en"
+            ? (translations[String(originalRestaurantName).trim()] || originalRestaurantName) +
+              " | " + (translations["المنيو"] || "Menu")
+            : originalRestaurantName + " | المنيو";
+
+        var metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+            metaDescription.content = currentLanguage === "en"
+                ? (translations[String(originalPageDescription).trim()] || originalPageDescription)
+                : originalPageDescription;
+        }
+
+        selectors.forEach(function (select) {
+            select.value = currentLanguage;
+        });
+
+        updateProductEnglishNames();
+        document.querySelectorAll("body *").forEach(translateElement);
+
+        try {
+            localStorage.setItem(languageStorageKey, currentLanguage);
+        } catch (e) {}
+
+        if (typeof filterProducts === "function") {
+            filterProducts();
+        }
+    }
+
+    selectors.forEach(function (select) {
+        select.addEventListener("change", function () {
+            var language = select.value === "en" ? "en" : "ar";
+
+            if (language === "en" && !translationAvailable) {
+                alert("English translation is currently unavailable. Please try again later.");
+                applyLanguage("ar");
+                return;
+            }
+
+            applyLanguage(language);
+        });
+    });
+
+    fetch(endpoint, { credentials: "same-origin" })
+        .then(function (response) {
+            if (!response.ok) throw new Error("Translation request failed");
+            return response.json();
+        })
+        .then(function (data) {
+            translations = data && data.translations ? data.translations : {};
+            translationAvailable = data && data.available === true;
+
+            var savedLanguage = "ar";
+            try {
+                savedLanguage = localStorage.getItem(languageStorageKey) || "ar";
+            } catch (e) {}
+
+            if (savedLanguage === "en" && translationAvailable) {
+                applyLanguage("en");
+            } else {
+                applyLanguage("ar");
+            }
+        })
+        .catch(function () {
+            applyLanguage("ar");
+        });
+
+    var observer = new MutationObserver(function (records) {
+        if (translating) return;
+        translating = true;
+
+        records.forEach(function (record) {
+            if (record.type === "characterData") {
+                translateTextNode(record.target);
+            }
+
+            record.addedNodes.forEach(function (node) {
+                if (node.nodeType === 3) {
+                    translateTextNode(node);
+                } else if (node.nodeType === 1) {
+                    translateElement(node);
+                }
+            });
+        });
+
+        translating = false;
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        characterData: true,
+        subtree: true
+    });
+})();
+</script>
+
 </body>
 </html>

@@ -19,8 +19,6 @@ from functools import wraps
 
 import os
 import requests
-from deep_translator import GoogleTranslator
-from deep_translator.exceptions import TooManyRequests
 import time
 import threading
 import secrets
@@ -192,10 +190,13 @@ def get_public_menu_cached_data(restaurant_id):
 
 
 # =========================================================
-# الترجمة التلقائية للمنيو العامة
+# الترجمة المحلية للمنيو العامة
 # =========================================================
+def translate_menu_texts(source_texts, target_language="en"):
+    target_language = (
+        "ar" if str(target_language).lower() == "ar" else "en"
+    )
 
-def translate_menu_texts(source_texts):
     texts = list(dict.fromkeys(
         str(text).strip()
         for text in source_texts
@@ -204,9 +205,6 @@ def translate_menu_texts(source_texts):
 
     if not texts:
         return {}, True
-
-    source_language = "ar"
-    target_language = "en"
 
     fixed_translations = {
         "سلة الطلبات": "Your Cart",
@@ -278,20 +276,78 @@ def translate_menu_texts(source_texts):
         "واتساب": "WhatsApp",
     }
 
-    def make_hash(text):
-        value = f"menu-translation-v2|{source_language}|{target_language}|{text}"
-        return hashlib.sha256(value.encode("utf-8")).hexdigest()
+    def contains_arabic(value):
+        return any(
+            "\u0600" <= char <= "\u06FF"
+            or "\u0750" <= char <= "\u077F"
+            or "\u08A0" <= char <= "\u08FF"
+            or "\uFB50" <= char <= "\uFDFF"
+            or "\uFE70" <= char <= "\uFEFF"
+            for char in value
+        )
 
-    hashes = {text: make_hash(text) for text in texts}
+    def contains_latin(value):
+        return any(
+            ("a" <= char.lower() <= "z")
+            for char in value
+        )
+
     translations = {}
+    pending_by_direction = {"ar": [], "en": []}
+    hashes = {}
+
+    for original in texts:
+        has_arabic = contains_arabic(original)
+        has_latin = contains_latin(original)
+
+        if has_arabic and not has_latin:
+            source_language = "ar"
+        elif has_latin and not has_arabic:
+            source_language = "en"
+        else:
+            translations[original] = original
+            continue
+
+        if source_language == target_language:
+            translations[original] = original
+            continue
+
+        if target_language == "en" and source_language == "ar":
+            fixed = fixed_translations.get(original)
+            if fixed:
+                translations[original] = fixed
+                continue
+
+        cache_hash = hashlib.sha256(
+            (
+                "menu-translation-v3|"
+                + source_language
+                + "|"
+                + target_language
+                + "|"
+                + original
+            ).encode("utf-8")
+        ).hexdigest()
+
+        hashes[original] = (
+            cache_hash,
+            source_language,
+            target_language,
+        )
+        pending_by_direction[source_language].append(original)
 
     # استرجاع الترجمات المحفوظة
     cache_read_failed = False
+    cache_hashes = list(hashes.values())
+
     try:
-        for start in range(0, len(texts), 200):
-            batch = texts[start:start + 200]
-            batch_hashes = [hashes[text] for text in batch]
-            placeholders = ", ".join(["%s"] * len(batch_hashes))
+        for start_index in range(0, len(cache_hashes), 200):
+            batch = cache_hashes[start_index:start_index + 200]
+            batch_hashes = [item[0] for item in batch]
+
+            placeholders = ", ".join(
+                ["%s"] * len(batch_hashes)
+            )
 
             rows = query_db(
                 f"""
@@ -303,9 +359,12 @@ def translate_menu_texts(source_texts):
             )
 
             for row in rows:
-                translations[row["source_text"]] = row["translated_text"]
+                translations[row["source_text"]] = (
+                    row["translated_text"]
+                )
 
     except Exception as exc:
+        cache_read_failed = True
         try:
             get_db().rollback()
         except Exception:
@@ -315,97 +374,74 @@ def translate_menu_texts(source_texts):
             "Translation cache read failed: %s",
             type(exc).__name__
         )
-        cache_read_failed = True
-        translations = {}
 
-    translations.update({text: fixed_translations[text] for text in texts if text in fixed_translations})
+    for source_language in ("ar", "en"):
+        pending_by_direction[source_language] = [
+            text for text in pending_by_direction[source_language]
+            if text not in translations
+        ]
 
-    missing = [
-        text for text in texts
-        if text not in translations
-    ]
-
-
-    if cache_read_failed:
-        return ({text: translations.get(text, text) for text in texts}, False)
-    if not missing:
-        return (
-            {text: translations.get(text, text) for text in texts},
-            all(text in translations for text in texts)
-        )
-
-    # فصل النصوص العربية عن النصوص غير العربية
     successful_translations = []
-    arabic_missing = []
 
-    for original in missing:
-        has_arabic = any(
-            "\u0600" <= char <= "\u06FF"
-            or "\u0750" <= char <= "\u077F"
-            or "\u08A0" <= char <= "\u08FF"
-            or "\uFB50" <= char <= "\uFDFF"
-            or "\uFE70" <= char <= "\uFEFF"
-            for char in original
-        )
+    # الترجمة المحلية على دفعات
+    try:
+        from translation_engine import translate_batch
 
-        if has_arabic:
-            arabic_missing.append(original)
-        else:
-            translations[original] = original
+        for source_language in ("ar", "en"):
+            missing = pending_by_direction[source_language]
 
-    # تشغيل Google فقط عند وجود نصوص عربية
-    if arabic_missing:
-        try:
-            translator = GoogleTranslator(source="auto", target="en")
-        except Exception as exc:
-            app.logger.warning(
-                "Google translator initialization failed: %s",
-                type(exc).__name__
-            )
-            return (
-                {text: translations.get(text, text) for text in texts},
-                False
-            )
-
-        for original in arabic_missing:
-            try:
-                translated = translator.translate(original)
-
-                if not isinstance(translated, str) or not translated.strip():
-                    raise ValueError("Empty translation response.")
-
-                translated = translated.strip()
-
-            except TooManyRequests:
-                app.logger.warning(
-                    "Google translation rate limit reached; "
-                    "remaining texts deferred."
-                )
-                break
-
-            except Exception as exc:
-                app.logger.warning(
-                    "Google translation failed for one text: %s",
-                    type(exc).__name__
-                )
+            if not missing:
                 continue
 
-            translations[original] = translated
-            successful_translations.append((original, translated))
+            translated_batch = translate_batch(
+                missing,
+                source_language,
+                target_language,
+                batch_size=16,
+            )
 
-    # حفظ جميع الترجمات الناجحة
-    if successful_translations:
+            if len(translated_batch) != len(missing):
+                raise ValueError(
+                    "Translation engine returned an invalid batch size."
+                )
+
+            for original, translated in zip(
+                missing, translated_batch
+            ):
+                if not isinstance(translated, str) or not translated.strip():
+                    continue
+
+                translated = translated.strip()
+                translations[original] = translated
+                successful_translations.append(
+                    (
+                        original,
+                        translated,
+                        hashes[original],
+                    )
+                )
+
+    except Exception as exc:
+        app.logger.exception(
+            "Local translation engine failed: %s",
+            type(exc).__name__
+        )
+
+    # حفظ الترجمات الناجحة في قاعدة البيانات
+    if successful_translations and not cache_read_failed:
         values = []
         args = []
 
-        for original, translated in successful_translations:
+        for original, translated, cache_data in successful_translations:
+            source_hash, source_language, destination_language = cache_data
+
             values.append("(%s, %s, %s, %s, %s)")
             args.extend([
-                hashes[original],
+                source_hash,
                 original,
                 translated,
                 source_language,
-                target_language
+                destination_language,
             ])
 
         try:
@@ -433,11 +469,18 @@ def translate_menu_texts(source_texts):
             )
 
     result = {
-        text: translations.get(text, text)
-        for text in texts
+        original: translations.get(original, original)
+        for original in texts
     }
-    complete = all(text in translations for text in texts)
+
+    complete = all(
+        original in translations
+        for original in texts
+    )
+
     return result, complete
+
+
 def parse_product_sizes_form():
     names = request.form.getlist("size_name")
     prices = request.form.getlist("size_price")
@@ -4887,10 +4930,18 @@ def public_menu_translations(slug):
         "رقم الطلب غير موجود",
     ])
 
-    translations, translation_available = translate_menu_texts(source_texts)
+    target_language = (
+        "ar" if request.args.get("lang", "en").lower() == "ar"
+        else "en"
+    )
+
+    translations, translation_available = translate_menu_texts(
+        source_texts,
+        target_language=target_language
+    )
 
     return jsonify({
-        "language": "en",
+        "language": target_language,
         "available": translation_available,
         "translations": translations
     })

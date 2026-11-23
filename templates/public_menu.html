@@ -2558,7 +2558,7 @@ function filterProducts(){
 
     products.forEach(product => {
 
-        const nameAr = product.dataset.name || "";
+        const nameAr = product.dataset.nameAr || product.dataset.name || "";
         const nameEn = product.dataset.nameEn || "";
 
         const category =
@@ -2930,18 +2930,19 @@ body.public-menu-page .menu-categories .menu-category.active {
 
     if (!selectors.length) return;
 
-    var translations = {};
+    var translationsByLanguage = {
+        ar: {},
+        en: {}
+    };
+
+    var loadedLanguages = {};
+    var pendingLanguages = {};
     var currentLanguage = "ar";
     var originalTexts = new WeakMap();
     var originalAttributes = new WeakMap();
+    var originalProductNames = new WeakMap();
     var translating = false;
-
-    window.translateMenuValue = function (value) {
-        var original = String(value == null ? "" : value);
-        return currentLanguage === "en"
-            ? (translations[original.trim()] || original)
-            : original;
-    };
+    var languageRequestId = 0;
 
     var endpoint = "{{ url_for('public_menu_translations', slug=restaurant.slug) }}";
     var languageStorageKey = "menusmart_menu_language_{{ restaurant.id }}";
@@ -2953,29 +2954,9 @@ body.public-menu-page .menu-categories .menu-category.active {
         return originalTexts.get(node);
     }
 
-    function translateTextNode(node) {
-        if (!node || !node.parentElement) return;
-
-        var parentTag = node.parentElement.tagName;
-        if (parentTag === "SCRIPT" || parentTag === "STYLE") return;
-
-        var original = rememberText(node);
-        var trimmed = original.trim();
-        if (!trimmed) return;
-
-        var translated = currentLanguage === "en"
-            ? (translations[trimmed] || trimmed)
-            : original;
-
-        if (node.nodeValue !== translated) {
-            node.nodeValue = translated;
-        }
-    }
-
-    function translateAttribute(element, attribute) {
-        if (!element.hasAttribute(attribute)) return;
-
+    function getOriginalAttribute(element, attribute) {
         var saved = originalAttributes.get(element);
+
         if (!saved) {
             saved = {};
             originalAttributes.set(element, saved);
@@ -2985,34 +2966,86 @@ body.public-menu-page .menu-categories .menu-category.active {
             saved[attribute] = element.getAttribute(attribute);
         }
 
-        var original = saved[attribute];
+        return saved[attribute];
+    }
+
+    function translateValue(value) {
+        var original = String(value == null ? "" : value);
         var key = original.trim();
 
-        if (!key) return;
+        if (!key || currentLanguage === "ar" && !translationsByLanguage.ar[key]) {
+            return original;
+        }
 
-        var translated = currentLanguage === "en"
-            ? (translations[key] || original)
-            : original;
+        return translationsByLanguage[currentLanguage][key] || original;
+    }
+
+    window.translateMenuValue = translateValue;
+
+    function translateTextNode(node) {
+        if (!node || !node.parentElement) return;
+
+        var parentTag = node.parentElement.tagName;
+        if (parentTag === "SCRIPT" || parentTag === "STYLE") return;
+
+        var original = rememberText(node);
+        var translated = translateValue(original);
+
+        if (node.nodeValue !== translated) {
+            node.nodeValue = translated;
+        }
+    }
+
+    function translateAttribute(element, attribute) {
+        if (!element.hasAttribute(attribute)) return;
+
+        var original = getOriginalAttribute(element, attribute);
+        if (!original) return;
+
+        var translated = translateValue(original);
 
         if (element.getAttribute(attribute) !== translated) {
             element.setAttribute(attribute, translated);
         }
     }
 
+    function updateProductNames() {
+        document.querySelectorAll(".public-product-card").forEach(function (card) {
+            var title = card.querySelector(".public-product-title-row h2");
+            if (!title) return;
+
+            var originalName = originalProductNames.get(card);
+
+            if (originalName === undefined) {
+                originalName = rememberText(title.firstChild || title).trim();
+                originalProductNames.set(card, originalName);
+            }
+
+            var hasArabic = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(originalName);
+
+            if (hasArabic) {
+                card.dataset.nameAr = originalName.toLowerCase();
+                card.dataset.nameEn = (
+                    translationsByLanguage.en[originalName] || originalName
+                ).toLowerCase();
+            } else {
+                card.dataset.nameEn = originalName.toLowerCase();
+                card.dataset.nameAr = (
+                    translationsByLanguage.ar[originalName] || originalName
+                ).toLowerCase();
+            }
+        });
+    }
+
     function translateElement(element) {
         if (!element || element.nodeType !== 1) return;
 
-        ["placeholder", "aria-label", "alt", "title"].forEach(function (attr) {
-            translateAttribute(element, attr);
+        ["placeholder", "aria-label", "alt", "title"].forEach(function (attribute) {
+            translateAttribute(element, attribute);
         });
 
         if (element.matches(".public-product-card")) {
-            var title = element.querySelector(".public-product-title-row h2");
-            if (title) {
-                var arabicName = rememberText(title.firstChild || title);
-                var key = String(arabicName || "").trim();
-                element.dataset.nameEn = (translations[key] || "").toLowerCase();
-            }
+            updateProductNames();
         }
 
         var walker = document.createTreeWalker(
@@ -3021,18 +3054,16 @@ body.public-menu-page .menu-categories .menu-category.active {
         );
 
         var nodes = [];
-        while (walker.nextNode()) nodes.push(walker.currentNode);
+
+        while (walker.nextNode()) {
+            nodes.push(walker.currentNode);
+        }
+
         nodes.forEach(translateTextNode);
     }
 
-    function updateProductEnglishNames() {
-        document.querySelectorAll(".public-product-card").forEach(function (card) {
-            var title = card.querySelector(".public-product-title-row h2");
-            var originalName = title ? rememberText(title.firstChild || title) : "";
-            var key = String(originalName || "").trim();
-            card.dataset.nameEn = (translations[key] || "").toLowerCase();
-        });
-    }
+    var originalRestaurantName = {{ restaurant.name|default('Menu Smart')|tojson }};
+    var originalPageDescription = {{ restaurant.description|default('المنيو الإلكتروني للنشاط')|tojson }};
 
     function applyLanguage(language) {
         currentLanguage = language === "en" ? "en" : "ar";
@@ -3040,26 +3071,23 @@ body.public-menu-page .menu-categories .menu-category.active {
         document.documentElement.lang = currentLanguage;
         document.documentElement.dir = currentLanguage === "en" ? "ltr" : "rtl";
 
-        var originalRestaurantName = {{ restaurant.name|default('Menu Smart')|tojson }};
-        var originalPageDescription = {{ restaurant.description|default('المنيو الإلكتروني للنشاط')|tojson }};
-
-        document.title = currentLanguage === "en"
-            ? (translations[String(originalRestaurantName).trim()] || originalRestaurantName) +
-              " | " + (translations["المنيو"] || "Menu")
-            : originalRestaurantName + " | المنيو";
+        document.title =
+            translateValue(originalRestaurantName) +
+            " | " +
+            translateValue("المنيو");
 
         var metaDescription = document.querySelector('meta[name="description"]');
+
         if (metaDescription) {
-            metaDescription.content = currentLanguage === "en"
-                ? (translations[String(originalPageDescription).trim()] || originalPageDescription)
-                : originalPageDescription;
+            metaDescription.content = translateValue(originalPageDescription);
         }
 
         selectors.forEach(function (select) {
             select.value = currentLanguage;
         });
 
-        updateProductEnglishNames();
+        updateProductNames();
+
         document.querySelectorAll("body *").forEach(translateElement);
 
         try {
@@ -3071,56 +3099,107 @@ body.public-menu-page .menu-categories .menu-category.active {
         }
     }
 
-    selectors.forEach(function (select) {
-        select.addEventListener("change", function () {
-            var language = select.value === "en" ? "en" : "ar";
+    function fetchLanguage(language) {
+        if (loadedLanguages[language]) {
+            return Promise.resolve(translationsByLanguage[language]);
+        }
 
-applyLanguage(language);
-        });
-    });
+        if (pendingLanguages[language]) {
+            return pendingLanguages[language];
+        }
 
-    fetch(endpoint, { credentials: "same-origin" })
+        pendingLanguages[language] = fetch(
+            endpoint + "?lang=" + encodeURIComponent(language),
+            { credentials: "same-origin" }
+        )
         .then(function (response) {
-            if (!response.ok) throw new Error("Translation request failed");
+            if (!response.ok) {
+                throw new Error("Translation request failed");
+            }
             return response.json();
         })
         .then(function (data) {
-            translations = data && data.translations ? data.translations : {};
-
-            var savedLanguage = "ar";
-            try {
-                savedLanguage = localStorage.getItem(languageStorageKey) || "ar";
-            } catch (e) {}
-
-            if (savedLanguage === "en") {
-                applyLanguage("en");
-            } else {
-                applyLanguage("ar");
+            if (!data || !data.translations) {
+                throw new Error("Invalid translation response");
             }
+
+            translationsByLanguage[language] = data.translations;
+            loadedLanguages[language] = true;
+
+            return translationsByLanguage[language];
         })
-        .catch(function () {
-            applyLanguage("ar");
+        .finally(function () {
+            delete pendingLanguages[language];
         });
+
+        return pendingLanguages[language];
+    }
+
+    function loadLanguage(language) {
+        language = language === "en" ? "en" : "ar";
+
+        var requestId = ++languageRequestId;
+
+        selectors.forEach(function (select) {
+            select.value = language;
+        });
+
+        Promise.all([fetchLanguage("ar"), fetchLanguage("en")])
+            .then(function () {
+                if (requestId !== languageRequestId) return;
+                applyLanguage(language);
+            })
+            .catch(function (error) {
+                if (requestId !== languageRequestId) return;
+
+                console.error("Menu translation unavailable:", error);
+
+                if (language === "ar") {
+                    applyLanguage("ar");
+                } else {
+                    selectors.forEach(function (select) {
+                        select.value = currentLanguage;
+                    });
+                }
+            });
+    }
+
+    selectors.forEach(function (select) {
+        select.addEventListener("change", function () {
+            loadLanguage(select.value);
+        });
+    });
+
+    var savedLanguage = "ar";
+
+    try {
+        savedLanguage = localStorage.getItem(languageStorageKey) || "ar";
+    } catch (e) {}
+
+    loadLanguage(savedLanguage);
 
     var observer = new MutationObserver(function (records) {
         if (translating) return;
+
         translating = true;
 
-        records.forEach(function (record) {
-            if (record.type === "characterData") {
-                translateTextNode(record.target);
-            }
-
-            record.addedNodes.forEach(function (node) {
-                if (node.nodeType === 3) {
-                    translateTextNode(node);
-                } else if (node.nodeType === 1) {
-                    translateElement(node);
+        try {
+            records.forEach(function (record) {
+                if (record.type === "characterData") {
+                    translateTextNode(record.target);
                 }
-            });
-        });
 
-        translating = false;
+                record.addedNodes.forEach(function (node) {
+                    if (node.nodeType === 3) {
+                        translateTextNode(node);
+                    } else if (node.nodeType === 1) {
+                        translateElement(node);
+                    }
+                });
+            });
+        } finally {
+            translating = false;
+        }
     });
 
     observer.observe(document.body, {

@@ -1,0 +1,16 @@
+{
+  "prefix": ">>ara<<",
+  "id": "opus-mt-en-ar-ct2-int8",
+  "direction": {
+    "from": "en",
+    "to": "ar"
+  },
+  "source": "https://huggingface.co/Helsinki-NLP/opus-mt-en-ar",
+  "license": "Apache-2.0",
+  "attribution": "Helsinki-NLP / OPUS-MT",
+  "conversion": {
+    "tool": "ct2-transformers-converter",
+    "quantization": "int8",
+    "ctranslate2": "4.8.4"
+  }
+}

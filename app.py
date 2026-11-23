@@ -19,7 +19,8 @@ from functools import wraps
 
 import os
 import requests
-from deep_translator import MyMemoryTranslator
+from deep_translator import GoogleTranslator
+from deep_translator.exceptions import TooManyRequests
 import time
 import threading
 import secrets
@@ -248,16 +249,44 @@ def translate_menu_texts(source_texts):
         "التجهيز": "Preparing",
         "مراحل الطلب": "Order Progress",
         "رقم الطلب غير موجود": "Order number not found",
+        "تم استلام طلبك": "Your order has been received",
+        "تم استلام طلبك بنجاح من Menu Smart.": "Your order has been successfully received by Menu Smart.",
+        "العودة إلى المنيو": "Back to Menu",
+        "العودة للمنيو": "Back to Menu",
+        "تم بنجاح": "Completed Successfully",
+        "تم استلام طلبك 🎉": "Your order has been received 🎉",
+        "رقم التتبع": "Tracking Number",
+        "تتبع طلبك": "Track Your Order",
+        "حالة الطلب الحالية": "Current Order Status",
+        "الطلب جاهز": "Order Ready",
+        "إذا تغيّر نشاط حالة الطلب، حدّث الصفحة لرؤية الحالة الجديدة.": "Refresh the page to see the latest order status.",
+        "العميل": "Customer",
+        "طريقة الدفع": "Payment Method",
+        "الدفع عند الاستلام": "Cash on Delivery",
+        "الدفع الإلكتروني": "Online Payment",
+        "بيانات طلبك تستخدم فقط لمعالجة الطلب والتواصل معك بخصوصه.": "Your order information is used only to process your order and contact you about it.",
+        "منصة المنيو الإلكتروني والطلبات الرقمية.": "Digital menu and online ordering platform.",
+        "MENU": "MENU",
+        "عرض المنيو": "View Menu",
+        "اتصل بنا": "Contact Us",
+        "العنوان": "Address",
+        "أون لاين": "Online",
+        "تصفح المنيو واطلب الآن": "Browse the menu and order now",
+        "تتبع": "Track",
+        "تابع حالة طلبك": "Track your order status",
+        "تواصل معنا": "Contact Us",
+        "واتساب": "WhatsApp",
     }
 
     def make_hash(text):
-        value = f"{source_language}\\0{target_language}\\0{text}"
+        value = f"menu-translation-v2|{source_language}|{target_language}|{text}"
         return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
     hashes = {text: make_hash(text) for text in texts}
     translations = {}
 
     # استرجاع الترجمات المحفوظة
+    cache_read_failed = False
     try:
         for start in range(0, len(texts), 200):
             batch = texts[start:start + 200]
@@ -286,6 +315,7 @@ def translate_menu_texts(source_texts):
             "Translation cache read failed: %s",
             type(exc).__name__
         )
+        cache_read_failed = True
         translations = {}
 
     translations.update({text: fixed_translations[text] for text in texts if text in fixed_translations})
@@ -295,51 +325,80 @@ def translate_menu_texts(source_texts):
         if text not in translations
     ]
 
+
+    if cache_read_failed:
+        return ({text: translations.get(text, text) for text in texts}, False)
     if not missing:
         return (
             {text: translations.get(text, text) for text in texts},
             all(text in translations for text in texts)
         )
 
-    # ترجمة النصوص غير الموجودة في الكاش
-    for start in range(0, len(missing), 10):
-        batch = missing[start:start + 10]
+    # فصل النصوص العربية عن النصوص غير العربية
+    successful_translations = []
+    arabic_missing = []
 
+    for original in missing:
+        has_arabic = any(
+            "\u0600" <= char <= "\u06FF"
+            or "\u0750" <= char <= "\u077F"
+            or "\u08A0" <= char <= "\u08FF"
+            or "\uFB50" <= char <= "\uFDFF"
+            or "\uFE70" <= char <= "\uFEFF"
+            for char in original
+        )
+
+        if has_arabic:
+            arabic_missing.append(original)
+        else:
+            translations[original] = original
+
+    # تشغيل Google فقط عند وجود نصوص عربية
+    if arabic_missing:
         try:
-            translated_batch = MyMemoryTranslator(
-                    source="ar-SA",
-                    target="en-GB"
-                ).translate_batch(batch)
-
-            if not isinstance(translated_batch, list):
-                raise ValueError("Unexpected translation response.")
-
-            translated_batch = [
-                str(item).strip() if item is not None else ""
-                for item in translated_batch
-            ]
-
-            if (
-                len(translated_batch) != len(batch)
-                or any(not item for item in translated_batch)
-            ):
-                raise ValueError("Invalid translation response.")
-
+            translator = GoogleTranslator(source="auto", target="en")
         except Exception as exc:
             app.logger.warning(
-                "Translation request failed: %s",
+                "Google translator initialization failed: %s",
                 type(exc).__name__
             )
-            continue
+            return (
+                {text: translations.get(text, text) for text in texts},
+                False
+            )
 
-        for original, translated in zip(batch, translated_batch):
+        for original in arabic_missing:
+            try:
+                translated = translator.translate(original)
+
+                if not isinstance(translated, str) or not translated.strip():
+                    raise ValueError("Empty translation response.")
+
+                translated = translated.strip()
+
+            except TooManyRequests:
+                app.logger.warning(
+                    "Google translation rate limit reached; "
+                    "remaining texts deferred."
+                )
+                break
+
+            except Exception as exc:
+                app.logger.warning(
+                    "Google translation failed for one text: %s",
+                    type(exc).__name__
+                )
+                continue
+
             translations[original] = translated
+            successful_translations.append((original, translated))
 
-        # حفظ الدفعة في قاعدة البيانات
+    # حفظ جميع الترجمات الناجحة
+    if successful_translations:
         values = []
         args = []
 
-        for original, translated in zip(batch, translated_batch):
+        for original, translated in successful_translations:
             values.append("(%s, %s, %s, %s, %s)")
             args.extend([
                 hashes[original],

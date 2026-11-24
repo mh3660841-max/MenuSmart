@@ -4974,13 +4974,13 @@ gap: 7px;
 
 padding: 12px;
 
-background: #111a2e;
+background: #FFFFFF;
 
-border: 1px solid #2a3650;
+border: 1px solid #E2E8F0;
 
 border-radius: 20px;
 
-box-shadow: 0 10px 30px rgba(0,0,0,.28);
+box-shadow: 0 10px 30px rgba(16,27,48,.07);
 
 }
 
@@ -4997,7 +4997,7 @@ padding: 11px 13px;
 
 border-radius: 13px;
 
-color: #a5afc5;
+color: #64748B;
 
 font-size: 13px;
 
@@ -5025,16 +5025,16 @@ flex-shrink: 0;
 
 border-radius: 9px;
 
-background: #17243b;
+background: #F1EBFF;
 
 font-size: 16px;
 
 }
 
 .settings-nav-item:hover {
-color: #f1f5ff;
+color: #172033;
 
-background: #202d46;
+background: #F8FAFC;
 
 transform:
     translateX(-2px);
@@ -5042,7 +5042,7 @@ transform:
 }
 
 .settings-nav-item.active {
-color: #f1f5ff;
+color: #172033;
 
 background:
     rgba(var(--ms-accent-rgb), .12);
@@ -5097,7 +5097,7 @@ display: block;
 
 margin-bottom: 5px;
 
-color: #999;
+color: #94A3B8;
 
 font-size: 12px;
 
@@ -5138,8 +5138,8 @@ border-radius: 15px;
 background:
     linear-gradient(
         145deg,
-        #111111,
-        #292929
+        #101B30,
+        #263A5B
     );
 
 color: var(--ms-purple);
@@ -5237,7 +5237,7 @@ border-top:
 EMPLOYEE CREATE
 ========================================================= */
 .employee-permissions-group { grid-column: 1 / -1; }
-.employee-permissions-hint { display:block; margin:0 0 12px; color:#888; font-size:12px; }
+.employee-permissions-hint { display:block; margin:0 0 12px; color:#718096; font-size:12px; }
 .employee-permissions-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
 .permission-card { position:relative; display:block; cursor:pointer; }
 .permission-card input { position:absolute; opacity:0; pointer-events:none; }
@@ -5489,7 +5489,7 @@ font-weight: 900;
 .notification-setting p {
 margin: 0;
 
-color: #888;
+color: #718096;
 
 font-size: 13px;
 
@@ -5546,7 +5546,7 @@ border-color:
     rgba(var(--ms-accent-rgb), .35);
 
 background:
-    #fffdf6;
+    #F5F3FF;
 
 }
 
@@ -5561,7 +5561,7 @@ justify-content: center;
 
 border-radius: 13px;
 
-background: #f4f4f4;
+background: #F1EBFF;
 
 font-size: 19px;
 
@@ -5583,14 +5583,14 @@ font-weight: 900;
 .settings-action p {
 margin: 0;
 
-color: #888;
+color: #718096;
 
 font-size: 12px;
 
 }
 
 .settings-action b {
-color: #999;
+color: #94A3B8;
 
 font-size: 18px;
 

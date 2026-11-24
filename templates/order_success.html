@@ -533,21 +533,7 @@
     }
 
 
-    .success-language-select {
-        min-height: 38px;
-        padding: 7px 12px;
-        border: 1px solid rgba(255,255,255,.18);
-        border-radius: 10px;
-        background: rgba(255,255,255,.07);
-        color: #f3fff8;
-        font: inherit;
-        font-size: 13px;
-        cursor: pointer;
-    }
-    .success-language-select option {
-        background: #08130f;
-        color: #edf7f1;
-    }
+
 
 </style>
 
@@ -568,10 +554,7 @@
 
     </a>
 
-    <select id="successLanguage" class="success-language-select" aria-label="Language">
-    <option value="ar">العربية</option>
-    <option value="en">English</option>
-</select>
+
 <a
         href="{{ url_for('public_menu', slug=order['restaurant_slug']) }}"
         class="success-back-link" aria-label="العودة إلى المنيو" title="العودة إلى المنيو"
@@ -881,88 +864,7 @@
 
 </script>
 <script>
-(function () {
-    "use strict";
 
-    var translations = {{ translations|tojson }};
-    var translationAvailable = {{ 'true' if translation_available else 'false' }};
-    var languageSelect = document.getElementById("successLanguage");
-    var params = new URLSearchParams(window.location.search);
-    var language = params.get("lang") === "en" && translationAvailable ? "en" : "ar";
-
-    function translatePage() {
-        document.documentElement.lang = language;
-        document.documentElement.dir = language === "en" ? "ltr" : "rtl";
-
-        document.title = language === "en"
-            ? (translations["تم استلام طلبك"] || "Order received") + " | Menu Smart"
-            : "تم استلام طلبك | Menu Smart";
-
-        var description = document.querySelector('meta[name="description"]');
-        if (description) {
-            description.content = language === "en"
-                ? (translations["تم استلام طلبك بنجاح من Menu Smart."] || description.content)
-                : "تم استلام طلبك بنجاح من Menu Smart.";
-        }
-
-        if (language === "en") {
-            var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-            var nodes = [];
-
-            while (walker.nextNode()) {
-                nodes.push(walker.currentNode);
-            }
-
-            nodes.forEach(function (node) {
-                var original = node.nodeValue;
-                var normalized = original.replace(/\s+/g, " ").trim();
-                if (!normalized) return;
-
-                var translated = translations[normalized];
-
-                if (!translated && normalized.indexOf("← ") === 0) {
-                    var backText = normalized.slice(2);
-                    if (translations[backText]) {
-                        translated = "← " + translations[backText];
-                    }
-                }
-
-                if (translated) {
-                    var leading = (original.match(/^\s*/) || [""])[0];
-                    var trailing = (original.match(/\s*$/) || [""])[0];
-                    node.nodeValue = leading + translated + trailing;
-                }
-            });
-
-            document.querySelectorAll("[placeholder], [aria-label], [title]").forEach(function (element) {
-                ["placeholder", "aria-label", "title"].forEach(function (attribute) {
-                    var value = element.getAttribute(attribute);
-                    if (!value) return;
-
-                    var normalized = value.replace(/\s+/g, " ").trim();
-                    if (translations[normalized]) {
-                        element.setAttribute(attribute, translations[normalized]);
-                    }
-                });
-            });
-        }
-
-        languageSelect.value = language;
-    }
-
-    languageSelect.addEventListener("change", function () {
-        if (languageSelect.value === "en" && !translationAvailable) {
-            alert("English translation is not available yet.");
-            languageSelect.value = "ar";
-            return;
-        }
-
-        params.set("lang", languageSelect.value);
-        window.location.search = params.toString();
-    });
-
-    translatePage();
-})();
 </script>
 
 </body></html>

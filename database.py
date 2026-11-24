@@ -1583,23 +1583,6 @@ def init_db():
 
 
         # =====================================================
-        # كاش الترجمة التلقائية
-        # =====================================================
-
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS translation_cache (
-                id BIGSERIAL PRIMARY KEY,
-                source_hash VARCHAR(64) NOT NULL UNIQUE,
-                source_text TEXT NOT NULL,
-                translated_text TEXT NOT NULL,
-                source_language VARCHAR(10) NOT NULL DEFAULT 'ar',
-                target_language VARCHAR(10) NOT NULL DEFAULT 'en',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-
-        # =====================================================
         # الحفظ
         # =====================================================
 

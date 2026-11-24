@@ -117,18 +117,6 @@ body {
     }
 }
 
-.track-language-select {
-    display: block;
-    margin: 0 auto 20px;
-    padding: 9px 14px;
-    border: 1px solid rgba(130,205,163,.20);
-    border-radius: 10px;
-    background: #101d17;
-    color: var(--track-text);
-    font: inherit;
-    cursor: pointer;
-}
-
 .track-card {
     position: relative;
     width: 100%;
@@ -401,10 +389,7 @@ body {
 {% endif %}
 </div>
 
-<select id="trackLanguage" class="track-language-select" aria-label="Language">
-    <option value="ar">العربية</option>
-    <option value="en">English</option>
-</select>
+
 
 <h1>تتبع الطلب</h1>
 <p>أدخل رقم طلبك لمعرفة حالته</p>
@@ -447,74 +432,7 @@ body {
 </div>
 </main>
 <script>
-(function () {
-    "use strict";
 
-    var translations = {{ translations|tojson }};
-    var translationAvailable = {{ 'true' if translation_available else 'false' }};
-    var languageSelect = document.getElementById("trackLanguage");
-    var params = new URLSearchParams(window.location.search);
-    var language = params.get("lang") === "en" && translationAvailable
-        ? "en"
-        : "ar";
-
-    function translatePage() {
-        document.documentElement.lang = language;
-        document.documentElement.dir = language === "en" ? "ltr" : "rtl";
-        document.title = language === "en"
-            ? (translations["تتبع الطلب"] || "Track Order") + " | Menu Smart"
-            : "تتبع الطلب | Menu Smart";
-
-        var walker = document.createTreeWalker(
-            document.body,
-            NodeFilter.SHOW_TEXT
-        );
-
-        var nodes = [];
-        while (walker.nextNode()) nodes.push(walker.currentNode);
-
-        nodes.forEach(function (node) {
-            var original = node.nodeValue;
-            var trimmed = original.trim();
-            if (!trimmed || !translations[trimmed]) return;
-
-            if (language === "en") {
-                var start = original.indexOf(trimmed);
-                node.nodeValue =
-                    original.slice(0, start) +
-                    translations[trimmed] +
-                    original.slice(start + trimmed.length);
-            }
-        });
-
-        document.querySelectorAll(
-            "[placeholder], [aria-label], [title]"
-        ).forEach(function (element) {
-            ["placeholder", "aria-label", "title"].forEach(function (attr) {
-                if (!element.hasAttribute(attr)) return;
-                var original = element.getAttribute(attr);
-                if (language === "en" && translations[original]) {
-                    element.setAttribute(attr, translations[original]);
-                }
-            });
-        });
-
-        languageSelect.value = language;
-    }
-
-    languageSelect.addEventListener("change", function () {
-        if (languageSelect.value === "en" && !translationAvailable) {
-            alert("English translation is currently unavailable.");
-            languageSelect.value = "ar";
-            return;
-        }
-
-        params.set("lang", languageSelect.value);
-        window.location.search = params.toString();
-    });
-
-    translatePage();
-})();
 
 setInterval(function () {
     var input = document.querySelector('input[name="order_id"]');

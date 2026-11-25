@@ -18,35 +18,35 @@
 
         .analytics-page {
             --ms-black: #0b1020;
-            --ms-black-2: #11182b;
+            --ms-black-2: #FFFFFF;
             --ms-black-3: #1a2440;
             --ms-primary: #8b5cf6;
             --ms-primary-dark: #6d28d9;
-            --ms-primary-soft: #241b3d;
+            --ms-primary-soft: #F1EBFF;
             --ms-bg: #080d1b;
-            --ms-white: #111a2e;
-            --ms-text: #edf1ff;
-            --ms-muted: #a5afc5;
-            --ms-light: #7f8ba5;
-            --ms-border: #27324b;
+            --ms-white: #FFFFFF;
+            --ms-text: #172033;
+            --ms-muted: #64748B;
+            --ms-light: #64748B;
+            --ms-border: #E2E8F0;
             --ms-orange: #f59e0b;
             --ms-orange-bg: #302516;
             --ms-blue: #22d3ee;
             --ms-blue-bg: #102b3a;
-            --ms-purple: #a78bfa;
-            --ms-purple-bg: #241b3d;
+            --ms-purple: #8B5CF6;
+            --ms-purple-bg: #F1EBFF;
             --ms-danger: #f87171;
             --ms-danger-bg: #351d2a;
             min-height: 100vh;
             background: #080d1b;
-            color: #edf1ff;
+            color: #172033;
         }
 
         body.dashboard-page.analytics-page {
             background:
                 radial-gradient(ellipse at 85% 0%, rgba(91, 63, 160, .13), transparent 34%),
                 linear-gradient(180deg, #080d1b 0%, #0b1020 100%);
-            color: #edf1ff;
+            color: #172033;
         }
 
         .analytics-page *,
@@ -94,7 +94,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #a78bfa;
+            color: #8B5CF6;
             font-size: 12px;
             font-weight: 800;
             letter-spacing: .4px;
@@ -112,7 +112,7 @@
 
         .analytics-heading h1 {
             margin: 0;
-            color: #f4f5ff;
+            color: #172033;
             font-size: clamp(25px, 4vw, 34px);
             line-height: 1.3;
             font-weight: 900;
@@ -120,7 +120,7 @@
 
         .analytics-heading p {
             margin: 8px 0 0;
-            color: #8996b1;
+            color: #64748B;
             font-size: 13px;
             line-height: 1.8;
         }
@@ -130,13 +130,13 @@
             align-items: center;
             gap: 10px;
             padding: 8px 12px;
-            background: #111a2e;
-            border: 1px solid #27324b;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
             border-radius: 13px;
         }
 
         .analytics-period-control label {
-            color: #a5afc5;
+            color: #64748B;
             font-size: 12px;
             font-weight: 700;
             white-space: nowrap;
@@ -145,11 +145,11 @@
         .analytics-period-control select {
             min-width: 125px;
             padding: 9px 30px 9px 12px;
-            border: 1px solid #35415d;
+            border: 1px solid #DCE3EE;
             border-radius: 9px;
             outline: none;
-            background: #17213a;
-            color: #edf1ff;
+            background: #F8FAFC;
+            color: #172033;
             font: inherit;
             font-size: 13px;
             cursor: pointer;
@@ -174,17 +174,17 @@
     min-width: 0;
     overflow: hidden;
     padding: 19px;
-    background: linear-gradient(145deg, #151f36 0%, #111a2e 72%);
-    border: 1px solid #273550;
+    background: linear-gradient(145deg, #FFFFFF 0%, #FFFFFF 72%);
+    border: 1px solid #E2E8F0;
     border-radius: 17px;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, .17);
+    box-shadow: 0 10px 28px rgba(16, 27, 48, .07);
     transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 
 .analytics-kpi:hover {
     transform: translateY(-3px);
-    border-color: #465477;
-    box-shadow: 0 15px 32px rgba(0, 0, 0, .25);
+    border-color: #C4B5FD;
+    box-shadow: 0 15px 32px rgba(16, 27, 48, .09);
 }
 
 .analytics-kpi::after {
@@ -215,8 +215,8 @@
     height: 43px;
     flex: 0 0 43px;
     border-radius: 13px;
-    background: var(--icon-bg, #241b3d);
-    color: var(--icon-color, #a78bfa);
+    background: var(--icon-bg, #F1EBFF);
+    color: var(--icon-color, #8B5CF6);
 }
 
 .analytics-kpi-icon svg {
@@ -230,14 +230,14 @@
 }
 
 .analytics-kpi-period {
-    color: #7f8ba5;
+    color: #64748B;
     font-size: 10px;
     font-weight: 700;
 }
 
 .analytics-kpi-label {
     display: block;
-    color: #a5afc5;
+    color: #64748B;
     font-size: 12px;
     font-weight: 700;
     margin-bottom: 8px;
@@ -248,7 +248,7 @@
     align-items: baseline;
     flex-wrap: wrap;
     gap: 6px;
-    color: #f4f6ff;
+    color: #172033;
     font-size: clamp(22px, 2.5vw, 29px);
     line-height: 1.25;
     font-weight: 900;
@@ -259,7 +259,7 @@
 }
 
 .analytics-kpi-value small {
-    color: #9aa7c0;
+    color: #64748B;
     font-size: 11px;
     font-weight: 700;
 }
@@ -286,10 +286,10 @@
 
 .analytics-trend.positive { color: #4ade80; }
 .analytics-trend.negative { color: #fb7185; }
-.analytics-trend.neutral { color: #a5afc5; }
+.analytics-trend.neutral { color: #64748B; }
 
 .analytics-trend-note {
-    color: #7785a1;
+    color: #64748B;
     font-size: 10px;
 }
 
@@ -300,9 +300,9 @@
     padding: 23px;
     background:
         radial-gradient(ellipse at 85% 0%, rgba(139, 92, 246, .20), transparent 55%),
-        linear-gradient(145deg, #25204b 0%, #11182b 72%);
+        linear-gradient(145deg, #F5F3FF 0%, #FFFFFF 72%);
     border-color: rgba(139, 92, 246, .42);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, .2), 0 0 18px rgba(56, 189, 248, .08);
+    box-shadow: 0 12px 32px rgba(16, 27, 48, .08), 0 0 18px rgba(56, 189, 248, .08);
 }
 
 .analytics-kpi-sales::after {
@@ -311,11 +311,11 @@
 
 .analytics-kpi-sales .analytics-kpi-icon {
     background: rgba(139, 92, 246, .19) !important;
-    color: #c4b5fd !important;
+    color: #6D28D9 !important;
 }
 
 .analytics-kpi-sales .analytics-kpi-value {
-    color: #f4f1ff;
+    color: #172033;
     font-size: clamp(29px, 3vw, 38px);
 }
 
@@ -364,8 +364,8 @@
             gap: 13px;
             min-width: 0;
             padding: 15px 17px;
-            background: rgba(17, 26, 46, .78);
-            border: 1px solid #27324b;
+            background: rgba(248, 250, 252, 1);
+            border: 1px solid #E2E8F0;
             border-radius: 13px;
         }
 
@@ -376,7 +376,7 @@
             height: 37px;
             flex: 0 0 37px;
             border-radius: 11px;
-            background: #172c3c;
+            background: #E0F2FE;
             color: #22d3ee;
             font-size: 17px;
             font-weight: 900;
@@ -384,12 +384,12 @@
 
         .analytics-secondary-card:nth-child(2) .analytics-secondary-icon {
             background: rgba(139, 92, 246, .16);
-            color: #c4b5fd;
+            color: #6D28D9;
         }
 
         .analytics-secondary-card:nth-child(3) .analytics-secondary-icon {
-            background: #241b3d;
-            color: #a78bfa;
+            background: #F1EBFF;
+            color: #8B5CF6;
         }
 
         .analytics-secondary-copy {
@@ -398,14 +398,14 @@
 
         .analytics-secondary-copy span {
             display: block;
-            color: #8d9ab4;
+            color: #64748B;
             font-size: 11px;
             margin-bottom: 4px;
         }
 
         .analytics-secondary-copy strong {
             display: block;
-            color: #edf1ff;
+            color: #172033;
             font-size: 18px;
             font-weight: 900;
             direction: ltr;
@@ -419,10 +419,10 @@
         .analytics-panel {
             min-width: 0;
             padding: 21px;
-            background: linear-gradient(145deg, rgba(20, 30, 52, .96), rgba(17, 26, 46, .96));
-            border: 1px solid #273550;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 1), rgba(17, 26, 46, .96));
+            border: 1px solid #E2E8F0;
             border-radius: 17px;
-            box-shadow: 0 9px 25px rgba(0, 0, 0, .13);
+            box-shadow: 0 9px 25px rgba(16, 27, 48, .06);
         }
 
         .analytics-panel-header {
@@ -436,24 +436,24 @@
 
         .analytics-panel-heading h2 {
             margin: 0;
-            color: #edf1ff;
+            color: #172033;
             font-size: 16px;
             font-weight: 900;
         }
 
         .analytics-panel-heading p {
             margin: 6px 0 0;
-            color: #8290aa;
+            color: #64748B;
             font-size: 11px;
             line-height: 1.7;
         }
 
         .analytics-panel-tag {
             padding: 6px 10px;
-            border: 1px solid #35415d;
+            border: 1px solid #DCE3EE;
             border-radius: 8px;
-            color: #a5afc5;
-            background: #17213a;
+            color: #64748B;
+            background: #F8FAFC;
             font-size: 10px;
             font-weight: 700;
             white-space: nowrap;
@@ -468,7 +468,7 @@
             align-items: center;
             gap: 15px;
             flex-wrap: wrap;
-            color: #9aa7c0;
+            color: #64748B;
             font-size: 11px;
         }
 
@@ -495,7 +495,7 @@
             overflow-y: hidden;
             padding: 8px 2px 4px;
             scrollbar-width: thin;
-            scrollbar-color: #35415d transparent;
+            scrollbar-color: #DCE3EE transparent;
         }
 
         .analytics-chart {
@@ -523,7 +523,7 @@
             justify-content: center;
             width: 100%;
             height: 190px;
-            border-bottom: 1px solid #35415d;
+            border-bottom: 1px solid #DCE3EE;
             background-image: linear-gradient(to top, rgba(100, 116, 150, .08) 1px, transparent 1px);
             background-size: 100% 25%;
         }
@@ -533,7 +533,7 @@
             width: min(68%, 30px);
             min-height: 3px;
             border-radius: 6px 6px 2px 2px;
-            background: linear-gradient(180deg, #a78bfa 0%, #6d28d9 100%);
+            background: linear-gradient(180deg, #8B5CF6 0%, #6d28d9 100%);
             box-shadow: 0 0 14px rgba(139, 92, 246, .17);
             transition: height .25s ease, opacity .2s ease;
         }
@@ -545,7 +545,7 @@
         .analytics-chart-label {
             width: 100%;
             margin-top: 9px;
-            color: #8592ad;
+            color: #64748B;
             font-size: 9px;
             text-align: center;
             white-space: nowrap;
@@ -556,7 +556,7 @@
             place-items: center;
             width: 100%;
             min-height: 190px;
-            color: #8290aa;
+            color: #64748B;
             font-size: 13px;
             text-align: center;
         }
@@ -585,7 +585,7 @@
             gap: 12px;
             min-width: 0;
             padding: 10px;
-            background: rgba(8, 13, 27, .35);
+            background: rgba(248, 250, 252, 1);
             border: 1px solid rgba(53, 65, 93, .55);
             border-radius: 12px;
         }
@@ -596,7 +596,7 @@
             flex: 0 0 48px;
             overflow: hidden;
             border-radius: 10px;
-            background: #202b44;
+            background: #F1F5F9;
         }
 
         .analytics-product-image img {
@@ -611,7 +611,7 @@
             place-items: center;
             width: 100%;
             height: 100%;
-            color: #a78bfa;
+            color: #8B5CF6;
             font-size: 19px;
         }
 
@@ -623,7 +623,7 @@
         .analytics-product-info strong {
             display: block;
             overflow: hidden;
-            color: #e8edff;
+            color: #172033;
             font-size: 12px;
             font-weight: 800;
             text-overflow: ellipsis;
@@ -633,7 +633,7 @@
         .analytics-product-info span {
             display: block;
             margin-top: 5px;
-            color: #8491ab;
+            color: #64748B;
             font-size: 10px;
         }
 
@@ -645,7 +645,7 @@
 
         .analytics-product-sales strong {
             display: block;
-            color: #c4b5fd;
+            color: #6D28D9;
             font-size: 12px;
             font-weight: 900;
             white-space: nowrap;
@@ -654,7 +654,7 @@
         .analytics-product-sales span {
             display: block;
             margin-top: 4px;
-            color: #8491ab;
+            color: #64748B;
             font-size: 9px;
             white-space: nowrap;
         }
@@ -683,7 +683,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #c5cde0;
+            color: #334155;
             font-size: 11px;
             font-weight: 700;
         }
@@ -697,7 +697,7 @@
         }
 
         .analytics-status-value {
-            color: #edf1ff;
+            color: #172033;
             font-size: 11px;
             font-weight: 800;
             direction: ltr;
@@ -707,7 +707,7 @@
             height: 7px;
             overflow: hidden;
             border-radius: 20px;
-            background: #26314a;
+            background: #E2E8F0;
         }
 
         .analytics-status-fill {
@@ -736,9 +736,9 @@
             gap: 11px;
             min-width: 0;
             padding: 14px;
-            border: 1px solid #2c3954;
+            border: 1px solid #E2E8F0;
             border-radius: 12px;
-            background: rgba(8, 13, 27, .35);
+            background: rgba(248, 250, 252, 1);
         }
 
         .analytics-insight-icon {
@@ -748,8 +748,8 @@
             height: 34px;
             flex: 0 0 34px;
             border-radius: 10px;
-            background: #241b3d;
-            color: #c4b5fd;
+            background: #F1EBFF;
+            color: #6D28D9;
             font-size: 15px;
             font-weight: 900;
         }
@@ -760,23 +760,23 @@
 
         .analytics-insight-content strong {
             display: block;
-            color: #e8edff;
+            color: #172033;
             font-size: 12px;
             font-weight: 800;
         }
 
         .analytics-insight-content p {
             margin: 5px 0 0;
-            color: #8996b1;
+            color: #64748B;
             font-size: 11px;
             line-height: 1.8;
         }
 
         .analytics-empty {
             padding: 25px 15px;
-            border: 1px dashed #35415d;
+            border: 1px dashed #DCE3EE;
             border-radius: 12px;
-            color: #8996b1;
+            color: #64748B;
             font-size: 12px;
             text-align: center;
             line-height: 1.9;

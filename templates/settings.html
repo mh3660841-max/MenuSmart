@@ -360,7 +360,15 @@
     class="settings-form" enctype="multipart/form-data">
 
 
-    <div class="form-group">
+    
+<div class="settings-group-heading">
+    <span class="settings-group-number">01</span>
+    <div>
+        <h3>صورة المطعم</h3>
+        <p>الصورة التي تظهر خلف اللوجو واسم النشاط</p>
+    </div>
+</div>
+<div class="form-group">
         <label for="hero_background_image">صورة خلفية لوجو واسم المطعم</label>
         <input type="file" id="hero_background_image" name="hero_background_image"
                accept="image/png,image/jpeg,image/webp">
@@ -375,7 +383,15 @@
 
 <div class="form-grid">
 
-    <div class="form-group">
+    
+<div class="settings-group-heading" id="menu">
+    <span class="settings-group-number">02</span>
+    <div>
+        <h3>مظهر المنيو</h3>
+        <p>الألوان الأساسية والثانوية للمنيو</p>
+    </div>
+</div>
+<div class="form-group">
         <label for="primary_color">اللون الأساسي للمنيو</label>
         <input type="color" id="primary_color" name="primary_color"
                value="{{ settings.primary_color if settings and settings.primary_color else '#111111' }}">
@@ -445,7 +461,15 @@
         </div>
     </div>
 
-    <div class="form-group">
+    
+<div class="settings-group-heading">
+    <span class="settings-group-number">03</span>
+    <div>
+        <h3>شاشة البداية</h3>
+        <p>ألوان ونصوص شاشة الترحيب</p>
+    </div>
+</div>
+<div class="form-group">
         <label>تصميم شاشة البداية — لون الخلفية</label>
         <input type="color" id="start_screen_bg" name="start_screen_bg"
                value="{{ settings.start_screen_bg if settings and settings.start_screen_bg else '#F5F6F8' }}">
@@ -515,6 +539,14 @@
         </div>
     </div>
 
+
+<div class="settings-group-heading">
+    <span class="settings-group-number">04</span>
+    <div>
+        <h3>بيانات التواصل</h3>
+        <p>تنسيق النصوص وأيقونات التواصل</p>
+    </div>
+</div>
 <div class="form-group">
         <label for="contact_text_color">لون نص بيانات التواصل</label>
         <input type="color" id="contact_text_color" name="contact_text_color" value="{{ settings.contact_text_color if settings and settings.contact_text_color else '#666666' }}">
@@ -540,7 +572,15 @@
         </div>
     </div>
 
-    <div class="form-group">
+    
+<div class="settings-group-heading">
+    <span class="settings-group-number">05</span>
+    <div>
+        <h3>تصميم المنتجات</h3>
+        <p>أبعاد البطاقات وطريقة عرض المنتجات</p>
+    </div>
+</div>
+<div class="form-group">
         <label for="start_card_radius">استدارة حواف البطاقة (0–60)</label>
         <input type="number" id="start_card_radius" name="start_card_radius"
                min="0" max="60"
@@ -581,7 +621,15 @@
     </div>
 
 
-    <div class="form-group">
+    
+<div class="settings-group-heading">
+    <span class="settings-group-number">06</span>
+    <div>
+        <h3>الإعدادات العامة</h3>
+        <p>العملة واللغة وإتاحة الطلبات</p>
+    </div>
+</div>
+<div class="form-group">
     <label for="currency">العملة</label>
 
     <select id="currency" name="currency">
@@ -899,6 +947,8 @@
 <div class="form-grid">
 
 
+    <div class="settings-group-heading">إعدادات التوصيل</div>
+
     <div class="form-group full-width">
 
     <label>
@@ -951,6 +1001,8 @@
     </div>
 
 
+
+    <div class="settings-group-heading">وسائل الدفع الإلكتروني</div>
 
     <div class="form-group">
         <label for="wallet_number">رقم المحفظة الإلكترونية</label>
@@ -1320,55 +1372,66 @@
 
 <script>
 
-const settingsLinks =
-    document.querySelectorAll(
-        ".settings-nav-item"
-    );
+const settingsLinks = document.querySelectorAll(".settings-nav-item");
 
+const settingsTargets = Array.from(settingsLinks)
+    .map(function(link) {
+        return document.querySelector(link.getAttribute("href"));
+    })
+    .filter(Boolean);
 
-settingsLinks.forEach(
-    function(link) {
-
-        link.addEventListener(
-            "click",
-            function(event) {
-
-                event.preventDefault();
-
-                settingsLinks.forEach(
-                    function(item) {
-
-                        item.classList.remove(
-                            "active"
-                        );
-
-                    }
-                );
-
-                this.classList.add(
-                    "active"
-                );
-
-                const target =
-                    document.querySelector(
-                        this.getAttribute("href")
-                    );
-
-                if (target) {
-
-                    target.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
-                    });
-
-                }
-
-            }
+function setActiveSettingsLink(target) {
+    settingsLinks.forEach(function(link) {
+        link.classList.toggle(
+            "active",
+            link.getAttribute("href") === "#" + target.id
         );
+    });
+}
 
+settingsLinks.forEach(function(link) {
+    link.addEventListener("click", function(event) {
+        const target = document.querySelector(this.getAttribute("href"));
+
+        if (!target) return;
+
+        event.preventDefault();
+        setActiveSettingsLink(target);
+
+        history.replaceState(null, "", this.getAttribute("href"));
+
+        target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    });
+});
+
+function updateSettingsNavigation() {
+    let activeTarget = null;
+    let closestTop = -Infinity;
+
+    settingsTargets.forEach(function(target) {
+        const top = target.getBoundingClientRect().top;
+
+        if (top <= 150 && top > closestTop) {
+            closestTop = top;
+            activeTarget = target;
+        }
+    });
+
+    if (activeTarget) {
+        setActiveSettingsLink(activeTarget);
     }
-);
+}
 
+window.addEventListener("scroll", updateSettingsNavigation, {
+    passive: true
+});
+
+window.addEventListener("resize", updateSettingsNavigation);
+
+updateSettingsNavigation();
 
 const settingsForms =
     document.querySelectorAll(
